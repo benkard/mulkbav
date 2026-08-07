@@ -714,22 +714,52 @@ function rechne(input, param, flags) {
      der Anfangs- und der Endpunkt, nicht jeder Zwischenwert. Und wo es gar
      kein Konto gibt — bAV nach Kapitalauszahlung, bAV als lebenslange Rente —
      steht dort null; eine Rente ist ein Anspruch, kein Vermögen. */
-  function vermoegen(key, produkt){
+  /*   Wiederanlage(0)   = 0
+       Wiederanlage(t+1) = (Wiederanlage(t) + netto(t))·(1+w) − M
+       Vermögen(t)       = Produktkonto(t) + Wiederanlage(t)
+
+     M ist die äquivalente Jahresleistung V(0)·ANNW. Weil ANNW der nach-
+     schüssige Annuitätenfaktor ist und der Konsum am Jahresende abgeht,
+     gilt Wiederanlage(n) = 0 exakt: jede Option ist am Horizont punktgenau
+     aufgebraucht.
+
+     Entscheidend ist, WO der Konsum abgeht — nur aus der Wiederanlage. Das
+     Produktkapital bleibt im Produkt und wächst mit der Produktrendite vor
+     Steuern. Genau deshalb sind die Pfade NICHT proportional, anders als bei
+     der naheliegenden Variante, alles zum Wiederanlagezins zu führen und
+     daraus zu konsumieren; dort kürzt sich der Unterschied heraus. */
+  function vermoegen(key, produkt, M){
     var v = [], acc = 0;
     for (var t = 0; t <= N_AUSZ; t++){
       v.push(produkt(t) + acc);
-      if (t < N_AUSZ) acc = (acc + Z[t][key]) * (1 + D.wiederanl);
+      if (t < N_AUSZ) acc = (acc + Z[t][key]) * (1 + D.wiederanl) - M;
     }
     return v;
   }
+  var mJahr = { bav: res.bav[0] * ANNW, av: res.av[0] * ANNW, priv: res.priv[0] * ANNW };
+
+  /* Produktkonto — und davon der frei verfügbare Teil.
+       bAV   vor Rentenbeginn kein Zugriff (§ 1b BetrAVG: Unverfallbarkeit ja,
+             Verfügbarkeit nein), danach gibt es kein Konto mehr.
+       AV    Entnahme vor 65 ist förderschädlich; frei ist nur der „Sleeve“,
+             also der Überschuss über den Jahreshöchstbetrag, der ohnehin wie
+             ein gewöhnliches Depot geführt wird.
+       priv  jederzeit frei.
+     t = 0 ist der Beginn des ersten Auszahlungsjahres — da liegt das Kapital
+     in beiden Auszahlungsformen der bAV noch vor. */
+  var prodBav  = function(t){ return t === 0 ? KB : 0; };
+  var prodAv   = function(t){ return t < N_AUSZ ? Z[t].gef_a + Z[t].ngef_a + Z[t].sl_a : 0; };
+  var prodPriv = function(t){ return t < N_AUSZ ? Z[t].pr_a : 0; };
+
   var verm = {
-    /* t = 0 ist der Beginn des ersten Auszahlungsjahres — da liegt das Kapital
-       in beiden Auszahlungsformen noch vor. Erst im Lauf dieses Jahres wird es
-       entweder ausgezahlt oder gegen einen Rentenanspruch eingetauscht. Damit
-       gilt Vermögen(0) = Produktkapital und die Kurve läuft knickfrei durch. */
-    bav:  vermoegen('bav_net', function(t){ return t === 0 ? KB : 0; }),
-    av:   vermoegen('av_net',  function(t){ return t < N_AUSZ ? Z[t].gef_a + Z[t].ngef_a + Z[t].sl_a : 0; }),
-    priv: vermoegen('pr_net',  function(t){ return t < N_AUSZ ? Z[t].pr_a : 0; })
+    bav:  vermoegen('bav_net', prodBav,  mJahr.bav),
+    av:   vermoegen('av_net',  prodAv,   mJahr.av),
+    priv: vermoegen('pr_net',  prodPriv, mJahr.priv)
+  };
+  var vermLiq = {
+    bav:  vermoegen('bav_net', function(){ return 0; }, mJahr.bav),
+    av:   vermoegen('av_net',  function(t){ return t < N_AUSZ ? Z[t].sl_a : 0; }, mJahr.av),
+    priv: vermoegen('pr_net',  prodPriv, mJahr.priv)
   };
   return {
     I: I, P: P, D: D, A: A, Z: Z, cf: cf, beitragMtl: BEITRAG, bisektion: bis,
@@ -741,7 +771,7 @@ function rechne(input, param, flags) {
     kvpvAusz: { bav: ss('bav_kvpv'), av: 0, priv: 0 },
     rentenverlust: { bav: ss('mind_br'), av: 0, priv: 0 },
     nettoAusz: { bav: ss('bav_net'), av: ss('av_net'), priv: ss('pr_net') },
-    bwAuszahlung: bw, bwAufwand: bwAufw, ertrag: ertrag, reserve: res, vermoegen: verm,
+    bwAuszahlung: bw, bwAufwand: bwAufw, ertrag: ertrag, reserve: res, vermoegen: verm, vermoegenLiquid: vermLiq, mJahr: mJahr,
     irr: { bav: irrOf(cf.bav), av: irrOf(cf.av), priv: irrOf(cf.priv) },
     monat: { bav: sp('bav_net')*mfak, av: sp('av_net')*mfak, priv: sp('pr_net')*mfak },
     monatBrutto: { bav: sp('bav_br')*mfak, av: (sp('gef_e')+sp('ngef_e')+sp('sl_e'))*mfak, priv: sp('pr_e')*mfak },
@@ -1836,46 +1866,45 @@ function drawWaterfall(){
 }
 
 /* ---------- 3) Kapitalverlauf ---------- *
-   Eine Größe über die ganze Zeitachse: das VERMÖGEN, ohne Konsumannahme.
+   Durchgezogen: Vermögen insgesamt.  Gestrichelt, gleiche Farbe: davon der
+   frei verfügbare Teil. Der Abstand zwischen beiden ist gebundenes Kapital.
 
-     Ansparphase     Kontostand im Produkt
-     Auszahlung      Kontostand im Produkt  +  was ausgezahlt und netto
-                     wieder angelegt wurde
+   Ansparphase      Kontostand im Produkt
+   Auszahlungsphase Kontostand im Produkt + Wiederanlage, abzüglich der
+                    äquivalenten Monatsleistung, die tatsächlich verbraucht wird
 
-   Am Rentenbeginn ist die Wiederanlage null — die Kurve läuft knickfrei
-   durch. Kein Einheitenwechsel, kein Sprung, dem nichts entspricht: beim
-   Privatdepot passiert dort tatsächlich nichts.
-
-   Was man jetzt sieht und vorher nicht sah: Geld im Produkt wächst mit der
-   Produktrendite vor Steuern, ausgezahltes nur noch mit dem Satz danach.
-   Deshalb verlaufen die Kurven NICHT proportional — im Basisfall wandert
-   das Verhältnis AV-Depot zu Privatdepot von 1,32 auf 1,13. Jeder sichtbare
-   Abfall ist eine tatsächlich gezahlte Abgabe.                            */
+   Deshalb endet jede Option punktgenau bei null. Weil der Konsum nur aus der
+   Wiederanlage abgeht und das Produktkapital im Produkt bleibt, verlaufen die
+   Kurven trotzdem nicht proportional.                                        */
 function drawKapital(){
-  var cv = $('#chart'), P = prep(cv, 285), g = P.g, w = P.w, h = P.h;
+  var cv = $('#chart'), P = prep(cv, 300), g = P.g, w = P.w, h = P.h;
   var pad = { l:64, r:14, t:22, b:30 };
-  var a0 = S.I.alter, rb = S.I.rentbeg, pe = Math.max(S.I.planende, rb);
-  var nA = Math.min(R.D.n_ausz, R.Z.length);         // bis eine Zahlung nach dem Horizont
-  var xhi = rb + nA;
+  var a0 = S.I.alter, rb = S.I.rentbeg;
+  var nA = Math.min(R.D.n_ausz, R.Z.length), xhi = rb + nA;
 
-  var kurve = {};
-  OPTS.forEach(function(o){ kurve[o.k] = []; });
+  var ges = { bav:[], av:[], priv:[] }, frei = { bav:[], av:[], priv:[] };
   R.A.forEach(function(a){
     if (a.alter > rb) return;
-    kurve.bav.push([a.alter, a.k_bav_g + a.k_bav_n]);
-    kurve.av.push([a.alter, a.k_gef + a.k_ngef + a.sl_w]);
-    kurve.priv.push([a.alter, a.pr_w]);
+    ges.bav.push([a.alter, a.k_bav_g + a.k_bav_n]);
+    ges.av.push([a.alter, a.k_gef + a.k_ngef + a.sl_w]);
+    ges.priv.push([a.alter, a.pr_w]);
+    frei.bav.push([a.alter, 0]);          // kein Zugriff vor Rentenbeginn
+    frei.av.push([a.alter, a.sl_w]);      // nur der Sleeve ist ein normales Depot
+    frei.priv.push([a.alter, a.pr_w]);    // jederzeit frei
   });
   OPTS.forEach(function(o){
-    for (var t = 1; t <= nA; t++) kurve[o.k].push([rb + t, R.vermoegen[o.k][t]]);
+    for (var t = 1; t <= nA; t++){
+      ges[o.k].push([rb + t, R.vermoegen[o.k][t]]);
+      frei[o.k].push([rb + t, R.vermoegenLiquid[o.k][t]]);
+    }
   });
 
-  var alle = [].concat(kurve.bav, kurve.av, kurve.priv)
-               .map(function(p){ return p[1]; }).filter(isFinite);
+  var alle = [].concat(ges.bav, ges.av, ges.priv).map(function(p){ return p[1]; }).filter(isFinite);
   if (!alle.length) alle = [0, 1000];
-  var hi = Math.max.apply(null, alle);
+  var hi = Math.max.apply(null, alle), lo = Math.min(0, Math.min.apply(null, alle));
   hi = hi > 0 ? hi * 1.10 : 1000;
-  var xr = [a0, Math.max(xhi, a0 + 1)], yr = [0, hi];
+  if (lo < 0) lo *= 1.10;
+  var xr = [a0, Math.max(xhi, a0 + 1)], yr = [lo, hi];
   var X = function(v){ return pad.l + (v-xr[0])/(xr[1]-xr[0])*(w-pad.l-pad.r); };
   var Y = function(v){ return pad.t + (1-(v-yr[0])/(yr[1]-yr[0]))*(h-pad.t-pad.b); };
   axes(g,w,h,pad,xr,yr, function(v){ return num(v/1000,0)+'k'; }, function(v){ return num(v,0); },
@@ -1886,49 +1915,46 @@ function drawKapital(){
   g.fillStyle = css('--ink'); g.font = UIFONT; g.textAlign='right'; g.textBaseline='top';
   g.fillText('Rentenbeginn', X(rb)-5, pad.t+2);
 
-  OPTS.forEach(function(o){
-    var pts = kurve[o.k];
+  var zeichne = function(pts, col, breite, strich){
     if (pts.length < 2) return;
-    g.strokeStyle = o.raw; g.lineWidth = 2; g.lineJoin='miter'; g.beginPath();
+    g.strokeStyle = col; g.lineWidth = breite; g.lineJoin='miter';
+    if (strich) g.setLineDash(strich);
+    g.beginPath();
     pts.forEach(function(p,i){ var x=X(p[0]), y=Y(p[1]); if(i) g.lineTo(x,y); else g.moveTo(x,y); });
-    g.stroke();
-  });
+    g.stroke(); g.setLineDash([]);
+  };
+  OPTS.forEach(function(o){ zeichne(frei[o.k], o.raw, 1, [3,2]); });
+  OPTS.forEach(function(o){ zeichne(ges[o.k],  o.raw, 2, null); });
 
-  /* Bei lebenslanger Rente stürzt die bAV-Kurve ab, weil das Kapital an den
-     Versicherer geht. Das ist kein Verlust, sondern ein Tausch — ohne
-     Beschriftung liest es aber jeder als Verlust. */
   if (S.I.auszform === 2 && R.kapital.bav > 1){
     var yA = Y(R.kapital.bav), yB = Y(R.vermoegen.bav[1]);
     g.fillStyle = css('--white'); g.fillRect(X(rb)+5, (yA+yB)/2-7, 118, 14);
-    g.strokeStyle = OPTS[0].raw; g.lineWidth = 1;
-    g.strokeRect ? g.strokeRect(X(rb)+5, (yA+yB)/2-7, 118, 14) : 0;
-    g.fillStyle = OPTS[0].raw; g.font='bold '+UIFONT;
-    g.textAlign='left'; g.textBaseline='middle';
-    g.fillText('Kapital \u2192 Rentenanspruch', X(rb)+8, (yA+yB)/2);
+    g.fillStyle = OPTS[0].raw; g.font='bold '+UIFONT; g.textAlign='left'; g.textBaseline='middle';
+    g.fillText('Kapital → Rentenanspruch', X(rb)+8, (yA+yB)/2);
   }
 
   $('#legend').innerHTML = OPTS.map(function(o){
     return '<span><i style="background:'+o.raw+'"></i>'+o.name+'</span>';
-  }).join('') + '<span style="margin-left:auto">y: Vermögen, nominal (Tausend €)</span>';
+  }).join('') + '<span style="margin-left:auto">durchgezogen: gesamt &nbsp;·&nbsp; '
+    + 'gestrichelt: frei verfügbar</span>';
 
-  var e = { bav: R.vermoegen.bav[nA], av: R.vermoegen.av[nA], priv: R.vermoegen.priv[nA] };
-  $('#readout').textContent = 'Am Rentenbeginn: ' + eur(R.kapital.bav) + ' / ' + eur(R.kapital.av)
-    + ' / ' + eur(R.kapital.priv) + '.  Am Horizont: ' + eur(e.bav) + ' / ' + eur(e.av)
-    + ' / ' + eur(e.priv) + ' — dieselbe Rangfolge wie die Kennzahl oben.';
+  $('#readout').textContent = 'Am Rentenbeginn gebunden: bAV ' + eur(R.kapital.bav) + ' von '
+    + eur(R.kapital.bav) + ' · AV-Depot ' + eur(R.kapital.av - R.vermoegenLiquid.av[0]) + ' von '
+    + eur(R.kapital.av) + ' · privates Depot ' + eur(0) + ' von ' + eur(R.kapital.priv)
+    + '.  Die äquivalente Monatsleistung wird verbraucht, deshalb endet jede Option bei null.';
 
-  $('#chartnote').textContent = 'Vermögen ohne Konsumannahme: was noch im Produkt liegt, plus alles, '
-    + 'was ausgezahlt und netto wieder angelegt wurde (' + pct(R.diagnose.wiederanl,2) + ' nach '
-    + 'Steuern). Am Rentenbeginn ist die Wiederanlage null, deshalb läuft die Kurve knickfrei durch — '
-    + 'beim Privatdepot passiert dort ja auch nichts. Jeder Abfall ist eine tatsächlich gezahlte '
-    + 'Abgabe; bei der bAV mit Kapitalauszahlung ' + eur(R.kapital.bav - R.vermoegen.bav[1])
-    + ' auf einen Schlag, weil die gesamte Leistung in einem einzigen Jahr besteuert wird. '
-    + 'Die Kurven verlaufen bewusst nicht proportional: Geld im Produkt wächst mit der '
-    + 'Produktrendite vor Steuern, ausgezahltes nur noch mit dem Satz danach. '
-    + 'Zwei Einschränkungen: der Produktanteil enthält unterwegs noch latente Steuer, streng '
-    + 'vergleichbar sind daher Anfang und Ende. Und eine lebenslange Rente hat kein Konto — das '
-    + 'Kapital geht an den Versicherer, die Kurve fällt dort steil, obwohl nichts verloren ist. '
-    + 'Was die Rente nach dem Vergleichshorizont noch zahlt, fehlt in dieser Darstellung ebenfalls; '
-    + 'der Betrag steht als Memo unter „Diagnose“.';
+  $('#chartnote').textContent = 'Kontostand im Produkt, in der Auszahlungsphase zuzüglich der netto '
+    + 'wieder angelegten Auszahlungen (' + pct(R.diagnose.wiederanl,2) + ' nach Steuern) und '
+    + 'abzüglich der äquivalenten Monatsleistung, die tatsächlich verbraucht wird. Deshalb läuft '
+    + 'jede Option punktgenau auf null. Weil der Verbrauch nur aus der Wiederanlage abgeht und das '
+    + 'Produktkapital im Produkt bleibt, wo es mit der Produktrendite vor Steuern wächst, verlaufen '
+    + 'die Kurven trotzdem nicht proportional. — Die gestrichelte Linie ist der frei verfügbare '
+    + 'Teil: die bAV ist bis zum Rentenbeginn vollständig gebunden (§ 1b BetrAVG kennt '
+    + 'Unverfallbarkeit, nicht Verfügbarkeit), beim Altersvorsorgedepot ist eine Entnahme vor 65 '
+    + 'förderschädlich und frei nur der Überschuss über den Jahreshöchstbetrag, das Privatdepot ist '
+    + 'jederzeit frei. Das ist die einzige Achse, auf der eine Kapitalauszahlung gut aussieht. '
+    + 'Und noch einmal ausdrücklich: die Kurven zeigen das Vermögen aus DIESER einen Entscheidung, '
+    + 'nicht Ihr Gesamtvermögen.';
 }
 
 /* ---------- 4) Monatszerlegung ---------- */

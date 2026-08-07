@@ -226,36 +226,70 @@ Teilkapitalisierung der Betriebsrente, die es in der Praxis gibt, ist nicht abge
 
 ### Der Kapitalverlauf
 
-**Eine** Größe über die ganze Zeitachse: das **Vermögen, ohne Konsumannahme**.
-
-| | |
-|---|---|
-| Ansparphase | Kontostand im Produkt |
-| Auszahlungsphase | Kontostand im Produkt **+** was ausgezahlt und netto wieder angelegt wurde |
+Eine Größe über die ganze Zeitachse, mit Verbrauch und mit Liquiditätszerlegung.
 
 ```
-Wiederanlage(0) = 0,   Wiederanlage(t+1) = (Wiederanlage(t) + netto(t))·(1+w)
-Vermögen(t)     = Produktkonto(t) + Wiederanlage(t)
+Wiederanlage(0)   = 0
+Wiederanlage(t+1) = (Wiederanlage(t) + netto(t))·(1+w) − M      M = V(0)·ANNW
+Vermögen(t)       = Produktkonto(t) + Wiederanlage(t)
 ```
 
-Drei Eigenschaften, alle numerisch geprüft:
+Die äquivalente Monatsleistung wird also **tatsächlich verbraucht**. Weil `ANNW` der
+nachschüssige Annuitätenfaktor ist und der Konsum am Jahresende abgeht, gilt
+`Wiederanlage(n) = 0` exakt.
+
+Vier geprüfte Identitäten:
 
 | | |
 |---|---|
 | `Vermögen(0) = Produktkapital` | 0,00 € — die Wiederanlage ist am Rentenbeginn null, die Kurve läuft **knickfrei** durch |
-| `Vermögen(n) = V(0)·(1+w)ⁿ` | 8,9 · 10⁻¹⁶ relativ — der Endwert ist der Endwert aller Netto-Leistungen, also **dieselbe Rangfolge wie die Kennzahl oben** |
-| Pfade **nicht** proportional | Verhältnis AV-Depot zu Privatdepot wandert von 1,3152 auf 1,1296 |
+| `Vermögen(n) = 0` | 7,4 · 10⁻¹⁰ € — jede Option ist am Horizont punktgenau aufgebraucht |
+| `M = V(0)·ANNW`, `M/12` diskontiert `=` Monatsleistung | 0,00 € — der Verbrauch ist genau die Kennzahl oben |
+| Pfade **nicht** proportional | AV/privat wandert von 1,3152 auf 1,2497 |
 
-Die dritte ist der eigentliche Gewinn. Geld **im** Produkt wächst mit der Produktrendite vor
-Steuern, ausgezahltes nur noch mit dem Satz danach — und genau dieser Unterschied war die
-Ausgangsfrage. Jeder sichtbare Abfall ist eine tatsächlich gezahlte Abgabe; bei der bAV mit
-Kapitalauszahlung 144.791 € auf einen Schlag, weil die gesamte Leistung in einem einzigen Jahr
-besteuert wird.
+> **Warum das nicht proportional ist — und die naheliegende Variante schon.**
+> Setzt man *alles* auf den Wiederanlagezins und konsumiert daraus
+> (`G(t+1) = G(t)(1+w) − M`), kürzt sich der Unterschied heraus: `G_x/G_y = M_x/M_y` für alle t,
+> geprüft auf 4 · 10⁻¹⁴. Entscheidend ist, **wo** der Konsum abgeht. Nimmt man ihn nur aus der
+> Wiederanlage und lässt das Produktkapital im Produkt, wo es mit der Produktrendite **vor**
+> Steuern wächst, bleibt genau der Unterschied stehen, um den es geht.
 
-Zwei Einschränkungen stehen in der Diagrammnotiz: der Produktanteil enthält unterwegs noch
-latente Steuer (streng vergleichbar sind Anfang und Ende), und eine lebenslange Rente hat kein
-Konto — dort geht das Kapital an den Versicherer, die Kurve fällt steil, obwohl nichts verloren
-ist. Dieser Punkt ist im Diagramm eigens beschriftet („Kapital → Rentenanspruch“).
+### Liquidität
+
+Durchgezogen das Vermögen insgesamt, gestrichelt in derselben Farbe der **frei verfügbare**
+Teil. Der Abstand ist gebundenes Kapital.
+
+| | Bindung | im Basisfall bei Rentenbeginn |
+|---|---|---|
+| bAV | vollständig bis zum Rentenbeginn — § 1b BetrAVG kennt Unverfallbarkeit, nicht Verfügbarkeit; danach kein Konto mehr | **0 € von 357.076 € frei** |
+| Altersvorsorgedepot | Entnahme vor 65 ist förderschädlich; frei ist nur der „Sleeve“ über dem Jahreshöchstbetrag | 0 € von 240.001 € frei |
+| privates ETF-Depot | jederzeit | **182.489 € von 182.489 € frei** |
+
+Das ist die einzige Achse, auf der eine bAV-Kapitalauszahlung gut aussieht: mit 68 springt sie
+von 0 % auf 100 % Verfügbarkeit. Und es ist die Achse, die in Beratungsgesprächen am häufigsten
+fehlt.
+
+### Warum kein Konsummodell
+
+Naheliegend wäre, Lebenshaltungskosten als eigene Eingabe zu führen. Das wurde geprüft und
+verworfen — es trägt **beweisbar keine vergleichende Information**. Weil der Nettoaufwand in
+allen drei Optionen identisch ist, unterscheiden sich die Zahlungsströme nur in der
+Auszahlungsphase; ein für alle drei gleicher Konsumstrom `C` ist damit eine gemeinsame additive
+Verschiebung:
+
+| Konsum | AV − privat bei t = 5 | bei t = 15 | bAV − privat bei t = 15 |
+|---|---|---|---|
+| 0 €/Jahr | 55.049,182535 € | 56.681,527808 € | −62.016,690135 € |
+| 12.000 €/Jahr | 55.049,182535 € | 56.681,527808 € | −62.016,690135 € |
+| 60.000 €/Jahr | 55.049,182535 € | 56.681,527808 € | −62.016,690135 € |
+
+Auf sechs Nachkommastellen identisch. Dazu käme: ein ehrliches Konsummodell bräuchte in der
+Ansparphase auch das Gehalt, sonst liefe die Kurve sofort ins Minus — das wäre ein
+Haushaltsplaner, kein Förderarchitektur-Vergleich. Und die Zahl „leer mit 87“ würde als Aussage
+über die Altersvorsorge insgesamt gelesen, obwohl das Modell nur diese eine Entscheidung kennt.
+
+Der Verbrauch der **äquivalenten** Monatsleistung ist etwas anderes: er ist je Option
+verschieden, aus dem Modell abgeleitet und braucht keine Fremdannahme. Deshalb steht er drin.
 
 ### Vier verworfene Fassungen
 
@@ -266,16 +300,12 @@ Der Weg dorthin lohnt die Notiz, weil jede Zwischenstufe an einem anderen Denkfe
 2. **Die prospektive Reserve `V(t)`.** Mathematisch tadellos und exakt die Größe hinter der
    Monatsleistung — aber nach einer Kapitalauszahlung **negativ** (−54.555 € ab Alter 68), weil
    dann nur noch Lasten ausstehen. Wahr, wichtig, und als Kurve unlesbar.
-3. **Der Entsparpfad** `G(t+1) = G(t)(1+w) − M`. Läuft für alle drei sauber auf null, aber die
-   Pfade sind dann zwangsläufig **proportional** (`G_x/G_y = M_x/M_y`, geprüft auf 4 · 10⁻¹⁴):
-   wer den Verbrauch fixiert, hat das Vermögen determiniert. Die Kurve trägt dann keine
-   Information über die Headline-Zahl hinaus.
+3. **Der reine Entsparpfad** `G(t+1) = G(t)(1+w) − M`. Läuft sauber auf null, aber die Pfade
+   sind dann zwangsläufig proportional: wer den Verbrauch fixiert *und* alles zum selben Zins
+   führt, hat das Vermögen determiniert.
 4. **Der beitragsfreie Wert** in der Ansparphase, um den Einheitenwechsel am Rentenbeginn zu
    vermeiden. Stetig und sauber, aber es blieb bei einer Nettogröße, die für das Privatdepot
    eine Bewegung suggeriert, wo keine ist.
-
-Die jetzige Fassung braucht keine Konsumannahme, wechselt nirgends die Einheit und ist als
-einzige nicht proportional.
 
 ## 8. Eine Lesefalle in der Sensitivitätskurve
 
