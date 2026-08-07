@@ -188,7 +188,96 @@ auf den Segment-Umschaltern), und `prefers-reduced-motion` schaltet Übergänge 
 Der Rechenweg baut 98 Tabellenzeilen. Solange kein Abschnitt aufgeklappt ist, wird der
 Neuaufbau jetzt bis 300 ms nach der letzten Eingabe verschoben und beim Aufklappen nachgeholt.
 
-## 7. Eine Lesefalle in der Sensitivitätskurve
+## 7. Zwei Zinssätze und der Kapitalverlauf
+
+In der Auszahlungsphase arbeiten **zwei verschiedene Zinssätze**, und das ist kein Versehen:
+
+| Geld … | verzinst sich mit | versteuert |
+|---|---|---|
+| … im Produkt (AV-Depot) | `rnet_av` = 6,50 % | erst bei Entnahme |
+| … im Produkt (Privatdepot) | `rnet_priv` = 6,80 % | erst bei Entnahme |
+| … ausgezahlt, noch nicht verbraucht | `wiederanl` = **5,54 %** | bereits versteuert |
+
+Wieviel davon betroffen ist, entscheidet die **Auszahlungsform** — und die gibt es bei *beiden*
+geförderten Produkten:
+
+| | Einmalbetrag | Rest |
+|---|---|---|
+| bAV | 0 % oder 100 % (`auszform`) | — |
+| Altersvorsorgedepot | 0 – 30 % (`teilkap`) | bleibt im Produkt |
+
+Beim Altersvorsorgedepot kostet der Einmalbetrag aus denselben zwei Gründen wie bei der bAV:
+volle Progression im Zuflussjahr und danach nur noch der Satz nach Abgeltungsteuer. Im
+Basisfall:
+
+| Einmalbetrag | steuerpflichtig Jahr 0 | Grenzbelastung | Monatsleistung |
+|---|---|---|---|
+| 0 % | 17.292 € | 27,2 % | 850,83 € |
+| 15 % | 42.543 € | 29,7 % | 840,09 € |
+| 30 % | 67.793 € | 32,3 % | 823,37 € |
+
+Zwei Kontrollen dazu: das Restkapital am Horizont ist über alle geprüften Renditen, Horizonte
+und Einmalbeträge **exakt 0,00 €** — der Annuitätenfaktor passt zur Rekursion, es wird nichts
+stillschweigend einbehalten. Und der Überschuss über den Jahreshöchstbetrag („Sleeve“) wird
+ohne Einmalbetrag verrentet; das ist eine Modellkonvention, kein Rechtssatz.
+
+**Modelllücke, ausdrücklich:** die bAV kennt hier nur ganz oder gar nicht. Eine
+Teilkapitalisierung der Betriebsrente, die es in der Praxis gibt, ist nicht abgebildet.
+
+### Der Kapitalverlauf
+
+**Eine** Größe über die ganze Zeitachse: das **Vermögen, ohne Konsumannahme**.
+
+| | |
+|---|---|
+| Ansparphase | Kontostand im Produkt |
+| Auszahlungsphase | Kontostand im Produkt **+** was ausgezahlt und netto wieder angelegt wurde |
+
+```
+Wiederanlage(0) = 0,   Wiederanlage(t+1) = (Wiederanlage(t) + netto(t))·(1+w)
+Vermögen(t)     = Produktkonto(t) + Wiederanlage(t)
+```
+
+Drei Eigenschaften, alle numerisch geprüft:
+
+| | |
+|---|---|
+| `Vermögen(0) = Produktkapital` | 0,00 € — die Wiederanlage ist am Rentenbeginn null, die Kurve läuft **knickfrei** durch |
+| `Vermögen(n) = V(0)·(1+w)ⁿ` | 8,9 · 10⁻¹⁶ relativ — der Endwert ist der Endwert aller Netto-Leistungen, also **dieselbe Rangfolge wie die Kennzahl oben** |
+| Pfade **nicht** proportional | Verhältnis AV-Depot zu Privatdepot wandert von 1,3152 auf 1,1296 |
+
+Die dritte ist der eigentliche Gewinn. Geld **im** Produkt wächst mit der Produktrendite vor
+Steuern, ausgezahltes nur noch mit dem Satz danach — und genau dieser Unterschied war die
+Ausgangsfrage. Jeder sichtbare Abfall ist eine tatsächlich gezahlte Abgabe; bei der bAV mit
+Kapitalauszahlung 144.791 € auf einen Schlag, weil die gesamte Leistung in einem einzigen Jahr
+besteuert wird.
+
+Zwei Einschränkungen stehen in der Diagrammnotiz: der Produktanteil enthält unterwegs noch
+latente Steuer (streng vergleichbar sind Anfang und Ende), und eine lebenslange Rente hat kein
+Konto — dort geht das Kapital an den Versicherer, die Kurve fällt steil, obwohl nichts verloren
+ist. Dieser Punkt ist im Diagramm eigens beschriftet („Kapital → Rentenanspruch“).
+
+### Vier verworfene Fassungen
+
+Der Weg dorthin lohnt die Notiz, weil jede Zwischenstufe an einem anderen Denkfehler scheiterte:
+
+1. **Nur das Produktkonto.** Die bAV fällt bei Kapitalwahl auf null und schweigt über den Rest.
+   Verschweigt, dass die Kennzahl sehr wohl eine Wiederanlage unterstellt.
+2. **Die prospektive Reserve `V(t)`.** Mathematisch tadellos und exakt die Größe hinter der
+   Monatsleistung — aber nach einer Kapitalauszahlung **negativ** (−54.555 € ab Alter 68), weil
+   dann nur noch Lasten ausstehen. Wahr, wichtig, und als Kurve unlesbar.
+3. **Der Entsparpfad** `G(t+1) = G(t)(1+w) − M`. Läuft für alle drei sauber auf null, aber die
+   Pfade sind dann zwangsläufig **proportional** (`G_x/G_y = M_x/M_y`, geprüft auf 4 · 10⁻¹⁴):
+   wer den Verbrauch fixiert, hat das Vermögen determiniert. Die Kurve trägt dann keine
+   Information über die Headline-Zahl hinaus.
+4. **Der beitragsfreie Wert** in der Ansparphase, um den Einheitenwechsel am Rentenbeginn zu
+   vermeiden. Stetig und sauber, aber es blieb bei einer Nettogröße, die für das Privatdepot
+   eine Bewegung suggeriert, wo keine ist.
+
+Die jetzige Fassung braucht keine Konsumannahme, wechselt nirgends die Einheit und ist als
+einzige nicht proportional.
+
+## 8. Eine Lesefalle in der Sensitivitätskurve
 
 Reglern wie *Jahresbrutto* oder *Monatsbeitrag* verändern nicht nur die Förderarchitektur,
 sondern auch den **Nettoaufwand** — und damit den Betrag, der in allen drei Optionen investiert
@@ -199,7 +288,7 @@ KV/PV-Beiträge mehr, oberhalb von 101.400 € auch keine RV/AV-Beiträge. Der N
 springt dort um bis zu 15 %, die investierte Summe mit ihm. Die App blendet einen Hinweis mit
 der tatsächlichen Spanne ein, sobald der Effekt 2 % übersteigt.
 
-## 8. Zwei Befunde, die beim Portieren aufgefallen sind
+## 9. Zwei Befunde, die beim Portieren aufgefallen sind
 
 **Die Vorabpauschale ist im Basisfall ein Vorteil für das Privatdepot.** Über 35 Jahre fallen
 121.774 € Vorabpauschale an, davon werden aber nur 11.942 € tatsächlich versteuert — der Rest
@@ -222,7 +311,7 @@ Die Sensitivitätskurve zeigt die Sättigung als waagerechten Ast.
 
 ---
 
-## 9. Das Aussehen: Windows 3.1 / NT 3.5
+## 10. Das Aussehen: Windows 3.1 / NT 3.5
 
 Silber `#C0C0C0` auf Petrol `#008080`, Navy-Titelleisten, harte Ein-Pixel-Kanten, alles aus der
 16-Farben-VGA-Palette. **Es gibt nur ein Farbschema** — `prefers-color-scheme` ist entfernt,
@@ -268,7 +357,7 @@ Grau ist unter Windows die Farbe des *Deaktivierten*. Lesbarer Text bleibt desha
 schwarz und wird über Größe und Kursivstellung abgestuft, nicht über Aufhellung. Das ist
 zugleich authentisch und der bessere Kontrast: Schwarz auf `#C0C0C0` sind 9,9 : 1.
 
-## 10. Bewusst nicht gebaut
+## 11. Bewusst nicht gebaut
 
 - **Onboarding-Assistent.** Elf Kernfelder tragen keinen Wizard; er verstellte nur den Blick
   auf die Kopplung der Größen.
