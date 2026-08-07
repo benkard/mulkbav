@@ -61,6 +61,7 @@ selbst zu aktualisieren.
 | 9 | Rechenweg |
 | 10 | Render-Schleife |
 | 11 | Installation und Offline-Betrieb |
+| 12 | Fensterrahmen: Titelleisten und Minimieren |
 
 Der Rechenkern in Teil 1 ist **die einzige Stelle, an der gerechnet wird.** Er ist zeichengenau
 aus `build_bav.py` übertragen; Änderungen an der Rechtslage gehören in beide Dateien.
@@ -119,9 +120,15 @@ Damit die beiden Kopien des Kerns nicht auseinanderlaufen, schneidet `extract.js
 `index.html` heraus und erzeugt daraus das `model.js`, gegen das getestet wird. Der Testkern
 *kann* also gar nicht vom ausgelieferten abweichen.
 
-Zusätzlich prüfen zwei Testskripte (nicht Teil der Auslieferung, siehe Sitzungsprotokoll):
+Die Testskripte liegen unter `outputs/tests/`, `./tests/alle.sh` fährt alles durch:
 
-- **DOM-Test:** 40 Zusicherungen über jsdom — Karten, Sichtbarkeitsregeln, Regler, Segment-
+- **Stilblatt-Test:** vergleicht die im Dokument benutzten Klassen mit denen im Stilblatt,
+  in beide Richtungen. Benutzt-ohne-Regel heißt: ein Element steht unformatiert da.
+  Regel-ohne-Nutzung heißt: tote Zeilen, meist eine vergessene Umbenennung. Der Test hat
+  nach dem Stilwechsel zwei echte Fehler gefunden — den unformatierten Wasserfall-Umschalter
+  und sechs verwaiste Hilfsklassen. Zusätzlich: jede per `var()` referenzierte Farbvariable
+  muss definiert sein.
+- **DOM-Test:** 34 Zusicherungen über jsdom — Karten, Sichtbarkeitsregeln, Regler, Segment-
   umschalter, Brutto-Netto-Kopplung in beide Richtungen, Fazittexte, mitlaufende Leiste,
   Rundung, Tabs, Kennzahlwechsel, Referenz merken, Zurücksetzen, `localStorage`.
   Die beiden seltenen Zweige des Fazits — „zulasten“ und „die Reihenfolge kehrt sich um“ —
@@ -133,8 +140,8 @@ Zusätzlich prüfen zwei Testskripte (nicht Teil der Auslieferung, siehe Sitzung
   Beitrag 0, entarteter Zeitraum bei Horizont = Rentenbeginn, und — der interessanteste —
   nicht ganzzahlige Zwischenwerte in der Sensitivitätskurve über das Feld *Alter*, wodurch
   `Z[6,2]` indiziert wurde.
-- **Canvas-Test, Stufe 2** (Sichtbarkeit): 208 Kombinationen aus 4 Breiten-/DPR-Paaren ×
-  13 Szenarien × 4 Diagrammen. Prüft zusätzlich, dass jede Koordinate **innerhalb der Bitmap**
+- **Canvas-Test, Stufe 2** (Sichtbarkeit): 400 Kombinationen aus 5 Breiten-/DPR-Paaren ×
+  20 Szenarien × 4 Diagrammen. Prüft zusätzlich, dass jede Koordinate **innerhalb der Bitmap**
   liegt. Diese Stufe entstand, nachdem Stufe 1 einen sichtbaren Fehler durchgelassen hatte:
   `prep()` skalierte die Zeichenmatrix mit `devicePixelRatio`, setzte `canvas.height` aber in
   logischen Pixeln — alles unterhalb von `h/dpr` wurde aus der Bitmap herausgezeichnet.
@@ -215,7 +222,53 @@ Die Sensitivitätskurve zeigt die Sättigung als waagerechten Ast.
 
 ---
 
-## 9. Bewusst nicht gebaut
+## 9. Das Aussehen: Windows 3.1 / NT 3.5
+
+Silber `#C0C0C0` auf Petrol `#008080`, Navy-Titelleisten, harte Ein-Pixel-Kanten, alles aus der
+16-Farben-VGA-Palette. **Es gibt nur ein Farbschema** — `prefers-color-scheme` ist entfernt,
+eine Dunkelvariante gäbe es hier nicht zu skinnen.
+
+Drei Kantenformen tragen die ganze Oberfläche:
+
+| Form | Aufbau | Wo |
+|---|---|---|
+| erhaben (3.1) | `1px solid #000` + `inset 1px 1px 0 #FFF` + `inset -1px -1px 0 #808080` | Schaltflächen |
+| erhaben (95) | zusätzlich `border-color:#DFDFDF #000 #000 #DFDFDF` | Fenster, Kacheln |
+| versenkt | `border-color:#808080 #FFF #FFF #808080` + `inset 1px 1px 0 #000` | Felder, Zeichenfläche |
+
+Gedrückte Umschalter bekommen zusätzlich das Rastermuster der eingerasteten Werkzeugleiste
+(`repeating-conic-gradient` mit 2 px Kachel). Das Fokusrechteck ist das originale gepunktete —
+zugleich das barrierefreiste, was Windows je hatte.
+
+### Was bewusst aus Windows 95 / NT 4 kommt
+
+Windows 3.1 kannte diese Steuerelemente schlicht nicht, und ohne sie wäre die App schlechter:
+
+- **Trackbar** — der Schieberegler ist ein Win95-Common-Control. Unter 3.1 hätte man Zahlen
+  eintippen müssen; die unmittelbare Rückkopplung wäre dahin.
+- **Registerkarten** — 3.1 löste Mehrseitigkeit über eigene Dialoge. Vier Diagramme in vier
+  Fenstern wären hier klar schlechter.
+- **Versenkter Rahmen** (`WS_EX_CLIENTEDGE`) statt 3.1s einfachem schwarzen Rahmen um
+  Eingabefelder — liest sich deutlich besser.
+
+### Was 3.1 besser konnte
+
+Die Segmentschalter sind zu **echten Optionsfeldgruppen** geworden. Das ist die authentische
+Entsprechung für eine Auswahl unter wenigen Alternativen, es ist das semantisch richtige
+Element, und die Pfeiltastennavigation der Radiogruppe gibt es geschenkt.
+
+### Fenster, die wirklich Fenster sind
+
+Jeder Abschnitt hat eine Titelleiste mit Systemmenü-Kasten und Minimieren-Knopf. Der Knopf ist
+kein Zierrat: er klappt den Inhalt tatsächlich ein, Doppelklick auf die Titelleiste ebenso, und
+der Zustand wird gespeichert. Auf dem Telefon ist das nützlich — man klappt „Ihre Angaben“ zu
+und hat das Diagramm ganzseitig.
+
+Grau ist unter Windows die Farbe des *Deaktivierten*. Lesbarer Text bleibt deshalb durchgehend
+schwarz und wird über Größe und Kursivstellung abgestuft, nicht über Aufhellung. Das ist
+zugleich authentisch und der bessere Kontrast: Schwarz auf `#C0C0C0` sind 9,9 : 1.
+
+## 10. Bewusst nicht gebaut
 
 - **Onboarding-Assistent.** Elf Kernfelder tragen keinen Wizard; er verstellte nur den Blick
   auf die Kopplung der Größen.

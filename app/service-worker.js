@@ -9,7 +9,7 @@
  * Beim Ändern der App die Version hochzählen — sonst sieht ein bereits
  * installierter Client die Änderung erst nach zwei Aufrufen.
  */
-const VERSION = 'av-v3';
+const VERSION = 'av-v4';
 const ASSETS = [
   './',
   './index.html',
