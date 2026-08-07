@@ -131,6 +131,9 @@ input[type=text]:focus-visible,input[type=number]:focus-visible{outline-offset:-
 .seg.btnseg button{font-size:11px;padding:3px 9px;min-height:22px}
 #cards{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 @media(max-width:640px){#cards{grid-template-columns:1fr}}
+/* Gekachelt haengt die Enge nicht mehr am Schirm, sondern am Fenster.
+   Also fragt die Regel das Fenster (siehe .win{container-type} unten). */
+@container (max-width:430px){#cards{grid-template-columns:1fr}}
 .opt{background:var(--face);padding:7px 9px 8px;position:relative;
   border:1px solid;border-color:var(--white) var(--gray) var(--gray) var(--white)}
 .opt.lead{border-color:var(--gray) var(--white) var(--white) var(--gray);background:var(--face-lt)}
@@ -139,6 +142,7 @@ input[type=text]:focus-visible,input[type=number]:focus-visible{outline-offset:-
   border:1px solid var(--black)}
 .opt .big{font-size:20px;font-weight:700;font-family:var(--mono);letter-spacing:-.02em;margin:3px 0 1px}
 @media(max-width:640px){.opt .big{font-size:18px}}
+@container (max-width:430px){.opt .big{font-size:18px}}
 .opt .sec{font-size:11px;font-family:var(--mono)}
 .delta{font-size:11px;font-weight:700;font-family:var(--mono);display:inline-block;
   padding:0 5px;background:var(--face);margin-top:2px;
@@ -311,6 +315,41 @@ kbd{font:11px var(--mono);background:var(--face);padding:0 4px;
   border:1px solid;border-color:var(--white) var(--gray) var(--gray) var(--white)}
 a{color:var(--navy)}
 @media (prefers-reduced-motion: reduce){ *{transition:none !important;scroll-behavior:auto !important} }
+
+/* ---------- Kachelung: „Fenster ▸ Nebeneinander“ ----------
+   Der Programm-Manager konnte seine Fenster nebeneinander legen; genau das
+   passiert hier, sobald Platz da ist. Ein Fenster wird nicht breiter als
+   rund 570 px — darueber wird keine Zeile mehr lesbar (die Typografie mag
+   45 bis 75 Zeichen), also wandert der gewonnene Platz in eine zweite und
+   ab 1560 px in eine dritte Spalte statt in laengere Zeilen.
+
+   Die Spalten sind echte Blockcontainer (.col) und keine Grid-Bereiche.
+   Das hat zwei Gruende: nur so packt jede Spalte ihre verschieden hohen
+   Fenster lueckenlos, und nur so hat position:sticky ueberhaupt einen
+   Weg zum Verschieben — der Grid-Bereich eines Elements ist genau eine
+   Zeile hoch, ein darin klebendes Element koennte sich nirgendwohin
+   kleben. Welches Fenster in welche Spalte kommt, entscheidet LAY
+   (Teil 13); im Quelltext steht weiter die einspaltige Reihenfolge. */
+.col{min-width:0}
+.win{container-type:inline-size}
+
+@media(min-width:1080px){
+  .wrap{max-width:1180px;display:grid;align-items:start;
+    grid-template-columns:repeat(2,minmax(0,1fr));column-gap:10px}
+  /* Kopf und Fuss ueber die volle Breite, ihr Text aber nicht: eine
+     1700 px lange Zeile liest niemand. */
+  .wrap>header,.wrap>footer{grid-column:1/-1}
+  .wrap>header .sub,.wrap>footer p{max-width:82ch}
+  /* Das Ergebnisfenster bleibt oben stehen, waehrend links die Regler
+     wandern. Damit ist die mitlaufende Leiste hier entbehrlich — sie
+     blendet sich von selbst aus, weil ihr Beobachter das Fenster ja
+     unverwandt im Bild sieht. */
+  body.tiled #w-result{position:sticky;top:8px;z-index:3}
+  body.nosticky #w-result{position:static}
+}
+@media(min-width:1560px){
+  .wrap{max-width:1740px;grid-template-columns:repeat(3,minmax(0,1fr))}
+}
 </style>
 </head>
 <body>
@@ -352,7 +391,7 @@ a{color:var(--navy)}
 </section>
 
 <!-- ======================= KERNANGABEN ======================= -->
-<section class="win">
+<section class="win" id="w-input">
   <h2>Ihre Angaben</h2>
   <p class="sub" style="margin-bottom:6px">Die Zahlen rechnen sich bei jeder Änderung sofort neu.
   Mit <span class="qm" style="cursor:default">?</span> erklärt sich jedes Feld selbst.</p>
@@ -360,7 +399,7 @@ a{color:var(--navy)}
 </section>
 
 <!-- ======================= DIAGRAMME ======================= -->
-<section class="win" data-title="Diagramme">
+<section class="win" id="w-chart" data-title="Diagramme">
   <div class="tabs" id="tabs" role="tablist"></div>
   <div id="chartwrap">
     <canvas id="chart" height="260"></canvas>
@@ -371,21 +410,21 @@ a{color:var(--navy)}
 </section>
 
 <!-- ======================= WEITERE ANGABEN ======================= -->
-<section class="win">
+<section class="win" id="w-extra">
   <h2 style="margin-bottom:6px">Weitere Angaben</h2>
   <p class="sub" style="margin-bottom:2px">Alles hier hat sinnvolle Voreinstellungen. Nur anfassen, wenn es auf Sie zutrifft.</p>
   <div id="groups"></div>
 </section>
 
 <!-- ======================= RECHENWEG ======================= -->
-<section class="win">
+<section class="win" id="w-calc">
   <h2 style="margin-bottom:6px">Rechenweg</h2>
   <p class="sub" style="margin-bottom:2px">Für alle, die es nachvollziehen wollen.</p>
   <div id="details"></div>
 </section>
 
 <!-- ======================= WEITERGEBEN ======================= -->
-<section class="win">
+<section class="win" id="w-share">
   <h2>Speichern und weitergeben</h2>
   <p class="sub">Ihre Eingaben liegen ausschließlich in diesem Browser (<kbd>localStorage</kbd>). Nichts wird übertragen,
   es gibt keinen Server und keine Tracker.</p>
@@ -1600,7 +1639,11 @@ function renderSticky(){
   }).join('');
 }
 function initSticky(){
-  var bar = $('#stickybar'), res = $('#result');
+  /* Das Ergebnisfenster heisst #w-result. Der frueher hier stehende
+     Selektor #result traf nichts, observe(null) warf, und die Ausnahme
+     riss alles mit, was danach kam — Leiste, Service Worker und
+     Installationshinweis inklusive. */
+  var bar = $('#stickybar'), res = $('#w-result');
   $('#sb-up').onclick = function(){ res.scrollIntoView({ behavior:'smooth', block:'start' }); };
   if (!('IntersectionObserver' in window)) return;   // ohne Beobachter bleibt sie aus
   new IntersectionObserver(function(es){
@@ -2300,6 +2343,7 @@ function refresh(){
   renderVerdict();
   renderDemo();
   renderSticky();
+  if (LAY) LAY.fit();          // Kartenzahl aendert die Fensterhoehe
   if (rafId) cancelAnimationFrame(rafId);
   rafId = requestAnimationFrame(function(){ drawChart(); scheduleDetails(); rafId = null; });
   saveState();
@@ -2358,7 +2402,10 @@ $('#reset').onclick = function(){
 /* Es gibt nur ein Farbschema. Silber auf Petrol ist hier nicht Dekoration,
    sondern die Sache selbst — eine Dunkelvariante gäbe es nicht zu skinnen. */
 var rt = null;
-window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(drawChart, 120); });
+window.addEventListener('resize', function(){
+  clearTimeout(rt);
+  rt = setTimeout(function(){ LAY.sync(); drawChart(); }, 120);
+});
 
 /* =====================================================================
    TEIL 12  —  FENSTERRAHMEN
@@ -2403,6 +2450,7 @@ function dressWindows(){
       S.open[key] = !r;
       if (save) saveState();
       if (!r) drawChart();          // eingeklapptes Canvas hat Breite 0
+      if (LAY) LAY.fit();           // Einklappen aendert die Fensterhoehe
     };
     mn.onclick = function(){ setRolled(!sec.classList.contains('rolled'), true); };
     /* Doppelklick auf die Titelleiste klappt ein - wie unter Windows */
@@ -2411,9 +2459,96 @@ function dressWindows(){
   });
 }
 
+/* =====================================================================
+   TEIL 13  —  KACHELUNG
+   Der Programm-Manager legte seine Fenster auf Wunsch nebeneinander.
+   Hier geschieht das von selbst, sobald der Schirm es hergibt:
+
+     unter 1080 px   eine Spalte   (Quelltextreihenfolge, unveraendert)
+     ab    1080 px   zwei Spalten  Eingaben | Ausgaben
+     ab    1560 px   drei Spalten  Eingaben | Ergebnis+Bild | Herleitung
+
+   Die Aufteilung folgt der Wirkungsrichtung: was man anfasst, steht
+   links; was daraus folgt, rechts daneben und damit gleichzeitig im
+   Bild. Das ist der eigentliche Gewinn — Ursache und Wirkung ohne
+   Scrollen, wofuer auf dem Telefon die mitlaufende Leiste einspringt.
+
+   Die Fenster werden dafuer wirklich umgehaengt statt bloss per CSS
+   umsortiert. Der Quelltext bleibt einspaltig und damit in der fuer
+   schmale Geraete richtigen Reihenfolge; display:contents haette diese
+   Reihenfolge zerstoert, und reine Grid-Zuweisung haette in jeder Zeile
+   Luecken in Hoehe des jeweils hoechsten Fensters gelassen.
+   ===================================================================== */
+var LAY = (function(){
+  var wrap = document.querySelector('.wrap'), foot = wrap.querySelector('footer');
+  /* einspaltige Reihenfolge = Quelltextreihenfolge */
+  var ORDER = ['w-result','w-input','w-chart','w-extra','w-calc','w-share'];
+  var PLAN = {
+    2: [['w-input','w-extra','w-share'], ['w-result','w-chart','w-calc']],
+    3: [['w-input','w-extra'], ['w-result','w-chart'], ['w-calc','w-share']]
+  };
+  var cur = 0;
+
+  /* Die Schwellen stehen doppelt — hier und im Stilblatt. Das ist der
+     Preis dafuer, dass die Struktur im DOM liegt und die Optik im CSS;
+     matchMedia liest wenigstens dieselbe Quelle wie der Umbruch. */
+  function want(){
+    return matchMedia('(min-width:1560px)').matches ? 3
+         : matchMedia('(min-width:1080px)').matches ? 2 : 1;
+  }
+
+  /* Ein angeheftetes Fenster nimmt dauerhaft Platz weg. Ueber 60 % der
+     Schirmhoehe waere das ein schlechter Tausch: darunter stuenden nur
+     noch Reste des Diagramms, und ein Fenster hoeher als der Schirm
+     liesse sein unteres Ende gar nicht mehr erreichen. In dem Fall
+     scrollt es normal mit — dann uebernimmt wieder die mitlaufende
+     Leiste, die dafuer ja gebaut ist. */
+  var STICKY_ANTEIL = 0.6;
+  function fitSticky(){
+    var r = document.getElementById('w-result');
+    if (!r) return;
+    document.body.classList.toggle('nosticky',
+      cur < 2 || r.getBoundingClientRect().height > window.innerHeight * STICKY_ANTEIL);
+  }
+
+  function apply(n){
+    if (n === cur) return false;
+    cur = n;
+    var w = {};
+    ORDER.forEach(function(id){ w[id] = document.getElementById(id); });
+    /* Erst die Fenster festhalten, dann die alten Spalten entfernen —
+       die Referenzen ueberleben das, appendChild haengt sie danach um. */
+    [].slice.call(wrap.querySelectorAll('.col')).forEach(function(c){ c.remove(); });
+    if (n === 1){
+      ORDER.forEach(function(id){ if (w[id]) wrap.insertBefore(w[id], foot); });
+    } else {
+      PLAN[n].forEach(function(ids){
+        var c = el('div','col');
+        ids.forEach(function(id){ if (w[id]) c.appendChild(w[id]); });
+        wrap.insertBefore(c, foot);
+      });
+    }
+    document.body.classList.toggle('tiled', n > 1);
+    return true;
+  }
+
+  return {
+    cols: function(){ return cur; },
+    fit:  fitSticky,
+    sync: function(){
+      var geaendert = apply(want());
+      fitSticky();
+      /* Das Canvas hat nach dem Umhaengen eine andere Breite. */
+      if (geaendert && typeof R !== 'undefined' && R) drawChart();
+      return geaendert;
+    }
+  };
+})();
+
 /* --- Start --- */
 loadState();
 dressWindows();
+LAY.sync();
 buildMetricBar(); buildTabs(); buildInputs();
 R = AVModell.rechne(S.I, S.P);
 refresh();

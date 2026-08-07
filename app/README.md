@@ -62,6 +62,7 @@ selbst zu aktualisieren.
 | 10 | Render-Schleife |
 | 11 | Installation und Offline-Betrieb |
 | 12 | Fensterrahmen: Titelleisten und Minimieren |
+| 13 | Kachelung: ein, zwei oder drei Fensterspalten |
 
 Der Rechenkern in Teil 1 ist **die einzige Stelle, an der gerechnet wird.** Er ist zeichengenau
 aus `build_bav.py` übertragen; Änderungen an der Rechtslage gehören in beide Dateien.
@@ -195,6 +196,50 @@ Zwei Änderungen:
 
 Dazu: `:focus-visible` ist jetzt definiert (vorher gab es gar keine sichtbare Tastaturführung
 auf den Segment-Umschaltern), und `prefers-reduced-motion` schaltet Übergänge ab.
+
+> **Berichtigung.** Der `IntersectionObserver` beobachtete `#result`. Dieses Element gibt es
+> nicht; der Abschnitt heißt `#w-result`. `observe(null)` wirft nach WebIDL einen `TypeError`
+> (`observe(Element target)`), und die Ausnahme riss alles mit, was im Skript danach kam:
+> die Leiste selbst, die Registrierung des Service Workers und den Installationshinweis.
+> Behoben; die drei Dinge funktionieren erstmals.
+
+## 6b. Bedienung auf breiten Schirmen
+
+Ein Fenster wird nicht breiter als rund 570 px. Darüber hinaus wird keine Zeile lesbarer — die
+Typografie mag 45 bis 75 Zeichen —, also wandert der gewonnene Platz in eine weitere Spalte
+statt in längere Zeilen:
+
+| Breite | Spalten | Aufteilung |
+|---|---|---|
+| < 1080 px | 1 | Quelltextreihenfolge, unverändert |
+| ≥ 1080 px | 2 | Eingaben ‖ Ausgaben |
+| ≥ 1560 px | 3 | Eingaben ‖ Ergebnis + Diagramm ‖ Herleitung |
+
+Die Aufteilung folgt der Wirkungsrichtung: was man anfasst, steht links; was daraus folgt,
+rechts daneben und damit **gleichzeitig im Bild**. Das ist der eigentliche Gewinn — Ursache und
+Wirkung ohne Scrollen, wofür auf dem Telefon die mitlaufende Leiste einspringt.
+
+Drei Entwurfsentscheidungen, jede mit ihrem Grund:
+
+1. **Die Fenster werden wirklich umgehängt** (`LAY.apply`), nicht bloß per CSS umsortiert.
+   Der Quelltext bleibt einspaltig und damit in der für schmale Geräte richtigen Reihenfolge.
+   `display:contents` auf vorgebauten Spalten hätte genau diese Reihenfolge zerstört, und eine
+   reine Grid-Zuweisung (`grid-column`/`grid-row`) hätte in jeder Zeile eine Lücke in Höhe des
+   jeweils höchsten Fensters gelassen. Echte Blockcontainer packen dicht.
+2. **`position:sticky` braucht einen Blockcontainer.** Der Grid-Bereich eines Elements ist genau
+   eine Zeile hoch; ein darin klebendes Element hätte keinen Weg, sich irgendwohin zu kleben.
+   Deshalb `.col` als Zwischenebene — und deshalb bleibt das Ergebnisfenster in seiner Spalte
+   oben stehen, während links die Regler wandern. Die mitlaufende Leiste blendet sich dabei von
+   selbst aus, ohne Sonderfall im Code: ihr Beobachter sieht das angeheftete Fenster ja
+   unverwandt im Bild.
+3. **Die Enge hängt nicht mehr am Schirm, sondern am Fenster.** Ein 560 px breites Fenster auf
+   einem 1600-px-Schirm braucht dieselben Regeln wie ein Telefon. Das ist der Fall, für den es
+   `@container` gibt; die alten `@media (max-width:640px)`-Regeln bleiben als Rückfall stehen.
+
+Ein angeheftetes Fenster nimmt dauerhaft Platz weg. Über 60 % der Schirmhöhe wäre das ein
+schlechter Tausch, und ein Fenster höher als der Schirm ließe sein unteres Ende gar nicht mehr
+erreichen. In dem Fall (`body.nosticky`, gesetzt nach Messung in `LAY.fit`) scrollt es normal
+mit, und die mitlaufende Leiste übernimmt wieder — die dafür ja gebaut ist.
 
 Der Rechenweg baut 98 Tabellenzeilen. Solange kein Abschnitt aufgeklappt ist, wird der
 Neuaufbau jetzt bis 300 ms nach der letzten Eingabe verschoben und beim Aufklappen nachgeholt.
