@@ -50,7 +50,7 @@ selbst zu aktualisieren.
 | Teil | Inhalt |
 |---|---|
 | 1 | **Rechenkern** — Portierung von `build_bav.py`. Reine Funktionen, kein DOM |
-| 2 | Felddefinitionen: 77 Eingaben mit Bereich, Einheit, Erklärung, Fundstelle |
+| 2 | Felddefinitionen: 80 Eingaben mit Bereich, Einheit, Erklärung, Fundstelle |
 | 3 | Zustand, `localStorage`, Kodierung für den Teilen-Link |
 | 4 | Formatierung (de-DE, Komma als Dezimaltrenner in beiden Richtungen) |
 | 5 | Kennzahlen |
@@ -100,13 +100,22 @@ existiert die Umkehrung nicht. Die App sagt das statt still nichts zu tun.
 
 ## 4. Prüfung
 
-Der Kern ist gegen die Excel-Mappe geprüft, drei unabhängige Fälle, jeweils 22 Aggregate:
+Der Kern ist gegen die Excel-Mappe geprüft, sechs unabhängige Fälle, jeweils rund 20 Aggregate:
 
 | Testfall | größte relative Abweichung |
 |---|---|
 | Basisfall (40 J., 75.000 €, 300 €/Monat, GKV, Kapital, Ausscheiden mit 63) | 3,6 · 10⁻¹⁵ |
 | Splitting, KiSt 9 %, kinderlos, PKV, Rente, Fünftelregelung, Modus 2, Teilkapital | 1,3 · 10⁻¹⁴ |
 | GKV + lebenslange Rente, Zuschussmodus 0, KiSt 8 %, Teilkapital 30 % | 6,2 · 10⁻¹⁵ |
+| **AVD verrentet** | 5,2 · 10⁻¹⁵ |
+| **AVD verrentet + 30 % Einmalbetrag** | 3,6 · 10⁻¹⁵ |
+| **beide Produkte verrentet, Splitting, PKV, andere Zeitachse, 2 Kinder** | 4,4 · 10⁻¹⁵ |
+
+> Der Prüfanker ist **erhalten geblieben**: `build_bav.py` wurde für die Depotverrentung
+> mitgezogen (neue Eingaben, drei neue Spalten im Blatt `Auszahlung`, zweite Memo-Zeile im
+> Blatt `Vergleich`), die Mappe neu erzeugt und mit LibreOffice durchgerechnet — 0 Formelfehler,
+> und der Basisfall ist auf den Cent unverändert. Der JS-Kern wird gegen diesen Recalc geprüft,
+> nicht gegen sich selbst.
 
 Das sind wenige Dutzend ULP — akkumulierter Gleitkommafehler, nichts Systematisches.
 Die Referenzwerte stammen aus einem LibreOffice-Recalc der Mappe mit denselben Eingaben.
@@ -128,7 +137,9 @@ Die Testskripte liegen unter `outputs/tests/`, `./tests/alle.sh` fährt alles du
   nach dem Stilwechsel zwei echte Fehler gefunden — den unformatierten Wasserfall-Umschalter
   und sechs verwaiste Hilfsklassen. Zusätzlich: jede per `var()` referenzierte Farbvariable
   muss definiert sein.
-- **DOM-Test:** 34 Zusicherungen über jsdom — Karten, Sichtbarkeitsregeln, Regler, Segment-
+- **Excel-Abgleich der Depotverrentung** (`7-avrente.js`): die drei neuen Fälle gegen einen
+  frischen LibreOffice-Recalc, einschließlich der Memo-Zeile für Zahlungen nach dem Horizont.
+- **DOM-Test:** 57 Zusicherungen über jsdom — Karten, Sichtbarkeitsregeln, Regler, Segment-
   umschalter, Brutto-Netto-Kopplung in beide Richtungen, Fazittexte, mitlaufende Leiste,
   Rundung, Tabs, Kennzahlwechsel, Referenz merken, Zurücksetzen, `localStorage`.
   Die beiden seltenen Zweige des Fazits — „zulasten“ und „die Reihenfolge kehrt sich um“ —
@@ -198,13 +209,31 @@ In der Auszahlungsphase arbeiten **zwei verschiedene Zinssätze**, und das ist k
 | … im Produkt (Privatdepot) | `rnet_priv` = 6,80 % | erst bei Entnahme |
 | … ausgezahlt, noch nicht verbraucht | `wiederanl` = **5,54 %** | bereits versteuert |
 
-Wieviel davon betroffen ist, entscheidet die **Auszahlungsform** — und die gibt es bei *beiden*
-geförderten Produkten:
+Wieviel davon betroffen ist, entscheidet die **Auszahlungsform**. Beide geförderten Produkte
+haben eine, und sie sind **unabhängig voneinander** einstellbar — wer die bAV als Kapital nimmt,
+kann das Depot trotzdem verrenten:
 
 | | Einmalbetrag | Rest |
 |---|---|---|
-| bAV | 0 % oder 100 % (`auszform`) | — |
-| Altersvorsorgedepot | 0 – 30 % (`teilkap`) | bleibt im Produkt |
+| bAV | 0 % oder 100 % (`auszform`) | lebenslange Rente |
+| Altersvorsorgedepot | 0 – 30 % (`teilkap`) | Auszahlungsplan **oder** lebenslange Rente (`av_auszform`) |
+
+### Die Verrentung des Altersvorsorgedepots
+
+Beim Depot hängen an der Auszahlungsform **drei** Wirkungen — nicht vier wie bei der bAV, weil
+KV/PV entfällt (keine Versorgungsbezüge):
+
+1. **Ertragsanteil statt halbem Unterschiedsbetrag** für die nicht geförderte Schicht, im
+   Basisfall 30,7 % des Kapitals. Steuerpflichtig sind dann 17,0 % der Rente statt 26,2 % der
+   Planentnahme (§ 22 Nr. 5 S. 2 Buchst. a EStG). Ein echter Vorteil der Verrentung.
+2. **Rentenfaktor statt Marktrendite** auf das Restkapital — eigenes Eingabefeld `rentfak_av`,
+   weil ein Depotvertrag ohne Versicherungsmantel auskommt und günstiger sein kann.
+3. **Zahlungen nach dem Horizont**, die der Vergleich nicht mitzählt. Eigene Memo-Zeile in der
+   Diagnose und eine Live-Notiz am Schalter; im Basisfall 145.618 €.
+
+Die geförderte Schicht ist in beiden Formen voll nachgelagert steuerpflichtig
+(§ 22 Nr. 5 S. 1 EStG) — daran ändert die Auszahlungsform nichts. Der Einmalbetrag wirkt in
+beiden Formen und wird als Kapital besteuert, auch wenn der Rest verrentet wird.
 
 Beim Altersvorsorgedepot kostet der Einmalbetrag aus denselben zwei Gründen wie bei der bAV:
 volle Progression im Zuflussjahr und danach nur noch der Satz nach Abgeltungsteuer. Im
@@ -221,8 +250,9 @@ und Einmalbeträge **exakt 0,00 €** — der Annuitätenfaktor passt zur Rekurs
 stillschweigend einbehalten. Und der Überschuss über den Jahreshöchstbetrag („Sleeve“) wird
 ohne Einmalbetrag verrentet; das ist eine Modellkonvention, kein Rechtssatz.
 
-**Modelllücke, ausdrücklich:** die bAV kennt hier nur ganz oder gar nicht. Eine
-Teilkapitalisierung der Betriebsrente, die es in der Praxis gibt, ist nicht abgebildet.
+**Verbleibende Modelllücke, ausdrücklich:** die bAV kennt weiterhin nur ganz oder gar nicht.
+Eine Teilkapitalisierung der Betriebsrente, die es in der Praxis gibt, ist nicht abgebildet —
+anders als beim Depot, wo Einmalbetrag und Verrentung seit dieser Fassung kombinierbar sind.
 
 ### Der Kapitalverlauf
 

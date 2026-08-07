@@ -429,7 +429,8 @@ var DEFAULT_INPUT = {
      kennt keinen Umschalter mehr, sondern koppelt Brutto und Netto über bruttoVonNetto() */
   agzus: 0.15, agzus_sv: 2, auszform: 1, rentfak: 26, rentdyn: 0.01, fuenftel: 0,
   rendite: 0.07, k_bav: 0.006, k_av: 0.005, k_priv: 0.002, infl: 0.02,
-  kv_ruhe: 1, sonst_zve: 22000, rente_br: 24000, teilkap: 0.0
+  kv_ruhe: 1, sonst_zve: 22000, rente_br: 24000, teilkap: 0.0,
+  av_auszform: 1, rentfak_av: 26, rentdyn_av: 0.01
 };
 var DEFAULT_PARAM = {
   bbg_rv: 101400, bbg_kv: 69750, bezug: 3955, de_rv: 51944, rw: 42.52,
@@ -636,18 +637,38 @@ function rechne(input, param, flags) {
     z.bav_net = z.bav_br - z.bav_kvpv - z.st_bav - z.mind_br + z.mind_kv;
     if (u === 0) { z.gef_a = KG; z.ngef_a = KN; z.sl_a = KS; z.pr_a = KP; z.pr_ba = KPB; }
     else {
-      z.gef_a = max(0, (q.gef_a - q.gef_e) * (1 + D.rnet_av));
-      z.ngef_a = max(0, (q.ngef_a - q.ngef_e) * (1 + D.rnet_av));
+      /* Bei Verrentung geht das Restkapital an den Versicherer — danach gibt
+         es kein Depotkonto mehr, genau wie bei der bAV. */
+      z.gef_a = I.av_auszform === 2 ? 0 : max(0, (q.gef_a - q.gef_e) * (1 + D.rnet_av));
+      z.ngef_a = I.av_auszform === 2 ? 0 : max(0, (q.ngef_a - q.ngef_e) * (1 + D.rnet_av));
       z.sl_a = max(0, (q.sl_a - q.sl_e) * (1 + D.rnet_priv));
       z.pr_a = max(0, (q.pr_a - q.pr_e) * (1 + D.rnet_priv));
       z.pr_ba = max(0, q.pr_ba - q.pr_ba * (q.pr_a === 0 ? 0 : q.pr_e / q.pr_a));
     }
     var tk = u === 0 ? I.teilkap : 0;
-    z.gef_e = z.plan === 0 ? 0 : min(z.gef_a, KG * tk + KG * (1 - I.teilkap) * ANN_AV);
-    z.ngef_e = z.plan === 0 ? 0 : min(z.ngef_a, KN * tk + KN * (1 - I.teilkap) * ANN_AV);
+    /* Verrentetes Restkapital je Schicht; die laufende Depotrente wird nach
+       ihrem Anteil daran aufgeteilt — dieselbe Konstruktion wie bei der bAV. */
+    var KGR = KG * (1 - I.teilkap), KNR = KN * (1 - I.teilkap), KRR = KGR + KNR;
+    var renteAv = KRR * I.rentfak_av / 1e4 * 12 * pow(1 + I.rentdyn_av, u) * z.plan;
+    z.av_rest = (I.av_auszform === 2 && z.plan === 0)
+      ? KRR * I.rentfak_av / 1e4 * 12 * pow(1 + I.rentdyn_av, u) : 0;
+    if (I.av_auszform === 1){
+      z.gef_e  = z.plan === 0 ? 0 : min(z.gef_a, KG * tk + KGR * ANN_AV);
+      z.ngef_ek = z.plan === 0 ? 0 : min(z.ngef_a, KN * tk + KNR * ANN_AV);
+      z.ngef_er = 0;
+    } else {
+      z.gef_e  = KG * tk + renteAv * (KRR === 0 ? 0 : KGR / KRR);
+      z.ngef_ek = KN * tk;
+      z.ngef_er = renteAv * (KRR === 0 ? 0 : KNR / KRR);
+    }
+    z.ngef_e = z.ngef_ek + z.ngef_er;
     z.sl_e = z.plan === 0 ? 0 : min(z.sl_a, KS * ANN_PR);
     z.sl_st = max(0, z.sl_e * (1 - (KS === 0 ? 1 : min(1, KSB / KS))) * (1 - P.tfs)) * D.kapst_eff;
-    z.av_stpfl = z.gef_e + z.ngef_e * (1 - (KN === 0 ? 1 : min(1, S_AVN / KN))) * P.halb;
+    /* Kapitalteil der nicht geförderten Schicht: halber Unterschiedsbetrag.
+       Rententeil: Ertragsanteil (§ 22 Nr. 5 S. 2 Buchst. a EStG). */
+    z.av_stpfl = z.gef_e
+               + z.ngef_ek * (1 - (KN === 0 ? 1 : min(1, S_AVN / KN))) * P.halb
+               + z.ngef_er * P.ertragsq;
     z.zve_av = max(0, z.sonst + z.av_stpfl);
     z.stg_av = steuer(z.zve_av, z.lam);
     z.av_net = z.gef_e + z.ngef_e - (z.stg_av - z.stg_b) + z.sl_e - z.sl_st;
@@ -788,7 +809,7 @@ function rechne(input, param, flags) {
       vbQuote: (D.frei_vb * Z[0].lohn) === 0 ? 0 : Z[0].bav_vb / (D.frei_vb * Z[0].lohn),
       kapFreiKapital: 120 * D.frei_vb * Z[0].lohn,
       kapFreiRente: I.rentfak === 0 ? 0 : D.frei_vb * Z[0].lohn / I.rentfak * 1e4,
-      memoRest: ss('bav_rest'),
+      memoRest: ss('bav_rest'), memoRestAv: ss('av_rest'),
       wiederanl: D.wiederanl, kapstEff: D.kapst_eff, bestAnteil: D.best_anteil
     }
   };
@@ -983,12 +1004,33 @@ var FIELDS = [
         + 'steuerpflichtig (Grenzbelastung dort ' + pct(gr,1) + ') und verzinst sich danach nur '
         + 'noch mit dem Satz nach Abgeltungsteuer statt mit der Produktrendite.';
     },
-    hint:'Bis 30 % des angesparten Kapitals sind zu Beginn der Auszahlungsphase als Einmalbetrag möglich. Das ist beim Altersvorsorgedepot dieselbe Entscheidung wie „Kapital oder Rente“ bei der bAV, nur gedeckelt — und sie kostet aus denselben zwei Gründen: volle Progression im Zuflussjahr und danach nur noch der Zinssatz nach Abgeltungsteuer. Der Überschuss über den Jahreshöchstbetrag („Sleeve“) wird ohne Einmalbetrag verrentet; das ist eine Modellkonvention, kein Rechtssatz.' },
+    hint:'Bis 30 % des angesparten Kapitals sind zu Beginn der Auszahlungsphase als Einmalbetrag möglich — in beiden Auszahlungsformen. Er kostet aus zwei Gründen: volle Progression im Zuflussjahr und danach nur noch der Zinssatz nach Abgeltungsteuer. Der Überschuss über den Jahreshöchstbetrag („Sleeve“) wird ohne Einmalbetrag verrentet; das ist eine Modellkonvention, kein Rechtssatz.' },
+  { k:'av_auszform', src:'I', g:'kern', kind:'seg', label:'Altersvorsorgedepot: Rest',
+    opts:[[1,'Auszahlungsplan'],[2,'lebenslange Rente']],
+    /* Bewusst ein eigener Schalter: wer die bAV als Kapital nimmt, kann das
+       Depot trotzdem verrenten. Eine gemeinsame Umschaltung erzwänge eine
+       Kopplung, die es rechtlich nicht gibt. */
+    hint:'Was mit dem Kapital jenseits des Einmalbetrags geschieht — unabhängig von der bAV-Entscheidung darüber. Auszahlungsplan: das Geld bleibt investiert und wird verzinst entnommen; die nicht geförderte Schicht wird mit dem halben Unterschiedsbetrag besteuert. Lebenslange Rente: das Kapital geht an den Anbieter, dafür wird die nicht geförderte Schicht nur mit dem Ertragsanteil besteuert (§ 22 Nr. 5 S. 2 Buchst. a EStG, 17 % ab Alter 67 statt hier rund 26 %). Die geförderte Schicht ist in beiden Fällen voll nachgelagert steuerpflichtig, das ändert sich nicht.',
+    liveNote:function(R){
+      if (S.I.av_auszform !== 2) return null;
+      if (!(R.diagnose.memoRestAv > 1)) return null;
+      return 'Über den Vergleichshorizont hinaus zahlt diese Rente noch ' + eur(R.diagnose.memoRestAv)
+        + ', die hier NICHT mitgezählt werden. Ein fester Horizont unterschätzt jede lebenslange '
+        + 'Rente systematisch — wer alt wird, gewinnt hier.';
+    } },
 
-  /* ---------------- bAV im Detail ---------------- */
-  { k:'rentfak', src:'I', g:'bav', kind:'num', label:'Rentenfaktor', min:0, max:60, step:0.5, unit:'€ je 10.000 €',
+  /* ---------------- Auszahlungsformen im Detail ---------------- */
+  { k:'rentfak_av', src:'I', g:'bav', kind:'num', label:'Rentenfaktor Altersvorsorgedepot', min:0, max:60, step:0.5, unit:'€ je 10.000 €',
+    showIf:function(I){return I.av_auszform===2;},
+    hint:'Nur bei Verrentung des Depots. Voreingestellt wie bei der bAV; ein Depotvertrag kommt ohne Versicherungsmantel aus und kann deshalb günstiger sein — den Wert aus dem konkreten Angebot eintragen. Bei 0 gibt es keine Rente.' },
+  { k:'rentdyn_av', src:'I', g:'bav', kind:'pct', label:'Dynamik der Depotrente p.a.', min:0, max:0.05, step:0.0025,
+    showIf:function(I){return I.av_auszform===2;},
+    hint:'Überschussbeteiligung bzw. Fondsentwicklung in der Rentenphase des Depotvertrags.' },
+  { k:'rentfak', src:'I', g:'bav', kind:'num', label:'Rentenfaktor bAV', min:0, max:60, step:0.5, unit:'€ je 10.000 €',
+    showIf:function(I){return I.auszform===2;},
     hint:'Nur bei Auszahlungsform „Rente“. 26 € Monatsrente je 10.000 € entspricht etwa 3,1 % Entnahmequote. Steht im Produktinformationsblatt.' },
   { k:'rentdyn', src:'I', g:'bav', kind:'pct', label:'Dynamik der bAV-Rente p.a.', min:0, max:0.05, step:0.0025,
+    showIf:function(I){return I.auszform===2;},
     hint:'Überschussbeteiligung bzw. Fondsentwicklung in der Rentenphase.' },
   { k:'fuenftel', src:'I', g:'bav', kind:'seg', label:'Fünftelregelung prüfen', opts:[[0,'nein (konservativ)'],[1,'ja']],
     hint:'§ 34 EStG ist bei planmäßiger Kapitalabfindung aus § 3 Nr. 63-Verträgen nach BFH X R 23/15 nur ausnahmsweise anwendbar. Konservativ: nein.' },
@@ -1092,7 +1134,7 @@ var FIELDS = [
 ];
 
 var GROUPS = [
-  { g:'bav',   t:'Betriebliche Altersvorsorge im Detail' },
+  { g:'bav',   t:'Auszahlungsformen im Detail' },
   { g:'person',t:'Zeitachse, Ausscheiden, Teilzeit' },
   { g:'steuer',t:'Steuer, Veranlagung, Kinder' },
   { g:'markt', t:'Kosten und Inflation' },
@@ -1926,12 +1968,24 @@ function drawKapital(){
   OPTS.forEach(function(o){ zeichne(frei[o.k], o.raw, 1, [3,2]); });
   OPTS.forEach(function(o){ zeichne(ges[o.k],  o.raw, 2, null); });
 
-  if (S.I.auszform === 2 && R.kapital.bav > 1){
-    var yA = Y(R.kapital.bav), yB = Y(R.vermoegen.bav[1]);
-    g.fillStyle = css('--white'); g.fillRect(X(rb)+5, (yA+yB)/2-7, 118, 14);
-    g.fillStyle = OPTS[0].raw; g.font='bold '+UIFONT; g.textAlign='left'; g.textBaseline='middle';
-    g.fillText('Kapital → Rentenanspruch', X(rb)+8, (yA+yB)/2);
-  }
+  /* Verrentung heisst: Kapital gegen Anspruch getauscht. Ohne Beschriftung
+     liest man den Absturz als Verlust — und das betrifft beide Produkte. */
+  var tausch = [];
+  if (S.I.auszform === 2 && R.kapital.bav > 1)
+    tausch.push({ o: OPTS[0], a: R.kapital.bav, b: R.vermoegen.bav[1] });
+  if (S.I.av_auszform === 2 && R.vermoegenLiquid.av[1] < R.vermoegen.av[1] - 1e-9 || 
+      (S.I.av_auszform === 2 && R.kapital.av > 1))
+    tausch.push({ o: OPTS[1], a: R.kapital.av, b: R.vermoegen.av[1] });
+  var marken = tausch.map(function(x){ return { y:(Y(x.a)+Y(x.b))/2, c:x.o.raw }; });
+  marken.sort(function(p,q){ return p.y - q.y; });
+  for (var mi = 1; mi < marken.length; mi++)
+    if (marken[mi].y - marken[mi-1].y < 16) marken[mi].y = marken[mi-1].y + 16;
+  g.font='bold '+UIFONT; g.textAlign='left'; g.textBaseline='middle';
+  marken.forEach(function(m){
+    var t = 'Kapital → Rentenanspruch', tw = g.measureText(t).width;
+    g.fillStyle = css('--white'); g.fillRect(X(rb)+5, m.y-7, tw+6, 14);
+    g.fillStyle = m.c; g.fillText(t, X(rb)+8, m.y);
+  });
 
   $('#legend').innerHTML = OPTS.map(function(o){
     return '<span><i style="background:'+o.raw+'"></i>'+o.name+'</span>';
@@ -1953,6 +2007,10 @@ function drawKapital(){
     + 'Unverfallbarkeit, nicht Verfügbarkeit), beim Altersvorsorgedepot ist eine Entnahme vor 65 '
     + 'förderschädlich und frei nur der Überschuss über den Jahreshöchstbetrag, das Privatdepot ist '
     + 'jederzeit frei. Das ist die einzige Achse, auf der eine Kapitalauszahlung gut aussieht. '
+    + (S.I.av_auszform === 2
+        ? 'Weil Sie das Depot verrenten, geht auch dort das Kapital an den Anbieter — die Kurve '
+          + 'fällt entsprechend, obwohl nichts verloren ist. '
+        : '')
     + 'Und noch einmal ausdrücklich: die Kurven zeigen das Vermögen aus DIESER einen Entscheidung, '
     + 'nicht Ihr Gesamtvermögen.';
 }
@@ -2127,6 +2185,7 @@ function renderDetails(){
     { c:['beitragsfrei mögliches Kapital (Kapitalauszahlung)', eur(d.kapFreiKapital)] },
     { c:['beitragsfrei mögliches Kapital (lebenslange Rente)', eur(d.kapFreiRente)] },
     { c:['MEMO: bAV-Rentenzahlungen nach dem Horizont', eur(d.memoRest)] },
+    { c:['MEMO: Depotrente nach dem Horizont', eur(d.memoRestAv)] },
     { c:['Wiederanlagezins nach Steuern', pct(d.wiederanl)] },
     { c:['effektive Abgeltungsteuer inkl. Soli/KiSt', pct(d.kapstEff,3)] },
     { c:['Besteuerungsanteil der gesetzlichen Rente', pct(d.bestAnteil,1)] }

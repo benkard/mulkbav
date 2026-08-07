@@ -8,7 +8,9 @@ from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter as gcl
 from openpyxl.chart import BarChart, Reference
 
-OUT = "/sessions/determined-nice-faraday/mnt/outputs/bAV-DYNO_vs_Altersvorsorgedepot_vs_ETF.xlsx"
+import os
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                   "bAV-DYNO_vs_Altersvorsorgedepot_vs_ETF.xlsx")
 
 FONT = "Arial"
 BLUE = Font(name=FONT, size=10, color="0000FF")
@@ -88,7 +90,10 @@ inp = [
     ("kv_ruhe",    "Krankenversicherung im Ruhestand: 1 = GKV, 2 = PKV",    1,      "1/2",   "Entscheidender Hebel: in der GKV sind Versorgungsbezuege mit dem vollen Beitragssatz belegt, private Altersvorsorge nicht."),
     ("sonst_zve",  "sonstiges zu versteuerndes Einkommen im Ruhestand",     22000,  "EUR",   "Vor allem der steuerpflichtige Teil der gesetzlichen Rente, ohne die hier verglichenen Produkte. Bestimmt den Grenzsteuersatz in der Auszahlungsphase."),
     ("rente_br",   "gesetzliche Bruttorente p.a. (heutige Werte)",          24000,  "EUR",   "Nur fuer den Beitragsbemessungsgrenzen-Deckel in der KV: Rente und Versorgungsbezuege teilen sich EINE Obergrenze ( 223 Abs. 3 SGB V)."),
-    ("teilkap",    "Altersvorsorgedepot: Teilkapital zu Beginn",            0.0,    "",      "Bis 30 % sind zu Beginn der Auszahlungsphase als Einmalbetrag moeglich."),
+    ("teilkap",    "Altersvorsorgedepot: Teilkapital zu Beginn",            0.0,    "",      "Bis 30 % sind zu Beginn der Auszahlungsphase als Einmalbetrag moeglich. Gilt in beiden Auszahlungsformen."),
+    ("av_auszform","Altersvorsorgedepot: 1 = Auszahlungsplan, 2 = lebenslange Rente", 1, "1/2", "Unabhaengig von der bAV-Auszahlungsform: wer die bAV als Kapital nimmt, kann das Depot trotzdem verrenten. Plan: Entnahme bleibt investiert, Besteuerung der nicht gefoerderten Schicht mit dem halben Unterschiedsbetrag. Rente: Kapital geht an den Versicherer, nicht gefoerderte Schicht nur mit dem Ertragsanteil ( 22 Nr. 5 S. 2 Buchst. a EStG)."),
+    ("rentfak_av", "Rentenfaktor Altersvorsorgedepot (EUR je 10.000 EUR)",   26,     "EUR",   "Nur bei Auszahlungsform 2. Voreinstellung wie bei der bAV; ein Depotvertrag kann guenstiger sein als ein Versicherungsmantel - Wert aus dem Angebot eintragen."),
+    ("rentdyn_av", "Dynamik der Altersvorsorgedepot-Rente p.a.",             0.01,   "",      "Ueberschussbeteiligung bzw. Fondsentwicklung in der Rentenphase des Depotvertrags."),
 ]
 
 r = 4
@@ -746,6 +751,9 @@ Z_COLS = [
     ("sl_a", "Sleeve\nStand", 11, EUR),
     ("sl_e", "Sleeve\nEntnahme", 11, EUR),
     ("sl_st", "Sleeve\nSteuer", 11, EUR),
+    ("ngef_ek", "davon Kapital\n(nicht gef.)", 12, EUR),
+    ("ngef_er", "davon Rente\n(nicht gef.)", 12, EUR),
+    ("av_rest", "MEMO AV-Rente\nnach dem Horizont", 14, EUR),
     ("av_stpfl", "steuerpfl.\nAV-Entnahme", 12, EUR),
     ("zve_av", "zvE Option\nAV-Depot", 11, EUR),
     ("arg_av", "Tarifarg.\nAV", 11, EUR),
@@ -881,19 +889,36 @@ for t in range(NZ):
         g("pr_a", f"={KP}")
         g("pr_ba", f"={KPB}")
     else:
-        g("gef_a", f"=MAX(0,({Cp['gef_a']}-{Cp['gef_e']})*(1+{P['rnet_av']}))")
-        g("ngef_a", f"=MAX(0,({Cp['ngef_a']}-{Cp['ngef_e']})*(1+{P['rnet_av']}))")
+        # Bei Verrentung geht das Restkapital an den Versicherer; ein Depotkonto
+        # gibt es danach nicht mehr.
+        g("gef_a", f"=IF({IN['av_auszform']}=2,0,MAX(0,({Cp['gef_a']}-{Cp['gef_e']})*(1+{P['rnet_av']})))")
+        g("ngef_a", f"=IF({IN['av_auszform']}=2,0,MAX(0,({Cp['ngef_a']}-{Cp['ngef_e']})*(1+{P['rnet_av']})))")
         g("sl_a", f"=MAX(0,({Cp['sl_a']}-{Cp['sl_e']})*(1+{P['rnet_priv']}))")
         g("pr_a", f"=MAX(0,({Cp['pr_a']}-{Cp['pr_e']})*(1+{P['rnet_priv']}))")
         g("pr_ba", f"=MAX(0,{Cp['pr_ba']}-{Cp['pr_ba']}*IF({Cp['pr_a']}=0,0,{Cp['pr_e']}/{Cp['pr_a']}))")
 
     tk = f"IF({t}=0,{IN['teilkap']},0)"
-    g("gef_e", f"=IF({C['plan']}=0,0,MIN({C['gef_a']},{KG}*{tk}+({KG}*(1-{IN['teilkap']}))*{ANN_AV}))")
-    g("ngef_e", f"=IF({C['plan']}=0,0,MIN({C['ngef_a']},{KN}*{tk}+({KN}*(1-{IN['teilkap']}))*{ANN_AV}))")
+    # Verrentetes Restkapital je Schicht und insgesamt
+    KGR = f"({KG}*(1-{IN['teilkap']}))"
+    KNR = f"({KN}*(1-{IN['teilkap']}))"
+    KRR = f"({KGR}+{KNR})"
+    # Laufende Depotrente; die Aufteilung auf die Schichten folgt ihrem Anteil
+    # am verrenteten Kapital, genau wie bei der bAV.
+    rente_av = f"{KRR}*{IN['rentfak_av']}/10000*12*(1+{IN['rentdyn_av']})^{t}*{C['plan']}"
+    g("av_rest", f"=IF(AND({IN['av_auszform']}=2,{C['plan']}=0),"
+                 f"{KRR}*{IN['rentfak_av']}/10000*12*(1+{IN['rentdyn_av']})^{t},0)")
+    g("gef_e", f"=IF({IN['av_auszform']}=1,"
+               f"IF({C['plan']}=0,0,MIN({C['gef_a']},{KG}*{tk}+{KGR}*{ANN_AV})),"
+               f"{KG}*{tk}+({rente_av})*IF({KRR}=0,0,{KGR}/{KRR}))")
+    g("ngef_ek", f"=IF({IN['av_auszform']}=1,"
+                 f"IF({C['plan']}=0,0,MIN({C['ngef_a']},{KN}*{tk}+{KNR}*{ANN_AV})),"
+                 f"{KN}*{tk})")
+    g("ngef_er", f"=IF({IN['av_auszform']}=1,0,({rente_av})*IF({KRR}=0,0,{KNR}/{KRR}))")
+    g("ngef_e", f"={C['ngef_ek']}+{C['ngef_er']}")
     g("sl_e", f"=IF({C['plan']}=0,0,MIN({C['sl_a']},{KS}*{ANN_PR}))")
     g("sl_st", f"=MAX(0,{C['sl_e']}*(1-IF({KS}=0,1,MIN(1,{KSB}/{KS})))*(1-{P['tfs']}))*{P['kapst_eff']}")
-    g("av_stpfl", f"={C['gef_e']}+{C['ngef_e']}*(1-IF({KN}=0,1,MIN(1,"
-                  f"Ansparphase!SUMPRODUCT_PLACEHOLDER)))*{P['halb']}")
+    g("av_stpfl", f"={C['gef_e']}+{C['ngef_ek']}*(1-IF({KN}=0,1,MIN(1,"
+                  f"Ansparphase!SUMPRODUCT_PLACEHOLDER)))*{P['halb']}+{C['ngef_er']}*{P['ertragsq']}")
     g("zve_av", f"=MAX(0,{C['sonst']}+{C['av_stpfl']})")
     g("arg_av", arg_formula(C['zve_av'], C['lam']))
     g("est_av", est_formula(C['arg_av'], C['lam']))
@@ -924,7 +949,8 @@ zw['CG8'].number_format = EUR
 for t in range(NZ):
     r = Z0 + t
     zw.cell(r, ZI['av_stpfl']).value = (
-        f"={ZC['gef_e']}{r}+{ZC['ngef_e']}{r}*(1-IF({KN}=0,1,MIN(1,$CG$7/{KN})))*{P['halb']}")
+        f"={ZC['gef_e']}{r}+{ZC['ngef_ek']}{r}*(1-IF({KN}=0,1,MIN(1,$CG$7/{KN})))*{P['halb']}"
+        f"+{ZC['ngef_er']}{r}*{P['ertragsq']}")
 
 # =====================================================================
 # 5) CASHFLOW / IRR
@@ -1112,6 +1138,9 @@ diag = [
     ("MEMO: bAV-Rentenzahlungen nach dem Vergleichshorizont",
      f"=SUM(Auszahlung!${ZC['bav_rest']}${Z0}:${ZC['bav_rest']}${ZLAST})", EUR,
      "Nur bei Auszahlungsform 2. Eine lebenslange Rente zahlt ueber den Horizont hinaus - diesen Betrag beruecksichtigt der Vergleich NICHT. Wer alt wird, gewinnt hier."),
+    ("MEMO: Altersvorsorgedepot-Rente nach dem Vergleichshorizont",
+     f"=SUM(Auszahlung!${ZC['av_rest']}${Z0}:${ZC['av_rest']}${ZLAST})", EUR,
+     "Dasselbe fuer das Altersvorsorgedepot, wenn es verrentet wird. Beide Memo-Zeilen sind der Preis eines festen Vergleichshorizonts: eine lebenslange Rente wird darin systematisch unterschaetzt."),
 ]
 r = 22
 for lab, fml, fmt, note in diag:

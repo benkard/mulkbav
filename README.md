@@ -8,12 +8,14 @@ Vollständig formelbasierte Excel-Arbeitsmappe (6.359 Formeln), erzeugt aus eine
 | `bAV-DYNO_vs_Altersvorsorgedepot_vs_ETF.xlsx` | Das Modell. Nur die gelben Zellen im Blatt `Eingaben` ändern. |
 | `build_bav.py` | Generator. Erzeugt die Mappe vollständig neu. **Einzige Quelle der Wahrheit** — Änderungen gehören hierhin, nicht in die xlsx. |
 | `app/` | **Web-App zum Weitergeben.** Derselbe Rechenkern in JavaScript, mobilfreundlich, offlinefähig, mit Sensitivitätskurven. Siehe `app/README.md`. |
+| `tests/` (in den Sitzungsausgaben) | Regressionslauf gegen einen frischen LibreOffice-Recalc dieser Mappe. |
 | `README.md` | Diese Datei. |
 
-> **Zwei Quellen der Wahrheit.** Der Rechenkern liegt jetzt zweimal vor: als Formelgenerator in
+> **Zwei Quellen der Wahrheit.** Der Rechenkern liegt zweimal vor: als Formelgenerator in
 > `build_bav.py` und als JavaScript in Teil 1 von `app/index.html`. Sie stimmen auf 1,3·10⁻¹⁴
-> relativ überein (drei Testfälle, 22 Aggregate). Bei jeder Rechtsänderung **beide** anfassen —
-> und danach den Abgleich wiederholen.
+> relativ überein — **sechs** Testfälle, jeweils rund 20 Aggregate, gegen einen frischen
+> LibreOffice-Recalc dieser Mappe. Bei jeder Rechtsänderung **beide** anfassen und danach den
+> Abgleich wiederholen; er ist der einzige Schutz davor, dass sie auseinanderlaufen.
 
 ---
 
@@ -59,7 +61,7 @@ Punkt 4 ist der dominante Nachteil der bAV; Punkt 2 ihr einziger struktureller V
 | `Parameter` | Rechengrößen 2026 mit Fundstelle, abgeleitete Größen |
 | `Umrechnung` | Bisektion Nettoaufwand → Bruttobeitrag |
 | `Ansparphase` | 62 Spalten × 50 Jahre (Zeilen 8–57) |
-| `Auszahlung` | 85 Spalten × 34 Jahre (Zeilen 8–41) |
+| `Auszahlung` | 58 Spalten × 34 Jahre (Zeilen 8–41) |
 | `Cashflow` | Zahlungsströme für IRR und Barwerte (Zeilen 5–69) |
 | `Vergleich` | Ergebnis, Diagnose, monatliche Leistung, Diagramm |
 
@@ -70,7 +72,7 @@ Diese werden von anderen Blättern referenziert — beim Einfügen von Zeilen **
 | Zeile | Inhalt |
 |---|---|
 | 5–19 | Haupttabelle (13 = Barwert Netto-Auszahlungen, 15 = Barwert Netto-Ertrag, 17 = IRR) |
-| 22–36 | Diagnose (31–35 = Freibetragsanalyse) |
+| 22–37 | Diagnose (31–35 = Freibetragsanalyse, 36/37 = Memo-Zeilen für Rentenzahlungen nach dem Horizont) |
 | 40–48 | Monatliche Leistung (47 = äquivalente Monatsleistung real) |
 | 50–52 | Diagrammdaten |
 | 55 | Diagramm |
@@ -99,13 +101,17 @@ zweimal besteuert würde:
 | | gefördert | nicht gefördert |
 |---|---|---|
 | **bAV** | bis 8 % BBG-RV (§ 3 Nr. 63 EStG) → 100 % nachgelagert steuerpflichtig | Rest, aus versteuertem Entgelt → halber Unterschiedsbetrag (Kapital) bzw. Ertragsanteil (Rente) |
-| **AV-Depot** | Eigenbeitrag bis 1.800 € + Zulagen → 100 % nachgelagert | Beiträge darüber + reinvestierte Erstattung → halber Unterschiedsbetrag |
+| **AV-Depot** | Eigenbeitrag bis 1.800 € + Zulagen → 100 % nachgelagert | Beiträge darüber + reinvestierte Erstattung → halber Unterschiedsbetrag (Plan bzw. Einmalbetrag) oder Ertragsanteil (Rente) |
 
 Der Überschuss über den Jahreshöchstbetrag von 6.840 € läuft in eine eigene Schiene
 („Sleeve"), die wie das Privatdepot besteuert wird — so bleibt der Nettoaufwand identisch.
 
 ### Auszahlungsphase
 
+- **Auszahlungsform je Produkt getrennt**: `auszform` für die bAV (Kapital oder Rente),
+  `av_auszform` für das Depot (Auszahlungsplan oder Rente), dazu `teilkap` für den Einmalbetrag
+  von bis zu 30 % beim Depot, der in beiden Formen wirkt. Bei Verrentung geht das Restkapital an
+  den Anbieter, ein Depotkonto gibt es danach nicht mehr
 - **KV/PV nur bei der bAV**: voller Satz allein vom Rentner (§ 250 SGB V), Freibetrag
   1/20 Bezugsgröße für KV, Freigrenze für PV, Kapitalleistung auf 120 Monate verteilt,
   gemeinsame BBG mit der gesetzlichen Rente (§ 223 Abs. 3 SGB V)
@@ -133,9 +139,10 @@ Werte im Cache ab — vorher liest jedes Werkzeug `None`.
 2. **Recalc auf dem gemounteten Ordner hängt.** Nach `/tmp` kopieren, dort rechnen,
    zurückkopieren.
 3. **Notiztexte dürfen nicht mit `=` beginnen** — openpyxl schreibt sie sonst als Formel.
-4. **Hilfszellen kollidieren mit Datenspalten.** Die Auszahlung reicht bis Spalte CG;
-   Hilfszellen liegen bei CE/CG **unterhalb** von Zeile 8, was funktioniert, aber fragil
-   ist. Beim Hinzufügen von Spalten prüfen.
+4. **Hilfszellen kollidieren mit Datenspalten.** Die Auszahlung reicht inzwischen bis Spalte
+   **BF** (58 Spalten), die Hilfszellen liegen bei CE/CG **unterhalb** von Zeile 8. Das
+   funktioniert, ist aber fragil: beim Hinzufügen von Spalten jedes Mal nachrechnen. Die
+   Erweiterung um die Depotverrentung hat drei Spalten gekostet.
 
 ---
 
@@ -238,6 +245,13 @@ an einer politisch gesetzten Zahl.
       (entscheidet 116 Basispunkte)
 - [ ] Prüfen, ob bereits andere Versorgungsbezüge bestehen — der Freibetrag gilt pro
       Person, nicht pro Vertrag
+- [x] ~~Verrentung des Altersvorsorgedepots~~ — eingebaut: eigene Eingabe `av_auszform`,
+      unabhängig von der bAV-Auszahlungsform, mit eigenem Rentenfaktor und eigener Dynamik.
+      Nicht geförderte Schicht dann mit dem Ertragsanteil statt dem halben Unterschiedsbetrag,
+      zweite Memo-Zeile für Zahlungen nach dem Vergleichshorizont.
+- [ ] Teilkapitalisierung der **bAV** (0–30 % einmalig, Rest verrentet). Beim Depot ist das seit
+      der Erweiterung möglich, bei der bAV noch nicht — das Modell kennt dort nur ganz oder gar
+      nicht. Die einzige verbliebene Asymmetrie zwischen den beiden geförderten Produkten.
 - [ ] Optional: jahresweise Inversion des Nettoaufwands statt nur im ersten Jahr
 - [ ] Optional: Sensitivitätstabelle über Rendite × Option (Excel-Datentabellen werden von
       openpyxl nicht geschrieben; Alternative wäre eine vorgerechnete Matrix)
