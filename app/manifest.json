@@ -34,5 +34,27 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Deutsch",
+      "short_name": "DE",
+      "url": "./?lang=de"
+    },
+    {
+      "name": "English",
+      "short_name": "EN",
+      "url": "./?lang=en"
+    },
+    {
+      "name": "Latine",
+      "short_name": "LA",
+      "url": "./?lang=la"
+    },
+    {
+      "name": "日本語",
+      "short_name": "JA",
+      "url": "./?lang=ja"
+    }
   ]
 }

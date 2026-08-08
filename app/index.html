@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#000080">
 <meta name="description" content="Betriebliche Altersvorsorge, Altersvorsorgedepot und privates ETF-Depot bei gleichem Nettoaufwand vergleichen. Rechtsstand 2026.">
+<!-- Der Inhalt beider Marken wird beim Start aus dem Woerterbuch nachgezogen. -->
 <title>Altersvorsorge-Vergleich</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -39,8 +40,15 @@
   --bav:#800000; --av:#000080; --priv:#008000;
   --good:#008000; --bad:#800000;
 
-  --ui:"MS Sans Serif","Microsoft Sans Serif",Tahoma,Geneva,Verdana,Arial,sans-serif;
-  --mono:"Fixedsys","Lucida Console","Courier New",monospace;
+  /* Die japanische Fassung braucht einen CJK-Schnitt. MS Gothic bzw. Meiryo
+     stehen bewusst vorn: eine Rasterschrift mit harten Kanten passt zum Rest
+     des Themas, und beide sind auf japanischen Systemen vorhanden. Für die
+     lateinischen Schriftzeichen greift weiterhin zuerst MS Sans Serif. */
+  --ui:"MS Sans Serif","Microsoft Sans Serif",Tahoma,Geneva,Verdana,Arial,
+       "MS PGothic","Hiragino Kaku Gothic ProN","Yu Gothic UI",Meiryo,
+       "Noto Sans JP",sans-serif;
+  --mono:"Fixedsys","Lucida Console","Courier New",
+         "MS Gothic","Hiragino Kaku Gothic ProN","Noto Sans Mono CJK JP",monospace;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -362,21 +370,24 @@ a{color:var(--navy)}
       <div class="sb-cap" id="sb-cap"></div>
       <div id="sb-vals"></div>
     </div>
-    <button class="sb-up" id="sb-up" type="button" aria-label="Nach oben zum Ergebnis">&#8593;</button>
+    <button class="sb-up" id="sb-up" type="button" data-i18n-aria="sb.up" aria-label="Nach oben zum Ergebnis">&#8593;</button>
   </div>
 </div>
 
 <div class="wrap">
 
-<header>
-  <h1>Altersvorsorge&#8209;Vergleich</h1>
-  <p class="sub">Betriebliche Altersvorsorge, Altersvorsorgedepot und privates ETF&#8209;Depot &mdash; bei
+<header data-title-key="win.header">
+  <h1 data-i18n="hdr.title">Altersvorsorge&#8209;Vergleich</h1>
+  <p class="sub" data-i18n-html="hdr.sub">Betriebliche Altersvorsorge, Altersvorsorgedepot und privates ETF&#8209;Depot &mdash; bei
   <b>gleichem Nettoaufwand</b> und mit demselben ETF. Rechtsstand 2026.</p>
+  <!-- Sprachwahl. Deutsch ist die Hauptsprache; Englisch ist eine Uebersetzung,
+       kein zweiter Rechtsstand - die Normzitate bleiben deutsch. -->
+  <div class="row" id="langrow" style="margin-top:7px"></div>
 </header>
 
 <!-- ======================= ERGEBNIS ======================= -->
-<section class="win" id="w-result">
-  <h2>Ergebnis</h2>
+<section class="win" id="w-result" data-title-key="win.result">
+  <h2 data-i18n="win.result">Ergebnis</h2>
   <div id="metricbar" class="seg" role="group" aria-label="Kennzahl"></div>
   <p class="sub" id="metricdesc" style="margin:2px 0 10px"></p>
   <p id="demo" class="msg demo" data-ico="?" hidden></p>
@@ -391,15 +402,15 @@ a{color:var(--navy)}
 </section>
 
 <!-- ======================= KERNANGABEN ======================= -->
-<section class="win" id="w-input">
-  <h2>Ihre Angaben</h2>
-  <p class="sub" style="margin-bottom:6px">Die Zahlen rechnen sich bei jeder Änderung sofort neu.
+<section class="win" id="w-input" data-title-key="win.input">
+  <h2 data-i18n="win.input">Ihre Angaben</h2>
+  <p class="sub" style="margin-bottom:6px" data-i18n-html="input.sub">Die Zahlen rechnen sich bei jeder Änderung sofort neu.
   Mit <span class="qm" style="cursor:default">?</span> erklärt sich jedes Feld selbst.</p>
   <div id="core"></div>
 </section>
 
 <!-- ======================= DIAGRAMME ======================= -->
-<section class="win" id="w-chart" data-title="Diagramme">
+<section class="win" id="w-chart" data-title-key="win.chart">
   <div class="tabs" id="tabs" role="tablist"></div>
   <div id="chartwrap">
     <canvas id="chart" height="260"></canvas>
@@ -410,29 +421,29 @@ a{color:var(--navy)}
 </section>
 
 <!-- ======================= WEITERE ANGABEN ======================= -->
-<section class="win" id="w-extra">
-  <h2 style="margin-bottom:6px">Weitere Angaben</h2>
-  <p class="sub" style="margin-bottom:2px">Alles hier hat sinnvolle Voreinstellungen. Nur anfassen, wenn es auf Sie zutrifft.</p>
+<section class="win" id="w-extra" data-title-key="win.extra">
+  <h2 style="margin-bottom:6px" data-i18n="win.extra">Weitere Angaben</h2>
+  <p class="sub" style="margin-bottom:2px" data-i18n="extra.sub">Alles hier hat sinnvolle Voreinstellungen. Nur anfassen, wenn es auf Sie zutrifft.</p>
   <div id="groups"></div>
 </section>
 
 <!-- ======================= RECHENWEG ======================= -->
-<section class="win" id="w-calc">
-  <h2 style="margin-bottom:6px">Rechenweg</h2>
-  <p class="sub" style="margin-bottom:2px">Für alle, die es nachvollziehen wollen.</p>
+<section class="win" id="w-calc" data-title-key="win.calc">
+  <h2 style="margin-bottom:6px" data-i18n="win.calc">Rechenweg</h2>
+  <p class="sub" style="margin-bottom:2px" data-i18n="calc.sub">Für alle, die es nachvollziehen wollen.</p>
   <div id="details"></div>
 </section>
 
 <!-- ======================= WEITERGEBEN ======================= -->
-<section class="win" id="w-share">
-  <h2>Speichern und weitergeben</h2>
-  <p class="sub">Ihre Eingaben liegen ausschließlich in diesem Browser (<kbd>localStorage</kbd>). Nichts wird übertragen,
+<section class="win" id="w-share" data-title-key="win.share">
+  <h2 data-i18n="win.share">Speichern und weitergeben</h2>
+  <p class="sub" data-i18n-html="share.sub">Ihre Eingaben liegen ausschließlich in diesem Browser (<kbd>localStorage</kbd>). Nichts wird übertragen,
   es gibt keinen Server und keine Tracker.</p>
   <div class="row" style="margin-top:10px">
-    <button class="btn pri" id="share">Link mit meinen Zahlen kopieren</button>
-    <button class="btn" id="export">Als Datei sichern</button>
-    <button class="btn" id="import">Datei laden</button>
-    <button class="btn" id="reset">Alles zurücksetzen</button>
+    <button class="btn pri" id="share" data-i18n="ui.share">Link mit meinen Zahlen kopieren</button>
+    <button class="btn" id="export" data-i18n="ui.export">Als Datei sichern</button>
+    <button class="btn" id="import" data-i18n="ui.import">Datei laden</button>
+    <button class="btn" id="reset" data-i18n="ui.reset">Alles zurücksetzen</button>
   </div>
   <input type="file" id="file" accept=".json,application/json" hidden>
   <p class="sub" id="sharemsg" style="margin-top:8px"></p>
@@ -440,17 +451,69 @@ a{color:var(--navy)}
 </section>
 
 <footer>
-  <p><b>Keine Steuer- oder Anlageberatung.</b> Ein Modell ist kein Vertrag. Die Rechtslage 2026 zur reformierten
+  <p data-i18n-html="footer.1"><b>Keine Steuer- oder Anlageberatung.</b> Ein Modell ist kein Vertrag. Die Rechtslage 2026 zur reformierten
   privaten Altersvorsorge ist an mehreren Stellen noch nicht abschließend geklärt; die Annahmen mit dem
   geringsten Vertrauensgrad stehen unter „Rechenweg → Belastbarkeit der Annahmen“ und sind dort auch änderbar.</p>
-  <p>Rechenkern eins zu eins portiert aus dem Excel-Modell
+  <p data-i18n-html="footer.2">Rechenkern eins zu eins portiert aus dem Excel-Modell
   <span class="pill">bAV-DYNO_vs_Altersvorsorgedepot_vs_ETF.xlsx</span> und gegen drei Testfälle auf
   Maschinengenauigkeit geprüft (größte relative Abweichung 1,3·10<sup>&minus;14</sup>).</p>
 </footer>
 
 </div>
 
+<script src="i18n.de.js"></script>
+<script src="i18n.en.js"></script>
+<script src="i18n.la.js"></script>
+<script src="i18n.ja.js"></script>
 <script>
+/* =====================================================================
+   TEIL 0  —  SPRACHEN
+   Deutsch ist die Hauptsprache und zugleich die Rueckfallebene: fehlt ein
+   Schluessel in der gewaehlten Sprache, greift der deutsche Eintrag; fehlt
+   auch der, erscheint der Schluessel selbst. Ein stiller Leerstring waere
+   die schlechtere Wahl - er verschwindet unbemerkt aus der Oberflaeche.
+
+   Ein Woerterbucheintrag ist entweder eine Zeichenkette oder eine Funktion
+   (p, f) -> string. Die Funktionsform ist noetig, weil ein Satz nicht die
+   Verkettung seiner Teile ist: Stellung, Numerus und Rektion haengen an der
+   Sprache. Deshalb bekommen die Funktionen ROHWERTE (Zahlen) und formatieren
+   selbst ueber f, statt fertige Textstuecke einzusetzen.
+   ===================================================================== */
+var LANGS = ['de','en','la','ja'], LANGKEY = 'altersvorsorge.lang';
+var DICT = { de: window.I18N_DE || {}, en: window.I18N_EN || {},
+             la: window.I18N_LA || {}, ja: window.I18N_JA || {} };
+var FMT = {};                     /* wird in applyLocale() gefuellt */
+
+/* Vorrang: ?lang= in der Adresse (teilbar) > gemerkte Wahl > Browsersprache.
+   Latein wird nie automatisch gewählt — ein Browser, der la meldet, meint es
+   fast sicher nicht als Anzeigesprache. */
+function pickLang(){
+  var q = /[?&]lang=([a-z]{2})/i.exec(location.search);
+  if (q && LANGS.indexOf(q[1].toLowerCase()) >= 0) return q[1].toLowerCase();
+  try { var s = localStorage.getItem(LANGKEY); if (LANGS.indexOf(s) >= 0) return s; } catch(e){}
+  var n = ((navigator.languages && navigator.languages[0]) || navigator.language || 'de').toLowerCase();
+  if (/^ja/.test(n)) return 'ja';
+  if (/^en/.test(n)) return 'en';
+  return 'de';
+}
+var LANG = pickLang();
+
+function tRaw(key){
+  var v = DICT[LANG] ? DICT[LANG][key] : undefined;
+  return v === undefined ? DICT.de[key] : v;
+}
+function tHas(key){ var v = tRaw(key); return v !== undefined && v !== ''; }
+function t(key, p){
+  var v = tRaw(key);
+  if (v === undefined) return key;
+  return typeof v === 'function' ? v(p || {}, FMT) : v;
+}
+/* Nur-Text-Fassung: fuer Beschriftungen im Canvas und in aria-Attributen,
+   wo Auszeichnung nicht dargestellt wird. */
+function tPlain(key, p){
+  return String(t(key, p)).replace(/<[^>]*>/g, '');
+}
+
 /* =====================================================================
    TEIL 1  —  RECHENKERN
    Portierung von build_bav.py.  Reine Funktionen, kein DOM.
@@ -466,7 +529,8 @@ var DEFAULT_INPUT = {
   tarifanp: 0.02, kinder: 0, kind_jahre: 18, kinderlos: 0,
   modus: 1, beitrag: 300, netto_ziel: 165, dyn: 1,   /* modus bleibt 1: die Oberfläche
      kennt keinen Umschalter mehr, sondern koppelt Brutto und Netto über bruttoVonNetto() */
-  agzus: 0.15, agzus_sv: 2, auszform: 1, rentfak: 26, rentdyn: 0.01, fuenftel: 0,
+  agzus: 0.15, agzus_sv: 2, agz_fix: 0, agz_fix_dyn: 0, agz_fix_min: 0,
+  auszform: 1, rentfak: 26, rentdyn: 0.01, fuenftel: 0,
   rendite: 0.07, k_bav: 0.006, k_av: 0.005, k_priv: 0.002, infl: 0.02,
   kv_ruhe: 1, sonst_zve: 22000, rente_br: 24000, teilkap: 0.0,
   av_auszform: 1, rentfak_av: 26, rentdyn_av: 0.01
@@ -528,9 +592,21 @@ function derive(I, P) {
   D.sv_kv_ag = (P.kv_allg + P.kv_zus) / 2 + P.pv_an;
   return D;
 }
-/* N(B) = B − SV-Ersparnis(B) − Steuerersparnis(B) ist stetig und streng monoton
-   wachsend, wegen der Knicke bei 4 %/8 % BBG-RV, an den BBG und an den Tarif-
-   eckwerten aber nicht geschlossen invertierbar → 34 Halbierungen. */
+/* Fester, betragsunabhängiger Arbeitgeberzuschuss (z. B. Deutsche Bahn).
+   Jahresbetrag im Jahr t bei Bruttobeitrag `bav_br` (Jahreswert) und Lohnindex.
+   Bedingung: der eigene Monatsbeitrag erreicht die vereinbarte Mindestschwelle.
+   Bei Schwelle 0 fließt er in jedem aktiven Jahr, auch ohne Eigenbeitrag. */
+function festZuschuss(I, bav_br, lohnidx, aktiv) {
+  if (!(I.agz_fix > 0) || !aktiv) return 0;
+  if (bav_br / 12 < (I.agz_fix_min || 0) - 1e-9) return 0;
+  return 12 * I.agz_fix * (I.agz_fix_dyn === 1 ? lohnidx : 1);
+}
+/* N(B) = B − SV-Ersparnis(B) − Steuerersparnis(B) ist streng monoton wachsend,
+   wegen der Knicke bei 4 %/8 % BBG-RV, an den BBG und an den Tarifeckwerten
+   aber nicht geschlossen invertierbar → 34 Halbierungen. Ein fester Zuschuss
+   mit Mindestschwelle macht N zusätzlich unstetig (Sprung nach oben an der
+   Schwelle, weil der Zuschuss dort die Freibeträge belegt): monoton bleibt es,
+   aber Zielwerte im Sprungintervall sind nicht erreichbar — `resid` zeigt das. */
 function bisektion(I, P, D, steuer) {
   var tz0 = I.alter >= I.tzalter ? I.tzfaktor : 1;
   var g0 = I.gehalt * tz0, bbgrv0 = P.bbg_rv, bbgkv0 = P.bbg_kv;
@@ -541,12 +617,13 @@ function bisektion(I, P, D, steuer) {
   for (var t = 0; t < N_BISEKT; t++) {
     if (t > 0) { if (nb < ziel) lo = mid; else hi = mid; }
     mid = (lo + hi) / 2;
-    var svf = min(mid, P.sv_frei_q * bbgrv0);
+    var agfx = festZuschuss(I, mid, 1, 1);
+    var svf = min(mid, max(0, P.sv_frei_q * bbgrv0 - agfx));
     var drv = min(g0, bbgrv0) - min(g0 - svf, bbgrv0);
     var dkv = min(g0, bbgkv0) - min(g0 - svf, bbgkv0);
     var svan = drv * D.sv_an + dkv * D.sv_kv_an;
     var svag = drv * D.sv_an + dkv * D.sv_kv_ag;
-    var agz = I.agzus_sv === 2 ? min(I.agzus * mid, svag) : I.agzus * (I.agzus_sv === 1 ? svf : mid);
+    var agz = (I.agzus_sv === 2 ? min(I.agzus * mid, svag) : I.agzus * (I.agzus_sv === 1 ? svf : mid)) + agfx;
     var stf = min(mid, max(0, P.st_frei_q * bbgrv0 - agz));
     var vorsm = min(g0 - svf, bbgrv0) * P.rv_an + min(g0 - svf, bbgkv0) * D.vorsq_kv;
     var stgm = steuer(max(0, g0 - stf - P.an_pausch - P.sa_pausch - vorsm), 1);
@@ -578,13 +655,19 @@ function rechne(input, param, flags) {
     a.brutto = I.gehalt * a.lohnidx * a.tz * a.aktiv;
     a.bbgrv = P.bbg_rv * a.lohnidx; a.bbgkv = P.bbg_kv * a.lohnidx;
     a.bav_br = min(a.brutto, 12 * BEITRAG * (I.dyn === 1 ? a.lohnidx : 1)) * a.aktiv;
-    a.bav_svf = min(a.bav_br, P.sv_frei_q * a.bbgrv);
+    /* Der feste Arbeitgeberzuschuss ist eine arbeitgeberfinanzierte Zuwendung
+       nach § 3 Nr. 63 EStG und belegt deshalb den 4-%-Topf des § 1 Abs. 1 S. 1
+       Nr. 9 SvEV und den 8-%-Topf des § 3 Nr. 63 EStG VORRANGIG; die eigene
+       Entgeltumwandlung bekommt nur noch den Rest steuer- und beitragsfrei. */
+    a.agz_fx = festZuschuss(I, a.bav_br, a.lohnidx, a.aktiv);
+    a.bav_svf = min(a.bav_br, max(0, P.sv_frei_q * a.bbgrv - a.agz_fx));
     a.drv = min(a.brutto, a.bbgrv) - min(a.brutto - a.bav_svf, a.bbgrv);
     a.dkv = min(a.brutto, a.bbgkv) - min(a.brutto - a.bav_svf, a.bbgkv);
     a.sverp = a.drv * D.sv_an + a.dkv * D.sv_kv_an;
     a.sverp_ag = a.drv * D.sv_an + a.dkv * D.sv_kv_ag;
-    a.agz = I.agzus_sv === 2 ? min(I.agzus * a.bav_br, a.sverp_ag)
-                             : I.agzus * (I.agzus_sv === 1 ? a.bav_svf : a.bav_br);
+    a.agz_var = I.agzus_sv === 2 ? min(I.agzus * a.bav_br, a.sverp_ag)
+                                 : I.agzus * (I.agzus_sv === 1 ? a.bav_svf : a.bav_br);
+    a.agz = a.agz_var + a.agz_fx;
     a.bav_stf = min(a.bav_br, max(0, P.st_frei_q * a.bbgrv - a.agz));
     a.bav_ein = a.bav_br + a.agz;
     a.bav_gef = min(a.bav_ein, P.st_frei_q * a.bbgrv);
@@ -844,6 +927,11 @@ function rechne(input, param, flags) {
       svErspAG: A[0].sverp_ag, svErspAN: A[0].sverp,
       ngefAnteil: A[0].bav_ein === 0 ? 0 : A[0].bav_ngef / A[0].bav_ein,
       ausschoepfung: A[0].bbgrv === 0 ? 0 : A[0].bav_br / (P.sv_frei_q * A[0].bbgrv),
+      agzFix: A[0].agz_fx, agzVar: A[0].agz_var,
+      /* Anteil des festen Zuschusses, der über den 4-%-Topf hinausragt und damit
+         beim Arbeitnehmer beitragspflichtiges Arbeitsentgelt wäre — vom Modell
+         NICHT als Beitragslast erfasst, deshalb als Diagnosewert ausgewiesen. */
+      agzFixUeber4: max(0, A[0].agz_fx - P.sv_frei_q * A[0].bbgrv),
       vbMonat: Z[0].bav_vb, freibetrag: D.frei_vb * Z[0].lohn,
       vbQuote: (D.frei_vb * Z[0].lohn) === 0 ? 0 : Z[0].bav_vb / (D.frei_vb * Z[0].lohn),
       kapFreiKapital: 120 * D.frei_vb * Z[0].lohn,
@@ -884,37 +972,28 @@ function waterfall(input, param, ziel) {
   var P0 = Object.assign({}, DEFAULT_PARAM, param || {});
   var e_priv = base.ertrag.priv;
   var vp = rechne(input, Object.assign({}, P0, { basiszins: 0 })).ertrag.priv - e_priv;
-  var vpNote = 'Weder bAV noch Altersvorsorgedepot kennen die Vorabpauschale (§ 18 InvStG). Gemessen als '
-    + 'Privatdepot ohne Vorabpauschale minus mit. Der Balken kann negativ sein: die Vorabpauschale läuft '
-    + 'zu großen Teilen in den Sparer-Pauschbetrag, erhöht aber in voller Höhe die Kostenbasis — dann ist '
-    + 'sie für das Privatdepot netto ein Vorteil.';
+  var vpNote = t('wfb.vp.note');
   if (ziel === 'av') {
     var e_av = base.ertrag.av;
     var ohne = rechne(input, Object.assign({}, P0, { zul_g1:0, zul_g2:0, kind_zul:0, av_sa_max:0 })).ertrag.av;
     var f = e_av - ohne;
     return { start:e_priv, ende:e_av, ziel:'av', bars:[
-      { label:'Wegfall der Vorabpauschale', wert:vp, note:vpNote },
-      { label:'Zulagen und Sonderausgabenabzug', wert:f,
-        note:'Fremdgeld nach dem neuen Zulagenmodell plus der Abzug nach § 10a EStG. Gemessen durch Abschalten beider Förderwege.' },
-      { label:'Besteuerungsarchitektur (Rest)', wert:e_av-e_priv-vp-f,
-        note:'Tarifarbitrage t₀ − t₁ und alles Übrige. Residual bestimmt, damit die Kette exakt aufgeht.' }
+      { label:t('wfb.vp.label'),   wert:vp, note:vpNote },
+      { label:t('wfb.zul.label'),  wert:f,               note:t('wfb.zul.note') },
+      { label:t('wfb.arch.label'), wert:e_av-e_priv-vp-f, note:t('wfb.arch.note') }
     ]};
   }
   var e_bav = base.ertrag.bav;
   var noKV = rechne(Object.assign({}, input, { kv_ruhe:2 }), param).ertrag.bav;
   var noKVEP = rechne(Object.assign({}, input, { kv_ruhe:2 }), param, { noEP:1 }).ertrag.bav;
-  var noAll = rechne(Object.assign({}, input, { kv_ruhe:2, agzus:0 }), param, { noEP:1 }).ertrag.bav;
+  var noAll = rechne(Object.assign({}, input, { kv_ruhe:2, agzus:0, agz_fix:0 }), param, { noEP:1 }).ertrag.bav;
   var kvpv = e_bav - noKV, epv = noKV - noKVEP, fremd = noKVEP - noAll;
   return { start:e_priv, ende:e_bav, ziel:'bav', bars:[
-    { label:'Wegfall der Vorabpauschale', wert:vp, note:vpNote },
-    { label:'Arbeitgeberzuschuss', wert:fremd,
-      note:'Fremdgeld — der einzige strukturelle Vorteil der bAV, der nicht aus dem Steuerrecht kommt. Gemessen durch Abschalten des Zuschusses.' },
-    { label:'Tarifarbitrage und Rest', wert:e_bav-e_priv-vp-fremd-kvpv-epv,
-      note:'Grenzsteuersatz beim Einzahlen minus beim Auszahlen, plus alles Übrige. Residual bestimmt, damit die Kette exakt aufgeht. Steueraufschub allein ist wertlos: (1−t)(1+r)ⁿ = (1+r)ⁿ(1−t), Multiplikation kommutiert.' },
-    { label:'KV/PV auf Versorgungsbezüge', wert:kvpv,
-      note:'§§ 229, 250 SGB V: den vollen Beitragssatz trägt der Rentner allein. Gemessen als Differenz zur Einstellung „PKV im Ruhestand“.' },
-    { label:'Verlust an Entgeltpunkten', wert:epv,
-      note:'Entgeltumwandlung mindert das beitragspflichtige Entgelt und damit die gesetzliche Rente. Netto gegengerechnet.' }
+    { label:t('wfb.vp.label'),    wert:vp,    note:vpNote },
+    { label:t('wfb.agz.label'),   wert:fremd, note:t('wfb.agz.note') },
+    { label:t('wfb.tarif.label'), wert:e_bav-e_priv-vp-fremd-kvpv-epv, note:t('wfb.tarif.note') },
+    { label:t('wfb.kvpv.label'),  wert:kvpv,  note:t('wfb.kvpv.note') },
+    { label:t('wfb.ep.label'),    wert:epv,   note:t('wfb.ep.note') }
   ]};
 }
 /* ---------------------------------------------------------------------
@@ -952,41 +1031,43 @@ root.AVModell = { rechne:rechne, waterfall:waterfall, bruttoVonNetto:bruttoVonNe
 /* =====================================================================
    TEIL 2  —  FELDDEFINITIONEN
    ===================================================================== */
-/* nom/satz/gen: das Fazit ist ein deutscher Satz, kein Etikettensalat.
-   „mehr als privates ETF-Depot“ liest sich wie eine Tabellenzeile. */
+/* nom/satz/gen: das Fazit ist ein Satz, kein Etikettensalat. „mehr als
+   privates ETF-Depot“ liest sich wie eine Tabellenzeile. Die Formen stehen
+   im Wörterbuch, weil sie an der Grammatik der jeweiligen Sprache hängen —
+   das Deutsche braucht hier einen Genitiv, das Englische keinen.
+
+   Die Textformen sind Zugriffsfunktionen und keine Felder: dann bleibt
+   `o.name` an jeder Aufrufstelle stehen und liefert nach einem Sprach-
+   wechsel von selbst den neuen Wert. */
 var OPTS = [
-  { k:'bav',  name:'bAV (Entgeltumwandlung)', short:'bAV',      color:'var(--bav)',  raw:'#800000',
-    nom:'die betriebliche Altersvorsorge', satz:'Die betriebliche Altersvorsorge', gen:'der bAV' },
-  { k:'av',   name:'Altersvorsorgedepot',     short:'AV-Depot', color:'var(--av)',   raw:'#000080',
-    nom:'das Altersvorsorgedepot', satz:'Das Altersvorsorgedepot', gen:'des Altersvorsorgedepots' },
-  { k:'priv', name:'privates ETF-Depot',      short:'privat',   color:'var(--priv)', raw:'#008000',
-    nom:'das private ETF-Depot', satz:'Das private ETF-Depot', gen:'des privaten ETF-Depots' }
+  { k:'bav',  color:'var(--bav)',  raw:'#800000' },
+  { k:'av',   color:'var(--av)',   raw:'#000080' },
+  { k:'priv', color:'var(--priv)', raw:'#008000' }
 ];
+OPTS.forEach(function(o){
+  ['name','short','nom','satz','gen'].forEach(function(prop){
+    Object.defineProperty(o, prop, { enumerable:true,
+      get: function(){ return t('opt.' + o.k + '.' + prop); } });
+  });
+});
 function opt(k){ return OPTS.filter(function(o){return o.k===k;})[0]; }
 
 /* kind: eur | eurm (€/Monat) | pct | num | seg
    src : 'I' Eingabe | 'P' Rechengröße   */
 var FIELDS = [
   /* ---------------- Kern ---------------- */
-  { k:'gehalt', src:'I', g:'kern', kind:'eur', label:'Jahresbrutto heute', min:15000, max:250000, step:1000,
-    hint:'Ohne Einmalzahlungen, gegebenenfalls einschließlich anteiligem 13. Gehalt. Bestimmt Ihren Grenzsteuersatz und ob Sie über den Beitragsbemessungsgrenzen liegen.' },
-  { k:'beitrag', src:'I', g:'kern', kind:'eurm', label:'Monatsbeitrag bAV brutto', min:0, max:1500, step:10,
+  { k:'gehalt', src:'I', g:'kern', kind:'eur', min:15000, max:250000, step:1000 },
+  { k:'beitrag', src:'I', g:'kern', kind:'eurm', min:0, max:1500, step:10,
     pairTop:true,
     liveNote:function(R){
       var a = R.A[0];
       if (!(a.bav_br > 0)) return null;
       var v4 = S.P.sv_frei_q * a.bbgrv, v8 = S.P.st_frei_q * a.bbgrv;
-      if (a.bav_br > v8 + 0.005)
-        return 'Über 8 % der Beitragsbemessungsgrenze RV (' + eur(v8) + ' im Jahr). Der Teil darüber ist '
-          + 'weder steuer- noch sozialabgabenbegünstigt — er wandert in den Versicherungsmantel und holt '
-          + 'sich dort nur die Beitragspflicht in der Krankenversicherung ab.';
-      if (a.bav_br > v4 + 0.005)
-        return 'Über 4 % der Beitragsbemessungsgrenze RV (' + eur(v4) + ' im Jahr). Bis hierhin haben Sie '
-          + 'einen Rechtsanspruch nach § 1a BetrAVG, darüber braucht es die Zustimmung des Arbeitgebers.';
+      if (a.bav_br > v8 + 0.005) return t('n.beitrag.ueber8', { v8: v8 });
+      if (a.bav_br > v4 + 0.005) return t('n.beitrag.ueber4', { v4: v4 });
       return null;
-    },
-    hint:'Bruttoentgeltumwandlung nach § 1a BetrAVG. Ein Rechtsanspruch besteht nur bis 4 % der Beitragsbemessungsgrenze RV, darüber braucht es die Zustimmung des Arbeitgebers.' },
-  { k:'netto_ziel', src:'I', g:'kern', kind:'eurm', label:'Monatlicher Nettoaufwand', min:0, max:1200, step:5,
+    } },
+  { k:'netto_ziel', src:'I', g:'kern', kind:'eurm', min:0, max:1200, step:5,
     pairBottom:true, srcKey:'beitrag',
     /* Abgeleitetes Feld: die Wahrheit steht in `beitrag`, hier steht dieselbe
        Größe in der anderen Währung. Lesen = Vorwärtsrechnung, Schreiben =
@@ -997,9 +1078,8 @@ var FIELDS = [
       var b = AVModell.bruttoVonNetto(S.I, S.P, v);
       S.I.beitrag = b.mtl;
       koppelWarn = b.erreichbar ? null : 'unerreichbar';
-    },
-    hint:'Der Betrag, um den Ihr verfügbares Einkommen im ersten Jahr sinkt — der tatsächlich aufgegebene Konsum und damit die ökonomisch richtige Entscheidungsvariable. Genau dieser Betrag wird in allen drei Optionen investiert; das ist die Bedingung für einen fairen Vergleich. Er hängt eineindeutig am Bruttobeitrag darüber: N(B) = B − SV-Ersparnis − Steuerersparnis ist streng monoton wachsend, also umkehrbar. Geschlossen geht das wegen der Knicke an den Beitragsbemessungsgrenzen und den Tarifeckwerten nicht, deshalb 34 Halbierungen — Genauigkeit unter einem Zehntelcent.' },
-  { k:'agzus', src:'I', g:'kern', kind:'pct', label:'Arbeitgeberzuschuss', min:0, max:1, step:0.01,
+    } },
+  { k:'agzus', src:'I', g:'kern', kind:'pct', min:0, max:1, step:0.01,
     /* Der wichtigste Live-Befund der ganzen App: oberhalb der KV-Beitrags-
        bemessungsgrenze spart der Arbeitgeber nur noch RV/AV, im spitzen Modus
        sättigt der Zuschuss deshalb oft schon unter dem gesetzlichen Minimum.
@@ -1009,26 +1089,38 @@ var FIELDS = [
       var a = R.A[0];
       if (!(a.bav_br > 0)) return null;
       if (S.I.agzus * a.bav_br <= a.sverp_ag + 0.005) return null;
-      return 'Gedeckelt bei ' + pct(a.sverp_ag / a.bav_br, 1) + '. Der Arbeitgeber spart tatsächlich nur '
-        + eur2(a.sverp_ag) + ' im Jahr — höhere Werte ändern hier nichts, solange der Zuschussmodus '
-        + '„spitz gerechnet“ bleibt.';
-    },
-    hint:'Gesetzliches Minimum 15 % (§ 1a Abs. 1a BetrAVG); viele Arbeitgeber zahlen mehr. Break-even gegenüber dem Privatdepot grob dort, wo (1+z)·(1−0,211) ≈ 1, also z ≈ 26,7 % — nachprüfbar mit der Sensitivitätskurve. Im Zuschussmodus „spitz“ ist dieser Wert oft gar nicht erreichbar, weil der Zuschuss vorher sättigt.' },
-  { k:'agzus_sv', src:'I', g:'kern', kind:'seg', label:'Zuschussmodus', opts:[[0,'voller Beitrag'],[1,'sv-freier Anteil'],[2,'spitz gerechnet']],
-    hint:'„Spitz“ ist der Gesetzeswortlaut: § 1a Abs. 1a BetrAVG schuldet den Zuschuss nur, SOWEIT der Arbeitgeber tatsächlich Sozialabgaben spart. Liegt Ihr Entgelt über beiden Beitragsbemessungsgrenzen, spart er nichts und schuldet nichts. Deshalb sättigt der Regler darüber im Basisfall bei rund 21 %. „Voller Beitrag“ ist eine freiwillige oder tarifvertragliche Zusage, „sv-freier Anteil“ die verbreitete pauschale Praxis. Vertrauensgrad der spitzen Lesart ca. 75 %.' },
-  { k:'dyn', src:'I', g:'kern', kind:'seg', label:'Beitrag dynamisieren', opts:[[1,'mit dem Gehalt'],[0,'nominal konstant']],
-    hint:'Steigt der Beitrag mit der Gehaltssteigerung, bleibt die Ausschöpfung des 8-%-Topfes über die Jahre ungefähr konstant. Bleibt er nominal konstant, sinkt sein realer Wert mit der Inflation — und der Nettoaufwand, den die beiden anderen Optionen zum Vergleich bekommen, sinkt mit.' },
-  { k:'rendite', src:'I', g:'kern', kind:'pct', label:'Bruttorendite ETF p.a.', min:0, max:0.12, step:0.001,
-    hint:'Vor Kosten, vor Steuern. In allen drei Optionen derselbe ETF — nur so vergleicht man Förderarchitekturen statt Anlageentscheidungen.' },
-  { k:'alter', src:'I', g:'kern', kind:'num', label:'Alter heute', min:18, max:66, step:1, unit:'Jahre',
-    hint:'Startpunkt der Ansparphase. Kalenderjahr 0 = 2026.' },
-  { k:'rentbeg', src:'I', g:'kern', kind:'num', label:'Auszahlungsbeginn', min:60, max:75, step:1, unit:'Jahre',
-    hint:'Beginn der Auszahlungsphase aller drei Optionen. Das Altersvorsorgedepot ist frühestens ab 65 auszahlbar (Reform 2026).' },
-  { k:'kv_ruhe', src:'I', g:'kern', kind:'seg', label:'Krankenversicherung im Ruhestand', opts:[[1,'gesetzlich'],[2,'privat']],
-    hint:'Der entscheidende Hebel. In der GKV sind Betriebsrenten Versorgungsbezüge und tragen den vollen Beitragssatz (§§ 229, 250 SGB V); private Altersvorsorge nicht. Allein diese Einstellung dreht das Ergebnis.' },
-  { k:'auszform', src:'I', g:'kern', kind:'seg', label:'bAV-Auszahlung', opts:[[1,'Kapital'],[2,'lebenslange Rente']],
-    hint:'Kapital: im Zuflussjahr voll steuerpflichtig, Beiträge zur KV auf 120 Monate verteilt (§ 229 Abs. 1 S. 3 SGB V). Die Rente streckt den Bezug auf die Restlebenszeit und schirmt deshalb ein Vielfaches an Kapital unter demselben Freibetrag ab. Das Modell kennt nur ganz oder gar nicht; eine Teilkapitalisierung der bAV ist nicht abgebildet.' },
-  { k:'teilkap', src:'I', g:'kern', kind:'pct', label:'Altersvorsorgedepot: Einmalbetrag zu Beginn', min:0, max:0.3, step:0.05,
+      return t('n.agzus.gedeckelt', { quote: a.sverp_ag / a.bav_br, ersparnis: a.sverp_ag });
+    } },
+  { k:'agz_fix', src:'I', g:'kern', kind:'eurm', min:0, max:400, step:5,
+    /* Manche Arbeitgeber (Deutsche Bahn, Teile des öffentlichen Dienstes, viele
+       Tarifwerke) zahlen einen Festbetrag, der nicht am Umwandlungsbetrag hängt.
+       Er ist die einzige Größe im Modell mit konstanter Grenzrendite: ein Euro
+       Eigenbeitrag mehr bringt hier nichts, aber der Sockel liegt schon da. */
+    liveNote:function(R){
+      if (!(S.I.agz_fix > 0)) return null;
+      var a = R.A[0], d = R.diagnose;
+      if (!(a.aktiv)) return null;
+      if (a.agz_fx === 0)
+        return t('n.agz_fix.fliesstNicht', { beitrag: a.bav_br/12, schwelle: S.I.agz_fix_min });
+      var txt = [];
+      if (d.agzFixUeber4 > 0.005)
+        txt.push(t('n.agz_fix.ueber4', { topf: S.P.sv_frei_q*a.bbgrv, ueber: d.agzFixUeber4 }));
+      else if (a.bav_svf < Math.min(a.bav_br, S.P.sv_frei_q*a.bbgrv) - 0.005)
+        txt.push(t('n.agz_fix.verdraengung', { rest: a.bav_svf }));
+      if (a.bav_ein > S.P.st_frei_q*a.bbgrv + 0.005)
+        txt.push(t('n.agz_fix.ueber8'));
+      return txt.length ? txt.join(' ') : null;
+    } },
+  { k:'agz_fix_dyn', src:'I', g:'kern', kind:'seg', opts:[0,1],
+    showIf:function(I){return I.agz_fix > 0;} },
+  { k:'agzus_sv', src:'I', g:'kern', kind:'seg', opts:[0,1,2] },
+  { k:'dyn', src:'I', g:'kern', kind:'seg', opts:[1,0] },
+  { k:'rendite', src:'I', g:'kern', kind:'pct', min:0, max:0.12, step:0.001 },
+  { k:'alter', src:'I', g:'kern', kind:'num', min:18, max:66, step:1 },
+  { k:'rentbeg', src:'I', g:'kern', kind:'num', min:60, max:75, step:1 },
+  { k:'kv_ruhe', src:'I', g:'kern', kind:'seg', opts:[1,2] },
+  { k:'auszform', src:'I', g:'kern', kind:'seg', opts:[1,2] },
+  { k:'teilkap', src:'I', g:'kern', kind:'pct', min:0, max:0.3, step:0.05,
     /* Dieselbe Entscheidung wie eine Zeile darüber, nur für das andere Produkt —
        deshalb steht sie hier und nicht im Abschnitt „Ruhestand“. */
     liveNote:function(R){
@@ -1037,153 +1129,142 @@ var FIELDS = [
       var ohne = AVModell.rechne(Object.assign({}, S.I, { teilkap: 0 }), S.P);
       var d = M.get(R,'av') - M.get(ohne,'av');
       var z = R.Z[0], gr = z.av_stpfl > 0 ? (z.stg_av - z.stg_b) / z.av_stpfl : 0;
-      return 'Kostet ' + (d >= 0 ? 'nichts, im Gegenteil: ' + M.dfmt(d)
-              : M.dfmt(-d).replace(/^[+−]/,'') + ' ' + M.unit)
-        + ' gegenüber reiner Verrentung. Grund: der Einmalbetrag ist im Zuflussjahr voll '
-        + 'steuerpflichtig (Grenzbelastung dort ' + pct(gr,1) + ') und verzinst sich danach nur '
-        + 'noch mit dem Satz nach Abgeltungsteuer statt mit der Produktrendite.';
-    },
-    hint:'Bis 30 % des angesparten Kapitals sind zu Beginn der Auszahlungsphase als Einmalbetrag möglich — in beiden Auszahlungsformen. Er kostet aus zwei Gründen: volle Progression im Zuflussjahr und danach nur noch der Zinssatz nach Abgeltungsteuer. Der Überschuss über den Jahreshöchstbetrag („Sleeve“) wird ohne Einmalbetrag verrentet; das ist eine Modellkonvention, kein Rechtssatz.' },
-  { k:'av_auszform', src:'I', g:'kern', kind:'seg', label:'Altersvorsorgedepot: Rest',
-    opts:[[1,'Auszahlungsplan'],[2,'lebenslange Rente']],
+      /* dfmt und unit sind kennzahlabhängig, nicht sprachabhängig — sie werden
+         hier fertig übergeben, alles Übrige formatiert das Wörterbuch. */
+      return t('n.teilkap.kosten', { gewinn: d >= 0, grenz: gr, unit: M.unit,
+        dtxt: d >= 0 ? M.dfmt(d) : M.dfmt(-d).replace(/^[+−]/, '') });
+    } },
+  { k:'av_auszform', src:'I', g:'kern', kind:'seg',
+    opts:[1,2],
     /* Bewusst ein eigener Schalter: wer die bAV als Kapital nimmt, kann das
        Depot trotzdem verrenten. Eine gemeinsame Umschaltung erzwänge eine
        Kopplung, die es rechtlich nicht gibt. */
-    hint:'Was mit dem Kapital jenseits des Einmalbetrags geschieht — unabhängig von der bAV-Entscheidung darüber. Auszahlungsplan: das Geld bleibt investiert und wird verzinst entnommen; die nicht geförderte Schicht wird mit dem halben Unterschiedsbetrag besteuert. Lebenslange Rente: das Kapital geht an den Anbieter, dafür wird die nicht geförderte Schicht nur mit dem Ertragsanteil besteuert (§ 22 Nr. 5 S. 2 Buchst. a EStG, 17 % ab Alter 67 statt hier rund 26 %). Die geförderte Schicht ist in beiden Fällen voll nachgelagert steuerpflichtig, das ändert sich nicht.',
     liveNote:function(R){
       if (S.I.av_auszform !== 2) return null;
       if (!(R.diagnose.memoRestAv > 1)) return null;
-      return 'Über den Vergleichshorizont hinaus zahlt diese Rente noch ' + eur(R.diagnose.memoRestAv)
-        + ', die hier NICHT mitgezählt werden. Ein fester Horizont unterschätzt jede lebenslange '
-        + 'Rente systematisch — wer alt wird, gewinnt hier.';
+      return t('n.av_auszform.horizont', { rest: R.diagnose.memoRestAv });
     } },
 
-  /* ---------------- Auszahlungsformen im Detail ---------------- */
-  { k:'rentfak_av', src:'I', g:'bav', kind:'num', label:'Rentenfaktor Altersvorsorgedepot', min:0, max:60, step:0.5, unit:'€ je 10.000 €',
-    showIf:function(I){return I.av_auszform===2;},
-    hint:'Nur bei Verrentung des Depots. Voreingestellt wie bei der bAV; ein Depotvertrag kommt ohne Versicherungsmantel aus und kann deshalb günstiger sein — den Wert aus dem konkreten Angebot eintragen. Bei 0 gibt es keine Rente.' },
-  { k:'rentdyn_av', src:'I', g:'bav', kind:'pct', label:'Dynamik der Depotrente p.a.', min:0, max:0.05, step:0.0025,
-    showIf:function(I){return I.av_auszform===2;},
-    hint:'Überschussbeteiligung bzw. Fondsentwicklung in der Rentenphase des Depotvertrags.' },
-  { k:'rentfak', src:'I', g:'bav', kind:'num', label:'Rentenfaktor bAV', min:0, max:60, step:0.5, unit:'€ je 10.000 €',
-    showIf:function(I){return I.auszform===2;},
-    hint:'Nur bei Auszahlungsform „Rente“. 26 € Monatsrente je 10.000 € entspricht etwa 3,1 % Entnahmequote. Steht im Produktinformationsblatt.' },
-  { k:'rentdyn', src:'I', g:'bav', kind:'pct', label:'Dynamik der bAV-Rente p.a.', min:0, max:0.05, step:0.0025,
-    showIf:function(I){return I.auszform===2;},
-    hint:'Überschussbeteiligung bzw. Fondsentwicklung in der Rentenphase.' },
-  { k:'fuenftel', src:'I', g:'bav', kind:'seg', label:'Fünftelregelung prüfen', opts:[[0,'nein (konservativ)'],[1,'ja']],
-    hint:'§ 34 EStG ist bei planmäßiger Kapitalabfindung aus § 3 Nr. 63-Verträgen nach BFH X R 23/15 nur ausnahmsweise anwendbar. Konservativ: nein.' },
+  /* ---------------- Zuschuss und Auszahlungsformen im Detail ---------------- */
+  { k:'agz_fix_min', src:'I', g:'bav', kind:'eurm', min:0, max:600, step:5,
+    showIf:function(I){return I.agz_fix > 0;},
+    liveNote:function(R){
+      if (!(S.I.agz_fix_min > 0)) return null;
+      var a = R.A[0];
+      if (!a.aktiv) return null;
+      var d = a.bav_br/12 - S.I.agz_fix_min;
+      if (d >= 0 && d < 25) return t('n.agz_fix_min.knapp', { d: d });
+      if (d < 0) return t('n.agz_fix_min.verfehlt', { fehlt: -d, zuschuss: S.I.agz_fix });
+      return null;
+    } },
+  { k:'rentfak_av', src:'I', g:'bav', kind:'num', min:0, max:60, step:0.5,
+    showIf:function(I){return I.av_auszform===2;} },
+  { k:'rentdyn_av', src:'I', g:'bav', kind:'pct', min:0, max:0.05, step:0.0025,
+    showIf:function(I){return I.av_auszform===2;} },
+  { k:'rentfak', src:'I', g:'bav', kind:'num', min:0, max:60, step:0.5,
+    showIf:function(I){return I.auszform===2;} },
+  { k:'rentdyn', src:'I', g:'bav', kind:'pct', min:0, max:0.05, step:0.0025,
+    showIf:function(I){return I.auszform===2;} },
+  { k:'fuenftel', src:'I', g:'bav', kind:'seg', opts:[0,1] },
 
   /* ---------------- Person und Zeitachse ---------------- */
-  { k:'planende', src:'I', g:'person', kind:'num', label:'Vergleichshorizont bis Alter', min:70, max:100, step:1, unit:'Jahre',
-    hint:'Auszahlungspläne laufen bis hierhin. Lebenslange Renten werden über denselben Horizont verglichen; was danach noch fließt, steht als Memo unter „Diagnose“. Wer alt wird, gewinnt dort.' },
-  { k:'ausscheid', src:'I', g:'person', kind:'num', label:'Ausscheiden aus dem Job', min:40, max:75, step:1, unit:'Jahre',
-    hint:'Ab hier kein Gehalt und keine Beiträge mehr. Das Kapital verzinst sich weiter bis zum Auszahlungsbeginn.' },
-  { k:'tzalter', src:'I', g:'person', kind:'num', label:'Teilzeit ab Alter', min:20, max:999, step:1, unit:'Jahre',
-    hint:'Jeder Wert ab dem Auszahlungsbeginn bedeutet: keine Teilzeit. Voreingestellt ist deshalb 67.' },
-  { k:'tzfaktor', src:'I', g:'person', kind:'pct', label:'Teilzeitfaktor', min:0.1, max:1, step:0.05,
-    hint:'Anteil des Vollzeitgehalts. 60 % = 60-%-Stelle.' },
+  { k:'planende', src:'I', g:'person', kind:'num', min:70, max:100, step:1 },
+  { k:'ausscheid', src:'I', g:'person', kind:'num', min:40, max:75, step:1 },
+  { k:'tzalter', src:'I', g:'person', kind:'num', min:20, max:999, step:1 },
+  { k:'tzfaktor', src:'I', g:'person', kind:'pct', min:0.1, max:1, step:0.05 },
 
   /* ---------------- Steuer und Familie ---------------- */
-  { k:'gsteig', src:'I', g:'steuer', kind:'pct', label:'Gehalts- und Lohnsteigerung p.a.', min:0, max:0.06, step:0.0025,
-    hint:'Schreibt auch Beitragsbemessungsgrenzen, Bezugsgröße, Durchschnittsentgelt und Rentenwert fort.' },
-  { k:'stkl', src:'I', g:'steuer', kind:'seg', label:'Veranlagung', opts:[[1,'einzeln'],[3,'zusammen (Splitting)']],
-    hint:'Maßgeblich ist die VERANLAGUNGSART, nicht die Lohnsteuerklasse: die Klasse steuert nur den unterjährigen Abzug, der Jahresbescheid rechnet ohnehin mit Splitting nach § 32a Abs. 5 EStG. Bei „zusammen“ unbedingt das zvE des Partners eintragen.' },
-  { k:'partner', src:'I', g:'steuer', kind:'eur', label:'zvE des Partners', min:0, max:250000, step:1000,
-    showIf:function(I){return I.stkl===3;},
-    hint:'Nur bei Zusammenveranlagung. Gerechnet wird 2·ESt((zvE + zvE_Partner)/2).' },
-  { k:'kist', src:'I', g:'steuer', kind:'pct', label:'Kirchensteuersatz', min:0, max:0.09, step:0.01,
-    hint:'8 % in Bayern und Baden-Württemberg, sonst 9 %, 0 bei Kirchenaustritt. Wirkt auch auf die Abgeltungsteuer: 0,25/(1+0,25k)·(1+0,055+k).' },
-  { k:'tarifanp', src:'I', g:'steuer', kind:'pct', label:'Anpassung der Tarifeckwerte p.a.', min:0, max:0.05, step:0.0025,
-    hint:'Der ganze Tarif wird um den Faktor λ = (1+x)^t gestreckt: ESt = s·λ·T(zvE/s/λ). Das ist exakt äquivalent zu einer proportionalen Verschiebung aller Eckwerte. 0 % zeigt volle kalte Progression.' },
-  { k:'kinder', src:'I', g:'steuer', kind:'num', label:'Anzahl Kinder', min:0, max:8, step:1,
-    hint:'Kinderzulage im Altersvorsorgedepot: 1 € je eingezahltem € bis 300 € je Kind.' },
-  { k:'kind_jahre', src:'I', g:'steuer', kind:'num', label:'Jahre mit Kinderzulage', min:0, max:25, step:1, unit:'Jahre',
-    showIf:function(I){return I.kinder>0;},
-    hint:'Die Kinderzulage hängt am Kindergeldanspruch (§ 85 EStG), läuft also nicht über die ganze Ansparphase.' },
-  { k:'kinderlos', src:'I', g:'steuer', kind:'seg', label:'Kinderlos (PV-Zuschlag)', opts:[[0,'nein'],[1,'ja']],
-    hint:'0,6 Prozentpunkte Zuschlag zur Pflegeversicherung, allein vom Arbeitnehmer zu tragen (§ 55 Abs. 3 SGB XI).' },
+  { k:'gsteig', src:'I', g:'steuer', kind:'pct', min:0, max:0.06, step:0.0025 },
+  { k:'stkl', src:'I', g:'steuer', kind:'seg', opts:[1,3] },
+  { k:'partner', src:'I', g:'steuer', kind:'eur', min:0, max:250000, step:1000,
+    showIf:function(I){return I.stkl===3;} },
+  { k:'kist', src:'I', g:'steuer', kind:'pct', min:0, max:0.09, step:0.01 },
+  { k:'tarifanp', src:'I', g:'steuer', kind:'pct', min:0, max:0.05, step:0.0025 },
+  { k:'kinder', src:'I', g:'steuer', kind:'num', min:0, max:8, step:1 },
+  { k:'kind_jahre', src:'I', g:'steuer', kind:'num', min:0, max:25, step:1,
+    showIf:function(I){return I.kinder>0;} },
+  { k:'kinderlos', src:'I', g:'steuer', kind:'seg', opts:[0,1] },
 
   /* ---------------- Kapitalmarkt ---------------- */
-  { k:'k_bav', src:'I', g:'markt', kind:'pct', label:'Kosten bAV-Produkt p.a.', min:0, max:0.03, step:0.0005,
-    hint:'Versicherungsmantel plus TER. Die Effektivkosten stehen im Produktinformationsblatt — dort nachsehen, nicht schätzen.' },
-  { k:'k_av', src:'I', g:'markt', kind:'pct', label:'Kosten Altersvorsorgedepot p.a.', min:0, max:0.03, step:0.0005,
-    hint:'Beim Standarddepot sind die Effektivkosten gesetzlich auf 1,0 % p.a. gedeckelt.' },
-  { k:'k_priv', src:'I', g:'markt', kind:'pct', label:'Kosten privates ETF-Depot p.a.', min:0, max:0.03, step:0.0005,
-    hint:'Reine TER eines breiten Welt-ETF.' },
-  { k:'infl', src:'I', g:'markt', kind:'pct', label:'Inflation p.a.', min:0, max:0.06, step:0.0025,
-    hint:'Diskontierungssatz für alle Angaben „in heutiger Kaufkraft“. Ändert die Rangfolge kaum, aber alle Niveaus.' },
+  { k:'k_bav', src:'I', g:'markt', kind:'pct', min:0, max:0.03, step:0.0005 },
+  { k:'k_av', src:'I', g:'markt', kind:'pct', min:0, max:0.03, step:0.0005 },
+  { k:'k_priv', src:'I', g:'markt', kind:'pct', min:0, max:0.03, step:0.0005 },
+  { k:'infl', src:'I', g:'markt', kind:'pct', min:0, max:0.06, step:0.0025 },
 
   /* ---------------- Ruhestand ---------------- */
-  { k:'sonst_zve', src:'I', g:'ruhe', kind:'eur', label:'sonstiges zvE im Ruhestand', min:0, max:120000, step:1000,
-    hint:'Vor allem der steuerpflichtige Teil der gesetzlichen Rente, ohne die hier verglichenen Produkte. Bestimmt den Grenzsteuersatz in der Auszahlungsphase — und damit die Tarifarbitrage t₀ − t₁.' },
-  { k:'rente_br', src:'I', g:'ruhe', kind:'eur', label:'gesetzliche Bruttorente p.a.', min:0, max:120000, step:1000,
-    hint:'Nur für den Deckel in der Krankenversicherung: gesetzliche Rente und Versorgungsbezüge teilen sich EINE Beitragsbemessungsgrenze (§ 223 Abs. 3 SGB V).' },
+  { k:'sonst_zve', src:'I', g:'ruhe', kind:'eur', min:0, max:120000, step:1000 },
+  { k:'rente_br', src:'I', g:'ruhe', kind:'eur', min:0, max:120000, step:1000 },
 
 
   /* ---------------- Rechengrößen 2026 ---------------- */
-  { k:'bbg_rv', src:'P', g:'p_sv', kind:'eur', label:'BBG Rentenversicherung (jährlich)', min:50000, max:200000, step:100, hint:'SVBezGrV 2026 (BGBl. 2025 I Nr. 116), bundeseinheitlich.' },
-  { k:'bbg_kv', src:'P', g:'p_sv', kind:'eur', label:'BBG Kranken-/Pflegeversicherung', min:40000, max:150000, step:100, hint:'SVBezGrV 2026; 5.812,50 € monatlich.' },
-  { k:'bezug', src:'P', g:'p_sv', kind:'eur', label:'Bezugsgröße (monatlich)', min:2000, max:8000, step:5, hint:'SVBezGrV 2026, 47.460 € jährlich. Ein Zwanzigstel davon ist der Freibetrag für Versorgungsbezüge in der KV (§ 226 Abs. 2 S. 2 SGB V).' },
-  { k:'de_rv', src:'P', g:'p_sv', kind:'eur', label:'Durchschnittsentgelt RV', min:30000, max:90000, step:100, hint:'Anlage 1 zu SGB VI, Wert 2026 — Nenner für die Entgeltpunkte.' },
-  { k:'rw', src:'P', g:'p_sv', kind:'num', label:'Aktueller Rentenwert', min:20, max:80, step:0.01, unit:'€',
-    hint:'Rentenwertbestimmungsverordnung 2026, ab 1.7.2026: 42,52 € (+4,24 %).' },
-  { k:'rv_an', src:'P', g:'p_sv', kind:'pct', label:'RV-Beitrag Arbeitnehmeranteil', min:0, max:0.15, step:0.0005, hint:'18,6 % hälftig.' },
-  { k:'av_an', src:'P', g:'p_sv', kind:'pct', label:'AV-Beitrag Arbeitnehmeranteil', min:0, max:0.05, step:0.0005, hint:'2,6 % hälftig.' },
-  { k:'kv_allg', src:'P', g:'p_sv', kind:'pct', label:'KV allgemeiner Beitragssatz', min:0, max:0.25, step:0.001, hint:'§ 241 SGB V.' },
-  { k:'kv_zus', src:'P', g:'p_sv', kind:'pct', label:'KV durchschnittlicher Zusatzbeitrag', min:0, max:0.06, step:0.001, hint:'Bekanntmachung des BMG; kassenindividuell abweichend — den Satz Ihrer Kasse eintragen.' },
-  { k:'pv_ges', src:'P', g:'p_sv', kind:'pct', label:'PV Gesamtbeitragssatz', min:0, max:0.08, step:0.001, hint:'§ 55 SGB XI. Kinderabschläge ab dem zweiten Kind sind nicht modelliert.' },
-  { k:'pv_an', src:'P', g:'p_sv', kind:'pct', label:'PV Arbeitnehmeranteil', min:0, max:0.05, step:0.0005, hint:'In Sachsen abweichend (2,3 %).' },
-  { k:'pv_kl', src:'P', g:'p_sv', kind:'pct', label:'PV Zuschlag für Kinderlose', min:0, max:0.02, step:0.0005, hint:'§ 55 Abs. 3 SGB XI, allein vom Arbeitnehmer.' },
+  { k:'bbg_rv', src:'P', g:'p_sv', kind:'eur', min:50000, max:200000, step:100 },
+  { k:'bbg_kv', src:'P', g:'p_sv', kind:'eur', min:40000, max:150000, step:100 },
+  { k:'bezug', src:'P', g:'p_sv', kind:'eur', min:2000, max:8000, step:5 },
+  { k:'de_rv', src:'P', g:'p_sv', kind:'eur', min:30000, max:90000, step:100 },
+  { k:'rw', src:'P', g:'p_sv', kind:'num', min:20, max:80, step:0.01 },
+  { k:'rv_an', src:'P', g:'p_sv', kind:'pct', min:0, max:0.15, step:0.0005 },
+  { k:'av_an', src:'P', g:'p_sv', kind:'pct', min:0, max:0.05, step:0.0005 },
+  { k:'kv_allg', src:'P', g:'p_sv', kind:'pct', min:0, max:0.25, step:0.001 },
+  { k:'kv_zus', src:'P', g:'p_sv', kind:'pct', min:0, max:0.06, step:0.001 },
+  { k:'pv_ges', src:'P', g:'p_sv', kind:'pct', min:0, max:0.08, step:0.001 },
+  { k:'pv_an', src:'P', g:'p_sv', kind:'pct', min:0, max:0.05, step:0.0005 },
+  { k:'pv_kl', src:'P', g:'p_sv', kind:'pct', min:0, max:0.02, step:0.0005 },
 
-  { k:'gfb', src:'P', g:'p_est', kind:'eur', label:'Grundfreibetrag (Ende Zone 1)', min:5000, max:30000, step:1, hint:'§ 32a Abs. 1 EStG i.d.F. des Steuerfortentwicklungsgesetzes.' },
-  { k:'e2', src:'P', g:'p_est', kind:'eur', label:'Ende Zone 2', min:10000, max:40000, step:1, hint:'Grenzsteuersatz steigt von 14 % auf 23,97 %.' },
-  { k:'e3', src:'P', g:'p_est', kind:'eur', label:'Ende Zone 3', min:40000, max:120000, step:1, hint:'Grenzsteuersatz steigt von 23,97 % auf 42 %.' },
-  { k:'e4', src:'P', g:'p_est', kind:'eur', label:'Beginn Zone 5 (Reichensteuer)', min:150000, max:400000, step:1, hint:'Ab 277.826 € gilt 45 %.' },
-  { k:'a2', src:'P', g:'p_est', kind:'num', label:'Koeffizient a₂', min:0, max:2000, step:0.01, hint:'ESt = (a₂·y + b₂)·y mit y = (zvE − Grundfreibetrag)/10.000.' },
-  { k:'b2', src:'P', g:'p_est', kind:'num', label:'Koeffizient b₂', min:0, max:3000, step:1, hint:'' },
-  { k:'a3', src:'P', g:'p_est', kind:'num', label:'Koeffizient a₃', min:0, max:1000, step:0.01, hint:'ESt = (a₃·z + b₃)·z + c₃ mit z = (zvE − 17.799)/10.000.' },
-  { k:'b3', src:'P', g:'p_est', kind:'num', label:'Koeffizient b₃', min:0, max:5000, step:1, hint:'' },
-  { k:'c3', src:'P', g:'p_est', kind:'num', label:'Konstante c₃', min:0, max:5000, step:0.01, hint:'' },
-  { k:'c4', src:'P', g:'p_est', kind:'num', label:'Konstante c₄', min:0, max:30000, step:0.01, hint:'ESt = 0,42·zvE − c₄.' },
-  { k:'c5', src:'P', g:'p_est', kind:'num', label:'Konstante c₅', min:0, max:40000, step:0.01, hint:'ESt = 0,45·zvE − c₅.' },
-  { k:'soli', src:'P', g:'p_est', kind:'pct', label:'Solidaritätszuschlag', min:0, max:0.08, step:0.0005, hint:'SolzG 1995.' },
-  { k:'soli_fg', src:'P', g:'p_est', kind:'eur', label:'Soli-Freigrenze', min:0, max:60000, step:10, hint:'2026, Grundtarif, bezogen auf die festgesetzte ESt; im Splitting doppelt. Daneben eine Milderungszone.' },
-  { k:'soli_mz', src:'P', g:'p_est', kind:'pct', label:'Milderungszone Grenzbelastung', min:0, max:0.3, step:0.001, hint:'§ 3 Abs. 2a SolzG.' },
-  { k:'an_pausch', src:'P', g:'p_est', kind:'eur', label:'Arbeitnehmer-Pauschbetrag', min:0, max:5000, step:1, hint:'§ 9a S. 1 Nr. 1a EStG.' },
-  { k:'sa_pausch', src:'P', g:'p_est', kind:'eur', label:'Sonderausgaben-Pauschbetrag', min:0, max:1000, step:1, hint:'§ 10c EStG.' },
+  { k:'gfb', src:'P', g:'p_est', kind:'eur', min:5000, max:30000, step:1 },
+  { k:'e2', src:'P', g:'p_est', kind:'eur', min:10000, max:40000, step:1 },
+  { k:'e3', src:'P', g:'p_est', kind:'eur', min:40000, max:120000, step:1 },
+  { k:'e4', src:'P', g:'p_est', kind:'eur', min:150000, max:400000, step:1 },
+  { k:'a2', src:'P', g:'p_est', kind:'num', min:0, max:2000, step:0.01 },
+  { k:'b2', src:'P', g:'p_est', kind:'num', min:0, max:3000, step:1 },
+  { k:'a3', src:'P', g:'p_est', kind:'num', min:0, max:1000, step:0.01 },
+  { k:'b3', src:'P', g:'p_est', kind:'num', min:0, max:5000, step:1 },
+  { k:'c3', src:'P', g:'p_est', kind:'num', min:0, max:5000, step:0.01 },
+  { k:'c4', src:'P', g:'p_est', kind:'num', min:0, max:30000, step:0.01 },
+  { k:'c5', src:'P', g:'p_est', kind:'num', min:0, max:40000, step:0.01 },
+  { k:'soli', src:'P', g:'p_est', kind:'pct', min:0, max:0.08, step:0.0005 },
+  { k:'soli_fg', src:'P', g:'p_est', kind:'eur', min:0, max:60000, step:10 },
+  { k:'soli_mz', src:'P', g:'p_est', kind:'pct', min:0, max:0.3, step:0.001 },
+  { k:'an_pausch', src:'P', g:'p_est', kind:'eur', min:0, max:5000, step:1 },
+  { k:'sa_pausch', src:'P', g:'p_est', kind:'eur', min:0, max:1000, step:1 },
 
-  { k:'kapst', src:'P', g:'p_kap', kind:'pct', label:'Abgeltungsteuersatz', min:0, max:0.5, step:0.005, hint:'§ 32d Abs. 1 EStG.' },
-  { k:'tfs', src:'P', g:'p_kap', kind:'pct', label:'Teilfreistellung Aktienfonds', min:0, max:0.6, step:0.01, hint:'§ 20 Abs. 1 Nr. 3 i.V.m. § 20 InvStG, Aktienfondsanteil über 50 %.' },
-  { k:'sparerpb', src:'P', g:'p_kap', kind:'eur', label:'Sparer-Pauschbetrag', min:0, max:5000, step:10, hint:'§ 20 Abs. 9 EStG; im Splitting verdoppelt. Absorbiert einen großen Teil der Vorabpauschale — siehe Wasserfall.' },
-  { k:'basiszins', src:'P', g:'p_kap', kind:'pct', label:'Basiszins Vorabpauschale', min:0, max:0.08, step:0.0005, hint:'BMF-Schreiben vom 13.01.2026, § 18 Abs. 4 InvStG (2025: 2,53 %). Auf 0 setzen heißt: keine Vorabpauschale.' },
-  { k:'vp_faktor', src:'P', g:'p_kap', kind:'pct', label:'Faktor für den Basisertrag', min:0, max:1, step:0.05, hint:'§ 18 Abs. 1 S. 1 InvStG.' },
+  { k:'kapst', src:'P', g:'p_kap', kind:'pct', min:0, max:0.5, step:0.005 },
+  { k:'tfs', src:'P', g:'p_kap', kind:'pct', min:0, max:0.6, step:0.01 },
+  { k:'sparerpb', src:'P', g:'p_kap', kind:'eur', min:0, max:5000, step:10 },
+  { k:'basiszins', src:'P', g:'p_kap', kind:'pct', min:0, max:0.08, step:0.0005 },
+  { k:'vp_faktor', src:'P', g:'p_kap', kind:'pct', min:0, max:1, step:0.05 },
 
-  { k:'st_frei_q', src:'P', g:'p_bav', kind:'pct', label:'steuerfrei § 3 Nr. 63 (Anteil BBG-RV)', min:0, max:0.2, step:0.005, hint:'8 % der BBG-RV = 8.112 € in 2026.' },
-  { k:'sv_frei_q', src:'P', g:'p_bav', kind:'pct', label:'sozialabgabenfrei (Anteil BBG-RV)', min:0, max:0.2, step:0.005, hint:'§ 1 Abs. 1 S. 1 Nr. 9 SvEV; 4 % = 4.056 € in 2026. Zugleich die Grenze des Rechtsanspruchs nach § 1a BetrAVG.' },
-  { k:'zul_g1', src:'P', g:'p_bav', kind:'pct', label:'Zulage Stufe 1 (je € Eigenbeitrag)', min:0, max:1, step:0.05, hint:'Altersvorsorgereformgesetz, in Kraft seit Mai 2026, Anwendung ab 1.1.2027.' },
-  { k:'zul_s1', src:'P', g:'p_bav', kind:'eur', label:'Grenze Stufe 1', min:0, max:3000, step:10, hint:'Bis 360 € Eigenbeitrag: 50 Cent je €.' },
-  { k:'zul_g2', src:'P', g:'p_bav', kind:'pct', label:'Zulage Stufe 2 (je € Eigenbeitrag)', min:0, max:1, step:0.05, hint:'Von 361 bis 1.800 €: 25 Cent je €.' },
-  { k:'zul_s2', src:'P', g:'p_bav', kind:'eur', label:'Grenze Stufe 2', min:0, max:6000, step:10, hint:'Höchstbetrag geförderter Eigenbeitrag; ergibt eine maximale Grundzulage von 540 €.' },
-  { k:'kind_zul', src:'P', g:'p_bav', kind:'eur', label:'Kinderzulage je Kind', min:0, max:1000, step:10, hint:'1 € je eingezahltem € bis 300 € je Kind.' },
-  { k:'av_max', src:'P', g:'p_bav', kind:'eur', label:'Höchstbetrag Einzahlung p.a.', min:0, max:20000, step:10, hint:'BMF-FAQ zur Reform der geförderten privaten Altersvorsorge, Stand 05.05.2026. Was darüber liegt, läuft in eine Nebenschiene, die wie ein Privatdepot besteuert wird.' },
-  { k:'av_sa_max', src:'P', g:'p_bav', kind:'eur', label:'Höchstbetrag Sonderausgabenabzug § 10a', min:0, max:12000, step:10, hint:'MODELLANNAHME, Vertrauensgrad ca. 70 %. Eigenbeitrag bis 1.800 € zuzüglich Zulagen. Diese eine Zahl entscheidet, ob ein Kind den Wert des AV-Depots hebt oder senkt.' },
-  { k:'ertragsq', src:'P', g:'p_bav', kind:'pct', label:'Ertragsanteil (Alter 67)', min:0, max:0.6, step:0.01, hint:'§ 22 Nr. 1 S. 3 Buchst. a Doppelbuchst. bb EStG, für nicht geförderte Rententeile.' },
-  { k:'halb', src:'P', g:'p_bav', kind:'pct', label:'steuerpflichtiger Anteil des Unterschiedsbetrags', min:0, max:1, step:0.05, hint:'§ 20 Abs. 1 Nr. 6 S. 2 EStG analog (Vertrag über 12 Jahre, Auszahlung nach 62): halber Unterschiedsbetrag. Vertrauensgrad ca. 80 %.' }
+  { k:'st_frei_q', src:'P', g:'p_bav', kind:'pct', min:0, max:0.2, step:0.005 },
+  { k:'sv_frei_q', src:'P', g:'p_bav', kind:'pct', min:0, max:0.2, step:0.005 },
+  { k:'zul_g1', src:'P', g:'p_bav', kind:'pct', min:0, max:1, step:0.05 },
+  { k:'zul_s1', src:'P', g:'p_bav', kind:'eur', min:0, max:3000, step:10 },
+  { k:'zul_g2', src:'P', g:'p_bav', kind:'pct', min:0, max:1, step:0.05 },
+  { k:'zul_s2', src:'P', g:'p_bav', kind:'eur', min:0, max:6000, step:10 },
+  { k:'kind_zul', src:'P', g:'p_bav', kind:'eur', min:0, max:1000, step:10 },
+  { k:'av_max', src:'P', g:'p_bav', kind:'eur', min:0, max:20000, step:10 },
+  { k:'av_sa_max', src:'P', g:'p_bav', kind:'eur', min:0, max:12000, step:10 },
+  { k:'ertragsq', src:'P', g:'p_bav', kind:'pct', min:0, max:0.6, step:0.01 },
+  { k:'halb', src:'P', g:'p_bav', kind:'pct', min:0, max:1, step:0.05 }
 ];
-
 var GROUPS = [
-  { g:'bav',   t:'Auszahlungsformen im Detail' },
-  { g:'person',t:'Zeitachse, Ausscheiden, Teilzeit' },
-  { g:'steuer',t:'Steuer, Veranlagung, Kinder' },
-  { g:'markt', t:'Kosten und Inflation' },
-  { g:'ruhe',  t:'Ruhestand' },
-  { g:'p_sv',  t:'Rechengrößen: Sozialversicherung 2026', legal:true },
-  { g:'p_est', t:'Rechengrößen: Einkommensteuertarif 2026 (§ 32a EStG)', legal:true },
-  { g:'p_kap', t:'Rechengrößen: Kapitalertrag- und Investmentsteuer', legal:true },
-  { g:'p_bav', t:'Rechengrößen: betriebliche und geförderte private Vorsorge', legal:true }
+  { g:'bav' }, { g:'person' }, { g:'steuer' }, { g:'markt' }, { g:'ruhe' },
+  { g:'p_sv',  legal:true }, { g:'p_est', legal:true },
+  { g:'p_kap', legal:true }, { g:'p_bav', legal:true }
 ];
 var FMAP = {}; FIELDS.forEach(function(f){ FMAP[f.src + ':' + f.k] = f; });
+
+/* Beschriftung, Erklärung und Einheit eines Feldes stehen im Wörterbuch unter
+   'f.<src>:<key>.label|hint|unit', die Beschriftungen der Optionsfelder unter
+   '...o<wert>'. Wie bei OPTS sind es Zugriffsfunktionen: `f.label` bleibt
+   lesbar und ist zugleich sprachaktuell. Ein fehlender Eintrag liefert den
+   leeren String — daran hängt, ob das Feld eine „?“-Schaltfläche bekommt
+   (die Koeffizienten b₂, b₃ und c₃ haben bewusst keine Erklärung). */
+FIELDS.forEach(function(f){
+  var base = 'f.' + f.src + ':' + f.k;
+  Object.defineProperty(f, 'label', { get: function(){ return t(base + '.label'); } });
+  Object.defineProperty(f, 'hint',  { get: function(){ return tHas(base + '.hint') ? t(base + '.hint') : ''; } });
+  Object.defineProperty(f, 'unit',  { get: function(){ return tHas(base + '.unit') ? t(base + '.unit') : ''; } });
+  f.optLabel = function(v){ return t(base + '.o' + v); };
+});
 
 
 /* =====================================================================
@@ -1199,7 +1280,16 @@ var S = {
   wfZiel: 'bav',
   open: {}
 };
-var R = null, BASE = null, BASEDESC = 'Ausgangswerte', PINNED = false, armed = null;
+var R = null, BASE = null, BASEKEY = null, PINNED = false, armed = null;
+/* Der Referenzstand wird als Feldschlüssel gemerkt, nicht als fertiger Satz:
+   sonst bliebe seine Beschreibung nach einem Sprachwechsel in der alten
+   Sprache stehen. */
+function baseDesc(){
+  if (PINNED) return t('base.desc.pinned');
+  if (!BASEKEY) return t('base.desc.prev');
+  var f = FIELDS.filter(function(x){ return x.k === BASEKEY; })[0];
+  return f ? t('base.desc.change', { label: f.label }) : t('base.desc.prev');
+}
 var koppelWarn = null;   // 'unerreichbar' | 'inaktiv' | null — siehe netto_ziel.set
 
 function loadState() {
@@ -1233,15 +1323,55 @@ function encodeState() {
 /* =====================================================================
    TEIL 4  —  FORMATIERUNG
    ===================================================================== */
-var nf0 = new Intl.NumberFormat('de-DE', {maximumFractionDigits:0});
-var nf2 = new Intl.NumberFormat('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2});
-var nfp = new Intl.NumberFormat('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2});
+/* Die Währung bleibt in allen Sprachen der Euro und steht nachgestellt;
+   umgeschaltet wird nur die Zifferngruppierung: 75.000,00 € bzw. 75,000.00 €.
+   en-GB statt en-US, weil dort das nachgestellte Symbol dem hiesigen Gebrauch
+   näher liegt; für reine Zahlen ist der Unterschied ohnehin keiner. Latein
+   bekommt die kontinentale Schreibweise — römische Ziffern wären ein Witz auf
+   Kosten der Lesbarkeit, und die Trennzeichenkonvention ist ohnehin jünger
+   als jede lateinische Quelle. Japanisch gruppiert wie das Englische. */
+var LOCALES = { de:'de-DE', en:'en-GB', la:'de-DE', ja:'ja-JP' };
+var GRUPPEN = { de:'.', en:',', la:'.', ja:',' };
+var LOCALE = 'de-DE', nf0 = null, nf2 = null, nfp = null;
+function applyLocale(){
+  LOCALE = LOCALES[LANG] || 'de-DE';
+  nf0 = new Intl.NumberFormat(LOCALE, {maximumFractionDigits:0});
+  nf2 = new Intl.NumberFormat(LOCALE, {minimumFractionDigits:2, maximumFractionDigits:2});
+  nfp = nf2;
+  FMT.eur = eur; FMT.eur2 = eur2; FMT.pct = pct; FMT.num = num; FMT.lang = LANG;
+  FMT.nf0 = function(x){ return nf0.format(x); };
+  FMT.nf2 = function(x){ return nf2.format(x); };
+}
 function eur(x){ return (isFinite(x)?nf0.format(Math.round(x)):'—') + ' €'; }
 function eur2(x){ return (isFinite(x)?nf2.format(x):'—') + ' €'; }
 function pct(x,d){ if(!isFinite(x)) return '—';
-  return new Intl.NumberFormat('de-DE',{minimumFractionDigits:d===undefined?2:d,maximumFractionDigits:d===undefined?2:d}).format(x*100)+' %'; }
-function num(x,d){ return new Intl.NumberFormat('de-DE',{minimumFractionDigits:d||0,maximumFractionDigits:d||0}).format(x); }
-function parseDE(s){ s = String(s).replace(/\s| |\./g,'').replace(',', '.').replace(/[^\d.\-]/g,''); var v = parseFloat(s); return isFinite(v)?v:NaN; }
+  return new Intl.NumberFormat(LOCALE,{minimumFractionDigits:d===undefined?2:d,maximumFractionDigits:d===undefined?2:d}).format(x*100)+' %'; }
+function num(x,d){ return new Intl.NumberFormat(LOCALE,{minimumFractionDigits:d||0,maximumFractionDigits:d||0}).format(x); }
+/* Eingabe: beide Schreibweisen werden angenommen, damit ein Sprachwechsel
+   keine getippte Zahl entwertet. Entscheidungsregel — stehen beide Zeichen im
+   Text, ist das rechte das Dezimalzeichen (1.234,56 wie 1,234.56). Steht nur
+   eines und folgen ihm genau drei Ziffern, ist es die Tausendergruppe der
+   aktuellen Sprache; sonst ist es das Dezimalzeichen. Damit bleibt allein
+   „1,234“ mehrdeutig, und genau dort entscheidet die Sprache. */
+function parseNum(s){
+  s = String(s).replace(/[^\d.,\-]/g, '');
+  var d = s.lastIndexOf('.'), c = s.lastIndexOf(','), sep = Math.max(d, c);
+  var grp = GRUPPEN[LANG] || '.', dec = '';
+  if (sep >= 0){
+    var ch = s.charAt(sep);
+    var tausender = /^\d{3}$/.test(s.slice(sep + 1)) && ch === grp && !(d >= 0 && c >= 0);
+    dec = tausender ? '' : ch;
+  }
+  var out = '';
+  for (var i = 0; i < s.length; i++){
+    var z = s.charAt(i);
+    if (z === '-'){ if (i === 0) out += z; continue; }
+    if (z === '.' || z === ','){ if (dec && i === sep) out += '.'; continue; }
+    out += z;
+  }
+  var v = parseFloat(out);
+  return isFinite(v) ? v : NaN;
+}
 
 /* Anzeigewert eines Feldes (Zahl im Eingabefeld) und Rückumrechnung */
 function fieldToView(f, v){
@@ -1253,9 +1383,9 @@ function viewToField(f, v){
   return v;
 }
 function fieldUnit(f){
-  if (f.kind === 'pct') return '%';
-  if (f.kind === 'eur') return '€';
-  if (f.kind === 'eurm') return '€/Monat';
+  if (f.kind === 'pct') return t('unit.pct');
+  if (f.kind === 'eur') return t('unit.eur');
+  if (f.kind === 'eurm') return t('unit.eurm');
   return f.unit || '';
 }
 /* Felder mit `get`/`set` sind abgeleitet: ihre Wahrheit liegt woanders,
@@ -1269,25 +1399,28 @@ function setFieldValue(f, v){
 /* =====================================================================
    TEIL 5  —  KENNZAHLEN
    ===================================================================== */
+/* Schlagzahlen auf ganze Euro. Ein Modell, dessen unsicherste Annahme einen
+   Vertrauensgrad von 70 % hat, darf nicht auf den Cent genau auftreten —
+   die Nachkommastellen sind Scheingenauigkeit. Im Rechenweg, wo es um die
+   Nachvollziehbarkeit der Additivität geht, bleibt es bei zwei Stellen.
+   label, desc und unit kommen wie bei OPTS und FIELDS aus dem Wörterbuch. */
 var METRICS = {
-  /* Schlagzahlen auf ganze Euro. Ein Modell, dessen unsicherste Annahme einen
-     Vertrauensgrad von 70 % hat, darf nicht auf den Cent genau auftreten —
-     die Nachkommastellen sind Scheingenauigkeit. Im Rechenweg, wo es um die
-     Nachvollziehbarkeit der Additivität geht, bleibt es bei zwei Stellen. */
-  monat: { label:'Monatsleistung', get:function(r,o){return r.monat[o];}, fmt:eur, unit:'€/Monat',
-    desc:'Konstante Monatszahlung über die gesamte Auszahlungsphase mit demselben Wert, in heutiger Kaufkraft. Die einzige Zahl, die sich unmittelbar mit Ihrem heutigen Nettoeinkommen vergleichen lässt.',
+  monat: { get:function(r,o){return r.monat[o];}, fmt:eur,
     dfmt:function(d){return (d>=0?'+':'−')+nf0.format(Math.round(Math.abs(d)))+' €';} },
-  ertrag: { label:'Netto-Ertrag (Barwert)', get:function(r,o){return r.ertrag[o];}, fmt:eur, unit:'€',
-    desc:'Was die Option in heutiger Kaufkraft über den eigenen Einsatz hinaus abwirft: Barwert aller Netto-Leistungen minus Barwert des Nettoaufwands.',
+  ertrag: { get:function(r,o){return r.ertrag[o];}, fmt:eur,
     dfmt:function(d){return (d>=0?'+':'−')+nf0.format(Math.round(Math.abs(d)))+' €';} },
-  irr: { label:'Interner Zinsfuß', get:function(r,o){return r.irr[o];}, fmt:function(x){return pct(x,2)+' p.a.';},
-    fmtKurz:function(x){return pct(x,2);}, unit:'% p.a.',
-    desc:'Rendite auf den tatsächlich eingesetzten Nettobetrag, nominal. Direkt mit der eingestellten Bruttorendite des ETF vergleichbar — die Differenz ist genau das, was Förderung und Abgaben zusammen kosten oder bringen.',
-    dfmt:function(d){return (d>=0?'+':'−')+nfp.format(Math.abs(d)*100)+' Pp.';} },
-  kapital: { label:'Kapital bei Rentenbeginn', get:function(r,o){return r.kapital[o];}, fmt:eur, unit:'€',
-    desc:'Vor Steuern und vor Sozialabgaben, nominal. Bewusst NICHT die Entscheidungsgröße: die bAV führt hier oft, verliert aber in der Auszahlung.',
+  irr: { get:function(r,o){return r.irr[o];}, fmt:function(x){return pct(x,2)+t('metric.pa');},
+    fmtKurz:function(x){return pct(x,2);},
+    dfmt:function(d){return (d>=0?'+':'−')+nfp.format(Math.abs(d)*100)+t('metric.pp');} },
+  kapital: { get:function(r,o){return r.kapital[o];}, fmt:eur,
     dfmt:function(d){return (d>=0?'+':'−')+nf0.format(Math.round(Math.abs(d)))+' €';} }
 };
+Object.keys(METRICS).forEach(function(m){
+  ['label','desc','unit'].forEach(function(prop){
+    Object.defineProperty(METRICS[m], prop, { enumerable:true,
+      get: function(){ return t('metric.' + m + '.' + prop); } });
+  });
+});
 
 
 /* =====================================================================
@@ -1314,7 +1447,8 @@ function buildField(f){
   var lab = el('div','lab');
   lab.appendChild(document.createTextNode(f.label));
   if (f.hint){
-    var q = el('button','qm','?'); q.type='button'; q.setAttribute('aria-label','Erklärung zu: '+f.label);
+    var q = el('button','qm','?'); q.type='button';
+    q.setAttribute('aria-label', t('ui.hintFor', { label: f.label }));
     q.onclick = function(){ wrap.classList.toggle('open'); };
     lab.appendChild(q);
   }
@@ -1327,17 +1461,19 @@ function buildField(f){
        Pfeiltastennavigation der Radiogruppe geschenkt mit. */
     var box = el('div','radios');
     var gname = 'r_' + f.src + '_' + f.k;
-    f.opts.forEach(function(o){
+    /* f.opts enthält nur noch die Werte; die Beschriftung kommt aus dem
+       Wörterbuch, damit sie beim Sprachwechsel mitgeht. */
+    f.opts.forEach(function(v){
       var lb = document.createElement('label');
       var rb = document.createElement('input');
-      rb.type = 'radio'; rb.name = gname; rb.value = String(o[0]);
-      rb.checked = fieldValue(f) === o[0];
+      rb.type = 'radio'; rb.name = gname; rb.value = String(v);
+      rb.checked = fieldValue(f) === v;
       rb.addEventListener('change', function(){
         if (!rb.checked) return;
-        arm(f.k); setFieldValue(f, o[0]); refresh();
+        arm(f.k); setFieldValue(f, v); refresh();
       });
       lb.appendChild(rb);
-      lb.appendChild(document.createTextNode(' ' + o[1]));
+      lb.appendChild(document.createTextNode(' ' + f.optLabel(v)));
       box.appendChild(lb);
     });
     wrap.appendChild(box);
@@ -1367,7 +1503,7 @@ function buildField(f){
       refresh();
     };
     rng.addEventListener('input', function(){ arm(f.k); commit(parseFloat(rng.value), true); });
-    inp.addEventListener('input', function(){ var v = parseDE(inp.value); if(isFinite(v)){ arm(f.k); commit(v,false);} });
+    inp.addEventListener('input', function(){ var v = parseNum(inp.value); if(isFinite(v)){ arm(f.k); commit(v,false);} });
     inp.addEventListener('blur', function(){ inp.value = formatFieldInput(f); });
     /* Beim Nachziehen nie das Feld überschreiben, in dem gerade getippt wird —
        sonst springt der Cursor und halbfertige Eingaben werden umformatiert. */
@@ -1389,8 +1525,7 @@ function buildField(f){
   if (f.pairBottom){
     wrap.classList.add('pair-bottom');
     var lk = el('div','couple');
-    lk.innerHTML = '<span>\u21C5</span> Zwei Sichten auf dieselbe Gr\u00f6\u00dfe. '
-      + '\u00c4ndern Sie eine, folgt die andere.';
+    lk.innerHTML = t('ui.couple');
     wrap.appendChild(lk);
   }
   return wrap;
@@ -1398,7 +1533,7 @@ function buildField(f){
 function formatFieldInput(f){
   var v = fieldToView(f, fieldValue(f));
   var d = f.kind==='pct' ? (f.step<0.001?3:(f.step<0.01?2:1)) : (f.step<1?2:0);
-  return new Intl.NumberFormat('de-DE',{minimumFractionDigits:0,maximumFractionDigits:d}).format(v);
+  return new Intl.NumberFormat(LOCALE,{minimumFractionDigits:0,maximumFractionDigits:d}).format(v);
 }
 function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
 
@@ -1412,14 +1547,14 @@ function buildInputs(){
     if (S.open[G.g]) d.open = true;
     d.addEventListener('toggle', function(){ S.open[G.g] = d.open; saveState(); });
     var sm = document.createElement('summary');
-    sm.appendChild(document.createTextNode(G.t));
+    sm.appendChild(document.createTextNode(t('group.' + G.g)));
     var fs = FIELDS.filter(function(f){return f.g===G.g;});
-    sm.appendChild(el('span','cnt', fs.length + (G.legal?' Rechengrößen':' Felder')));
+    sm.appendChild(el('span','cnt', t(G.legal ? 'ui.cnt.legal' : 'ui.cnt.fields', { n: fs.length })));
     d.appendChild(sm);
     var body = el('div','dbody');
     if (G.legal){
       var p = el('p','sub'); p.style.margin='0 0 6px';
-      p.textContent = 'Gesetzliche Größen mit Fundstelle. Nur ändern, wenn sich das Recht geändert hat oder Ihre Kasse abweicht.';
+      p.textContent = t('ui.legalNote');
       body.appendChild(p);
     }
     fs.forEach(function(f){ body.appendChild(buildField(f)); });
@@ -1436,7 +1571,7 @@ function syncVisibility(){
     if (w._live && R) w._live(R);
     if (f.kind === 'seg'){
       var bs = w.querySelectorAll('.radios input');
-      for (var i=0;i<bs.length;i++) bs[i].checked = (fieldValue(f) === f.opts[i][0]);
+      for (var i=0;i<bs.length;i++) bs[i].checked = (fieldValue(f) === f.opts[i]);
     }
   });
 }
@@ -1449,8 +1584,7 @@ function arm(key){
   if (PINNED) return;
   if (armed !== key){
     BASE = R;
-    var f = FIELDS.filter(function(x){return x.k===key;})[0];
-    BASEDESC = f ? 'vor der Änderung von „' + f.label + '“' : 'vorheriger Stand';
+    BASEKEY = FIELDS.filter(function(x){return x.k===key;}).length ? key : null;
     armed = key;
   }
   var fd = FIELDS.filter(function(x){return x.k===key;})[0];
@@ -1471,13 +1605,13 @@ function renderCards(){
     var c = el('div','opt' + (i===bi?' lead':''));
     c.style.setProperty('--c', o.raw);
     var nm = el('div','nm'); nm.appendChild(document.createTextNode(o.name));
-    if (i===bi){ var cr = el('span','crown','vorn'); cr.style.setProperty('--c', o.raw); nm.appendChild(cr); }
+    if (i===bi){ var cr = el('span','crown', t('card.lead')); cr.style.setProperty('--c', o.raw); nm.appendChild(cr); }
     c.appendChild(nm);
     c.appendChild(el('div','big', M.fmt(vals[i])));
     if (BASE){
       var d = vals[i] - M.get(BASE, o.k);
       var cls = Math.abs(d) < (S.metric==='irr'?1e-7:0.005) ? 'eq' : (d>0?'up':'dn');
-      c.appendChild(el('div','delta '+cls, cls==='eq' ? 'unverändert' : M.dfmt(d)));
+      c.appendChild(el('div','delta '+cls, cls==='eq' ? t('card.unchanged') : M.dfmt(d)));
     }
     var sec = el('div','sec');
     sec.style.marginTop = '6px';
@@ -1487,9 +1621,9 @@ function renderCards(){
   });
 
   $('#basetext').textContent = BASE
-    ? (PINNED ? 'Δ gegenüber dem gemerkten Stand' : 'Δ ' + BASEDESC)
-    : 'Bewegen Sie einen Regler — die Änderung erscheint hier als Δ.';
-  $('#pin').textContent = PINNED ? 'Referenz lösen' : 'Als Referenz merken';
+    ? (PINNED ? t('base.pinned') : t('base.delta', { desc: baseDesc() }))
+    : t('base.none');
+  $('#pin').textContent = t(PINNED ? 'ui.pin.clear' : 'ui.pin.set');
 
   /* Die Kennzahlen können unterschiedlich ranken: der Barwert zinst mit der
      Inflation ab, die äquivalente Monatsleistung mit dem Wiederanlagezins nach
@@ -1500,26 +1634,15 @@ function renderCards(){
   var hint = $('#rankhint');
   if (swap){
     hint.hidden = false;
-    hint.innerHTML = '<b>Die Kennzahlen sind sich uneinig.</b> Nach Monatsleistung liegt '
-      + nameOf(swap[0]) + ' vor ' + nameOf(swap[1]) + ', nach Barwert des Netto-Ertrags ist es umgekehrt. '
-      + 'Grund: der Barwert zinst mit der '
-      + 'Inflation ab (' + pct(S.I.infl,2) + '), die Monatsleistung verrentet mit dem Wiederanlagezins nach '
-      + 'Steuern (' + pct(R.diagnose.wiederanl,2) + '). Je weiter beide auseinanderliegen, desto besser steht '
-      + 'eine frühe Kapitalauszahlung da. Welche Kennzahl gilt, hängt davon ab, ob Sie das Geld anlegen oder '
-      + 'ausgeben würden — bei „ausgeben“ den Wert im Feld „Kosten privates ETF-Depot“ so setzen, dass der '
-      + 'Wiederanlagezins gegen null geht.';
+    hint.innerHTML = t('rank.swap', { a: nameOf(swap[0]), b: nameOf(swap[1]),
+      infl: S.I.infl, wiederanl: R.diagnose.wiederanl });
   } else hint.hidden = true;
 
   var wv = $('#bisektwarn');
   if (koppelWarn === 'unerreichbar'){
-    wv.hidden = false;
-    wv.textContent = 'Dieser Nettoaufwand ist nicht erreichbar — er übersteigt Ihr Gehalt. '
-      + 'Eingestellt wurde der höchste mögliche Wert.';
+    wv.hidden = false; wv.textContent = t('warn.unreachable');
   } else if (koppelWarn === 'inaktiv'){
-    wv.hidden = false;
-    wv.textContent = 'Im ersten Jahr sind Sie nach Ihren Angaben nicht mehr erwerbstätig — es gibt keine '
-      + 'Entgeltumwandlung, also auch keinen Nettoaufwand, zu dem sich ein Bruttobeitrag zurückrechnen ließe. '
-      + 'Prüfen Sie „Ausscheiden aus dem Job“ und „Alter heute“.';
+    wv.hidden = false; wv.textContent = t('warn.inactive');
   } else wv.hidden = true;
 }
 /* Erste Inversion zwischen zwei Ordnungen auf denselben drei Optionen.
@@ -1544,7 +1667,11 @@ function nameOf(k){ return OPTS.filter(function(o){return o.k===k;})[0].name; }
    denselben — also einmal rechnen und über eine Signatur zwischenspeichern. */
 var wfCacheMap = {}, wfCacheSig = null;
 function getWaterfall(ziel){
-  var sig = JSON.stringify(S.I) + '|' + JSON.stringify(S.P);
+  /* Die Sprache gehört in die Signatur: die Balken tragen ihre Beschriftung
+     und ihre Herleitung mit sich, und beide kommen aus dem Wörterbuch. Ohne
+     sie blieben nach einem Sprachwechsel die alten Texte stehen — sichtbar
+     im Fazit, das den größten Balken beim Namen nennt. */
+  var sig = LANG + '|' + JSON.stringify(S.I) + '|' + JSON.stringify(S.P);
   if (wfCacheSig !== sig){ wfCacheMap = {}; wfCacheSig = sig; }
   if (!wfCacheMap[ziel]) wfCacheMap[ziel] = AVModell.waterfall(S.I, S.P, ziel);
   return wfCacheMap[ziel];
@@ -1562,12 +1689,11 @@ function renderVerdict(){
 
   var diff = function(a,b){
     var d = a.v - b.v;
-    return S.metric === 'irr' ? nfp.format(d*100) + ' Prozentpunkte' : eur(d);
+    return S.metric === 'irr' ? t('verdict.pp', { v: nfp.format(d*100) }) : eur(d);
   };
   var fz = M.fmtKurz || M.fmt;
-  var s = '<b>' + w.satz + '</b> liegt vorn mit ' + M.fmt(w.v) + ' — ' + diff(w, zwei)
-        + ' mehr als ' + zwei.nom
-        + (drei ? ' und ' + diff(w, drei) + ' mehr als ' + drei.nom : '') + '.';
+  var s = t('verdict.lead', { satz: w.satz, wert: M.fmt(w.v), d2: diff(w, zwei), nom2: zwei.nom,
+    d3: drei ? diff(w, drei) : '', nom3: drei ? drei.nom : '' });
 
   /* Größter Einzelbeitrag zur Differenz. Gewinnt das Privatdepot, ist die
      interessante Frage, was die geförderte Alternative zurückhält. */
@@ -1576,10 +1702,8 @@ function renderVerdict(){
     var wf = getWaterfall(ziel), top = null;
     wf.bars.forEach(function(b){ if (!top || Math.abs(b.wert) > Math.abs(top.wert)) top = b; });
     if (top && Math.abs(top.wert) > 1){
-      s += ' Den größten Einzelposten im Abstand ' + opt(ziel).gen + ' zum privaten ETF-Depot bildet '
-         + '„' + top.label + '“ — und zwar ' + (top.wert >= 0 ? 'zugunsten' : 'zulasten')
-         + ' ' + opt(ziel).gen + ', mit ' + eur(Math.abs(top.wert)) + ' Barwert. '
-         + 'Die vollständige Zerlegung steht unter „Werttreiber“.';
+      s += t('verdict.top', { gen: opt(ziel).gen, label: top.label,
+        pro: top.wert >= 0, wert: top.wert });
     }
   }
 
@@ -1589,13 +1713,8 @@ function renderVerdict(){
   var hi = AVModell.rechne(Object.assign({}, S.I, { rendite: S.I.rendite + 0.01 }), S.P);
   var ordLo = argsort(lo, M), ordHi = argsort(hi, M), ordNow = vals.map(function(x){return x.k;}).join();
   var stabil = ordLo === ordNow && ordHi === ordNow;
-  s += '<span class="band">Wie belastbar ist das? Bei einer Bruttorendite von '
-     + pct(Math.max(0, S.I.rendite-0.01),1) + ' statt ' + pct(S.I.rendite,1) + ' wären es '
-     + fz(M.get(lo, w.k)) + ', bei ' + pct(S.I.rendite+0.01,1) + ' wären es '
-     + fz(M.get(hi, w.k)) + ' — die Reihenfolge '
-     + (stabil ? 'bleibt in dieser Spanne dieselbe.'
-               : '<b>kehrt sich in dieser Spanne um</b>, das Ergebnis trägt hier also nicht.')
-     + '</span>';
+  s += t('verdict.band', { lo: Math.max(0, S.I.rendite-0.01), mid: S.I.rendite, hi: S.I.rendite+0.01,
+    vlo: fz(M.get(lo, w.k)), vhi: fz(M.get(hi, w.k)), stabil: stabil });
   host.innerHTML = s;
 }
 function argsort(r, M){
@@ -1615,17 +1734,14 @@ function renderDemo(){
   var el0 = $('#demo');
   if (!istUnveraendert()){ el0.hidden = true; return; }
   el0.hidden = false;
-  el0.innerHTML = '<b>Das sind noch Beispielwerte</b> — 40 Jahre alt, 75.000 € Jahresbrutto, '
-    + '300 € Entgeltumwandlung im Monat, gesetzlich krankenversichert. Tragen Sie unter '
-    + '„Ihre Angaben“ Ihre eigenen ein; dieser Hinweis verschwindet dann von selbst.';
+  el0.innerHTML = t('demo.text');
 }
 
 /* Mitlaufende Leiste. Erscheint, sobald die Ergebniskarten aus dem Bild sind. */
 function renderSticky(){
   var M = METRICS[S.metric], host = $('#sb-vals');
-  $('#sb-cap').textContent = M.label + ' · ' + M.unit
-    + (S.metric === 'irr' ? '' : ', heutige Kaufkraft');
-  $('#stickybar').setAttribute('aria-label', 'Ergebnis: ' + M.label);
+  $('#sb-cap').textContent = t('sb.cap', { label: M.label, unit: M.unit, kaufkraft: S.metric !== 'irr' });
+  $('#stickybar').setAttribute('aria-label', t('sb.aria', { label: M.label }));
   host.innerHTML = OPTS.map(function(o){
     var v = M.get(R, o.k), dd = '';
     if (BASE){
@@ -1653,10 +1769,10 @@ function initSticky(){
 
 function secondary(o){
   var parts = [];
-  if (S.metric !== 'monat') parts.push('Monat ' + eur2(R.monat[o]));
-  if (S.metric !== 'ertrag') parts.push('Ertrag ' + eur(R.ertrag[o]));
-  if (S.metric !== 'irr') parts.push('IRR ' + pct(R.irr[o],2));
-  if (S.metric !== 'kapital') parts.push('Kapital ' + eur(R.kapital[o]));
+  if (S.metric !== 'monat') parts.push(t('metric.short.monat') + ' ' + eur2(R.monat[o]));
+  if (S.metric !== 'ertrag') parts.push(t('metric.short.ertrag') + ' ' + eur(R.ertrag[o]));
+  if (S.metric !== 'irr') parts.push(t('metric.short.irr') + ' ' + pct(R.irr[o],2));
+  if (S.metric !== 'kapital') parts.push(t('metric.short.kapital') + ' ' + eur(R.kapital[o]));
   return parts.slice(0,3).join(' &middot; ');
 }
 
@@ -1854,12 +1970,12 @@ function drawSens(){
     OPTS.forEach(function(o){ out.push(o.short + ' ' + M.fmt(nearest(s.pts[o.k], xv2)[1])); });
     $('#readout').textContent = out[0] + out.slice(1).join('  ·  ');
   } else {
-    $('#readout').textContent = 'Gestrichelt: Ihr aktueller Wert. Ringe: Schnittpunkte mit dem Privatdepot. Über der Kurve fahren oder tippen für Werte.';
+    $('#readout').textContent = t('sens.readout');
   }
 
   $('#legend').innerHTML = OPTS.map(function(o){
     return '<span><i style="background:'+o.raw+'"></i>'+o.name+'</span>';
-  }).join('') + '<span style="margin-left:auto">y: '+M.label+' ('+M.unit+')</span>';
+  }).join('') + '<span style="margin-left:auto">' + t('sens.legendY', { label: M.label, unit: M.unit }) + '</span>';
 
   /* Wandert der Regler auch den Nettoaufwand, ist das Niveau zwischen zwei
      x-Werten NICHT vergleichbar - nur die drei Kurven untereinander bei
@@ -1870,19 +1986,13 @@ function drawSens(){
   if (nfin.length){
     var nlo = Math.min.apply(null, nfin), nhi = Math.max.apply(null, nfin);
     if (nhi - nlo > 0.02 * Math.max(1, nhi))
-      note = ' Achtung: dieser Regler verändert auch den Nettoaufwand (hier ' + eur2(nlo) + ' bis '
-        + eur2(nhi) + ' im Monat) und damit den Betrag, der in allen drei Optionen investiert wird. '
-        + 'Deshalb sind die drei Kurven bei jedem einzelnen x fair vergleichbar, das Niveau zwischen '
-        + 'verschiedenen x aber nicht. Die Knicke sitzen an den Beitragsbemessungsgrenzen ('
-        + eur(S.P.bbg_kv) + ' für KV/PV, ' + eur(S.P.bbg_rv) + ' für RV/AV) und an den Tarifeckwerten.';
+      note = t('sens.noteNetto', { lo: nlo, hi: nhi, bbgkv: S.P.bbg_kv, bbgrv: S.P.bbg_rv });
   }
-  $('#chartnote').textContent = 'Der zuletzt bewegte Regler wird über seine ganze Spanne durchgerechnet — '
-    + s.pts.bav.length + ' vollständige Modellläufe. Aktuell: „' + f.label + '“. '
-    + 'Bewegen Sie einen anderen Regler, wechselt die Kurve mit.' + note;
+  $('#chartnote').textContent = t('sens.note', { n: s.pts.bav.length, label: f.label }) + note;
 }
 function formatViewNumber(f, v){
   var d = f.kind==='pct' ? 1 : (f.step<1?2:0);
-  return new Intl.NumberFormat('de-DE',{maximumFractionDigits:d}).format(v);
+  return new Intl.NumberFormat(LOCALE,{maximumFractionDigits:d}).format(v);
 }
 function nearest(pts, x){
   var b = pts[0], bd = Infinity;
@@ -1894,9 +2004,9 @@ function nearest(pts, x){
 var wfCache = null;
 function drawWaterfall(){
   var wf = wfCache = getWaterfall(S.wfZiel);
-  var items = [{label:'privates ETF-Depot', wert:wf.start, type:'abs'}]
+  var items = [{label: opt('priv').name, wert:wf.start, type:'abs'}]
     .concat(wf.bars.map(function(b){ return {label:b.label, wert:b.wert, type:'rel', note:b.note}; }))
-    .concat([{label: S.wfZiel==='bav'?'bAV':'Altersvorsorgedepot', wert:wf.ende, type:'abs'}]);
+    .concat([{label: opt(S.wfZiel).name, wert:wf.ende, type:'abs'}]);
 
   var cv = $('#chart'), n = items.length;
   var hh = Math.max(230, 46 + n*34);
@@ -1939,15 +2049,12 @@ function drawWaterfall(){
     g.fillText(t, w-8, y-2);
   });
 
-  $('#legend').innerHTML = '<span><i style="background:'+css('--good')+'"></i>hebt den Ertrag</span>'
-    + '<span><i style="background:'+css('--bad')+'"></i>senkt den Ertrag</span>'
-    + '<span style="margin-left:auto">Barwert des Netto-Ertrags, heutige Kaufkraft</span>';
+  $('#legend').innerHTML = '<span><i style="background:'+css('--good')+'"></i>' + t('wf.up') + '</span>'
+    + '<span><i style="background:'+css('--bad')+'"></i>' + t('wf.down') + '</span>'
+    + '<span style="margin-left:auto">' + t('wf.legend') + '</span>';
   var sum = wf.bars.reduce(function(s,b){return s+b.wert;},0);
-  $('#readout').textContent = 'Probe: ' + eur(wf.start) + ' + ' + eur(sum) + ' = ' + eur(wf.start+sum)
-    + ' (Soll ' + eur(wf.ende) + ', Abweichung ' + nf2.format(wf.start+sum-wf.ende) + ' €).';
-  $('#chartnote').innerHTML = 'Teleskopierende Zerlegung, deshalb geht sie exakt auf — aber sie ist '
-    + '<b>reihenfolgeabhängig</b>: die Effekte sind nicht additiv separierbar, jeder Balken misst den Beitrag '
-    + '<i>gegeben</i> die darüberliegenden. Tippen Sie einen Balken an für die Herleitung.';
+  $('#readout').textContent = t('wf.check', { start: wf.start, summe: sum, ende: wf.ende });
+  $('#chartnote').innerHTML = t('wf.note');
 }
 
 /* ---------- 3) Kapitalverlauf ---------- *
@@ -1998,7 +2105,7 @@ function drawKapital(){
   g.strokeStyle = css('--ink'); g.setLineDash([3,3]); g.lineWidth = 1;
   g.beginPath(); g.moveTo(X(rb), pad.t); g.lineTo(X(rb), h-pad.b); g.stroke(); g.setLineDash([]);
   g.fillStyle = css('--ink'); g.font = UIFONT; g.textAlign='right'; g.textBaseline='top';
-  g.fillText('Rentenbeginn', X(rb)-5, pad.t+2);
+  g.fillText(t('kap.rentbeg'), X(rb)-5, pad.t+2);
 
   var zeichne = function(pts, col, breite, strich){
     if (pts.length < 2) return;
@@ -2025,48 +2132,28 @@ function drawKapital(){
     if (marken[mi].y - marken[mi-1].y < 16) marken[mi].y = marken[mi-1].y + 16;
   g.font='bold '+UIFONT; g.textAlign='left'; g.textBaseline='middle';
   marken.forEach(function(m){
-    var t = 'Kapital → Rentenanspruch', tw = g.measureText(t).width;
+    /* `t` ist die Übersetzungsfunktion — die Beschriftung heißt hier deshalb
+       `txt` und nicht mehr `t`. */
+    var txt = t('kap.swap'), tw = g.measureText(txt).width;
     g.fillStyle = css('--white'); g.fillRect(X(rb)+5, m.y-7, tw+6, 14);
-    g.fillStyle = m.c; g.fillText(t, X(rb)+8, m.y);
+    g.fillStyle = m.c; g.fillText(txt, X(rb)+8, m.y);
   });
 
   $('#legend').innerHTML = OPTS.map(function(o){
     return '<span><i style="background:'+o.raw+'"></i>'+o.name+'</span>';
-  }).join('') + '<span style="margin-left:auto">durchgezogen: gesamt &nbsp;·&nbsp; '
-    + 'gestrichelt: frei verfügbar</span>';
+  }).join('') + '<span style="margin-left:auto">' + t('kap.legend') + '</span>';
 
-  $('#readout').textContent = 'Am Rentenbeginn gebunden: bAV ' + eur(R.kapital.bav) + ' von '
-    + eur(R.kapital.bav) + ' · AV-Depot ' + eur(R.kapital.av - R.vermoegenLiquid.av[0]) + ' von '
-    + eur(R.kapital.av) + ' · privates Depot ' + eur(0) + ' von ' + eur(R.kapital.priv)
-    + '.  Die äquivalente Monatsleistung wird verbraucht, deshalb endet jede Option bei null.';
+  $('#readout').textContent = t('kap.readout', {
+    bavGeb: R.kapital.bav, bav: R.kapital.bav,
+    avGeb: R.kapital.av - R.vermoegenLiquid.av[0], av: R.kapital.av, priv: R.kapital.priv });
 
-  $('#chartnote').textContent = 'Kontostand im Produkt, in der Auszahlungsphase zuzüglich der netto '
-    + 'wieder angelegten Auszahlungen (' + pct(R.diagnose.wiederanl,2) + ' nach Steuern) und '
-    + 'abzüglich der äquivalenten Monatsleistung, die tatsächlich verbraucht wird. Deshalb läuft '
-    + 'jede Option punktgenau auf null. Weil der Verbrauch nur aus der Wiederanlage abgeht und das '
-    + 'Produktkapital im Produkt bleibt, wo es mit der Produktrendite vor Steuern wächst, verlaufen '
-    + 'die Kurven trotzdem nicht proportional. — Die gestrichelte Linie ist der frei verfügbare '
-    + 'Teil: die bAV ist bis zum Rentenbeginn vollständig gebunden (§ 1b BetrAVG kennt '
-    + 'Unverfallbarkeit, nicht Verfügbarkeit), beim Altersvorsorgedepot ist eine Entnahme vor 65 '
-    + 'förderschädlich und frei nur der Überschuss über den Jahreshöchstbetrag, das Privatdepot ist '
-    + 'jederzeit frei. Das ist die einzige Achse, auf der eine Kapitalauszahlung gut aussieht. '
-    + (S.I.av_auszform === 2
-        ? 'Weil Sie das Depot verrenten, geht auch dort das Kapital an den Anbieter — die Kurve '
-          + 'fällt entsprechend, obwohl nichts verloren ist. '
-        : '')
-    + 'Und noch einmal ausdrücklich: die Kurven zeigen das Vermögen aus DIESER einen Entscheidung, '
-    + 'nicht Ihr Gesamtvermögen.';
+  $('#chartnote').textContent = t('kap.note', { wiederanl: R.diagnose.wiederanl,
+    verrentet: S.I.av_auszform === 2 });
 }
 
 /* ---------- 4) Monatszerlegung ---------- */
 function drawZerlegung(){
   var cv = $('#chart');
-  var rows = [
-    ['Bruttoleistung', R.monatBrutto, 1],
-    ['Einkommen-/Abgeltungsteuer', R.monatSteuer, -1],
-    ['Kranken- und Pflegeversicherung', R.monatKV, -1],
-    ['Verlust an gesetzlicher Rente', R.monatEP, -1]
-  ];
   var P = prep(cv, 250), g = P.g, w = P.w, h = P.h;
   var maxV = Math.max.apply(null, OPTS.map(function(o){return R.monatBrutto[o.k];})) * 1.02;
   if (!(maxV > 0) || !isFinite(maxV)) maxV = 1;
@@ -2082,10 +2169,10 @@ function drawZerlegung(){
     // gestapelte Abzüge vom Brutto
     var brutto = R.monatBrutto[o.k];
     var segs = [
-      { v: brutto + R.monatSteuer[o.k] + R.monatKV[o.k] + R.monatEP[o.k], c:o.raw, l:'netto' },
-      { v: -R.monatSteuer[o.k], c:'#808080', l:'Steuer' },
-      { v: -R.monatKV[o.k], c:'#800000', l:'KV/PV' },
-      { v: -R.monatEP[o.k], c:'#800080', l:'Rente' }
+      { v: brutto + R.monatSteuer[o.k] + R.monatKV[o.k] + R.monatEP[o.k], c:o.raw, l:t('zer.netto') },
+      { v: -R.monatSteuer[o.k], c:'#808080', l:t('zer.tax') },
+      { v: -R.monatKV[o.k], c:'#800000', l:t('zer.kv') },
+      { v: -R.monatEP[o.k], c:'#800080', l:t('zer.pension') }
     ];
     var acc = 0;
     var scale = (h-pad.t-pad.b-24)/(maxV||1);
@@ -2102,27 +2189,21 @@ function drawZerlegung(){
     g.fillStyle=css('--ink'); g.font='bold 12px "MS Sans Serif",Tahoma,Verdana,sans-serif'; g.textAlign='center';
     g.fillText(eur2(R.monat[o.k]), x0+bw/2, h-pad.b-8);
   });
-  $('#legend').innerHTML = '<span><i style="background:#808080"></i>Steuer</span>'
-    + '<span><i style="background:#800000"></i>KV/PV</span>'
-    + '<span><i style="background:#800080"></i>entgangene gesetzliche Rente</span>'
-    + '<span style="margin-left:auto">farbiger Sockel = das, was übrig bleibt</span>';
-  $('#readout').textContent = 'Alles als konstante Monatsleistung in heutiger Kaufkraft. Weil Annuitisierung linear ist, '
-    + 'addieren sich die Blöcke exakt.';
-  $('#chartnote').textContent = 'Der Bezugszeitraum ist für alle drei Optionen identisch. Eine Kapitalauszahlung wird '
-    + 'nicht durch zwölf geteilt, sondern mit dem Wiederanlagezins nach Steuern (' + pct(R.diagnose.wiederanl,2)
-    + ' p.a.) auf denselben Zeitraum verrentet. Wer das Kapital verkonsumiert statt anzulegen, steht schlechter.';
+  $('#legend').innerHTML = t('zer.legend');
+  $('#readout').textContent = t('zer.readout');
+  $('#chartnote').textContent = t('zer.note', { wiederanl: R.diagnose.wiederanl });
 }
 
 var TABS = [
-  { k:'sens', t:'Sensitivität', fn:drawSens },
-  { k:'wf',   t:'Werttreiber',  fn:drawWaterfall },
-  { k:'kap',  t:'Kapitalverlauf', fn:drawKapital },
-  { k:'zer',  t:'Monatszerlegung', fn:drawZerlegung }
+  { k:'sens', fn:drawSens },
+  { k:'wf',   fn:drawWaterfall },
+  { k:'kap',  fn:drawKapital },
+  { k:'zer',  fn:drawZerlegung }
 ];
 function buildTabs(){
   var host = $('#tabs'); host.innerHTML = '';
   TABS.forEach(function(T){
-    var b = el('button', null, T.t); b.type='button';
+    var b = el('button', null, t('tab.' + T.k)); b.type='button';
     b.setAttribute('aria-pressed', S.tab===T.k);
     b.onclick = function(){ S.tab=T.k; hoverX=null; buildTabs(); drawChart(); saveState(); };
     host.appendChild(b);
@@ -2138,11 +2219,12 @@ function buildTabs(){
     host.appendChild(sw);
   };
   if (S.tab==='wf')
-    umschalter([['bav','bAV'],['av','AV-Depot']], S.wfZiel, function(v){ S.wfZiel=v; });
+    umschalter([['bav', opt('bav').short], ['av', opt('av').short]], S.wfZiel,
+      function(v){ S.wfZiel=v; });
 }
 function drawChart(){
   var T = TABS.filter(function(x){return x.k===S.tab;})[0] || TABS[0];
-  try { T.fn(); } catch(e){ $('#readout').textContent = 'Diagramm nicht darstellbar: ' + e.message; }
+  try { T.fn(); } catch(e){ $('#readout').textContent = t('chart.error', { msg: e.message }); }
 }
 
 /* Interaktion auf der Leinwand */
@@ -2162,7 +2244,8 @@ function drawChart(){
     if (S.tab !== 'wf' || !wfCache) return;
     var r = cv.getBoundingClientRect(), y = ev.clientY - r.top;
     var i = Math.floor((y-16)/34) - 1;
-    if (i>=0 && i<wfCache.bars.length) $('#readout').textContent = wfCache.bars[i].label + ': ' + wfCache.bars[i].note;
+    if (i>=0 && i<wfCache.bars.length)
+      $('#readout').textContent = t('wf.barinfo', { label: wfCache.bars[i].label, note: wfCache.bars[i].note });
   });
 })();
 
@@ -2184,124 +2267,111 @@ function det(title, inner, key, sub){
     + (sub?'<p class="sub" style="margin:0 0 8px">'+sub+'</p>':'') + inner + '</div></details>';
 }
 function renderDetails(){
-  var d = R.diagnose, H = ['', 'bAV', 'AV-Depot', 'privat'];
-  var g = function(o,f){ return f(o); };
+  var d = R.diagnose, H = ['', t('det.h.bav'), t('det.h.av'), t('det.h.priv')];
 
   var erg = tbl(H, [
-    { c:['Summe eingezahlt aus dem Netto (nominal)', eur(R.summeNetto), eur(R.summeNetto), eur(R.summeNetto)] },
-    { c:['Fremdgeld (Zuschuss bzw. Zulagen)', eur(R.fremdgeld.bav), eur(R.fremdgeld.av), eur(0)] },
-    { c:['Kapital bei Auszahlungsbeginn', eur(R.kapital.bav), eur(R.kapital.av), eur(R.kapital.priv)] },
-    { c:['Summe Bruttoauszahlungen', eur(R.bruttoAusz.bav), eur(R.bruttoAusz.av), eur(R.bruttoAusz.priv)] },
-    { c:['davon Einkommen-/Abgeltungsteuer', eur(R.steuerAusz.bav), eur(R.steuerAusz.av), eur(R.steuerAusz.priv)] },
-    { c:['davon Kranken- und Pflegeversicherung', eur(R.kvpvAusz.bav), eur(0), eur(0)] },
-    { c:['Verlust an gesetzlicher Rente (kumuliert)', eur(R.rentenverlust.bav), eur(0), eur(0)] },
-    { c:['Summe Netto-Auszahlungen (nominal)', eur(R.nettoAusz.bav), eur(R.nettoAusz.av), eur(R.nettoAusz.priv)] },
-    { c:['Barwert der Netto-Auszahlungen', eur(R.bwAuszahlung.bav), eur(R.bwAuszahlung.av), eur(R.bwAuszahlung.priv)] },
-    { c:['Barwert des Nettoaufwands', eur(R.bwAufwand), eur(R.bwAufwand), eur(R.bwAufwand)] },
-    { hl:1, c:['Barwert des Netto-Ertrags', eur(R.ertrag.bav), eur(R.ertrag.av), eur(R.ertrag.priv)] },
-    { c:['Verhältnis Ertrag zu Aufwand', nf2.format(R.bwAuszahlung.bav/R.bwAufwand)+'×',
+    { c:[t('det.erg.netto'), eur(R.summeNetto), eur(R.summeNetto), eur(R.summeNetto)] },
+    { c:[t('det.erg.fremd'), eur(R.fremdgeld.bav), eur(R.fremdgeld.av), eur(0)] },
+    { c:[t('det.erg.kapital'), eur(R.kapital.bav), eur(R.kapital.av), eur(R.kapital.priv)] },
+    { c:[t('det.erg.brutto'), eur(R.bruttoAusz.bav), eur(R.bruttoAusz.av), eur(R.bruttoAusz.priv)] },
+    { c:[t('det.erg.steuer'), eur(R.steuerAusz.bav), eur(R.steuerAusz.av), eur(R.steuerAusz.priv)] },
+    { c:[t('det.erg.kvpv'), eur(R.kvpvAusz.bav), eur(0), eur(0)] },
+    { c:[t('det.erg.rentenverlust'), eur(R.rentenverlust.bav), eur(0), eur(0)] },
+    { c:[t('det.erg.nettoausz'), eur(R.nettoAusz.bav), eur(R.nettoAusz.av), eur(R.nettoAusz.priv)] },
+    { c:[t('det.erg.bwausz'), eur(R.bwAuszahlung.bav), eur(R.bwAuszahlung.av), eur(R.bwAuszahlung.priv)] },
+    { c:[t('det.erg.bwaufw'), eur(R.bwAufwand), eur(R.bwAufwand), eur(R.bwAufwand)] },
+    { hl:1, c:[t('det.erg.ertrag'), eur(R.ertrag.bav), eur(R.ertrag.av), eur(R.ertrag.priv)] },
+    { c:[t('det.erg.verhaeltnis'), nf2.format(R.bwAuszahlung.bav/R.bwAufwand)+'×',
          nf2.format(R.bwAuszahlung.av/R.bwAufwand)+'×', nf2.format(R.bwAuszahlung.priv/R.bwAufwand)+'×'] },
-    { c:['Interner Zinsfuß (nominal)', pct(R.irr.bav), pct(R.irr.av), pct(R.irr.priv)] },
-    { c:['Vorsprung gegenüber dem Privatdepot', eur(R.ertrag.bav-R.ertrag.priv), eur(R.ertrag.av-R.ertrag.priv), eur(0)] }
+    { c:[t('det.erg.irr'), pct(R.irr.bav), pct(R.irr.av), pct(R.irr.priv)] },
+    { c:[t('det.erg.vorsprung'), eur(R.ertrag.bav-R.ertrag.priv), eur(R.ertrag.av-R.ertrag.priv), eur(0)] }
   ]);
 
   var mon = tbl(H, [
-    { c:['Bruttoleistung pro Monat', eur2(R.monatBrutto.bav), eur2(R.monatBrutto.av), eur2(R.monatBrutto.priv)] },
-    { c:['abzüglich Einkommen-/Abgeltungsteuer', eur2(R.monatSteuer.bav), eur2(R.monatSteuer.av), eur2(R.monatSteuer.priv)] },
-    { c:['abzüglich Kranken- und Pflegeversicherung', eur2(R.monatKV.bav), eur2(0), eur2(0)] },
-    { c:['abzüglich Verlust an gesetzlicher Rente', eur2(R.monatEP.bav), eur2(0), eur2(0)] },
-    { hl:1, c:['NETTO PRO MONAT (heutige Kaufkraft)', eur2(R.monat.bav), eur2(R.monat.av), eur2(R.monat.priv)] }
+    { c:[t('det.mon.brutto'), eur2(R.monatBrutto.bav), eur2(R.monatBrutto.av), eur2(R.monatBrutto.priv)] },
+    { c:[t('det.mon.steuer'), eur2(R.monatSteuer.bav), eur2(R.monatSteuer.av), eur2(R.monatSteuer.priv)] },
+    { c:[t('det.mon.kvpv'), eur2(R.monatKV.bav), eur2(0), eur2(0)] },
+    { c:[t('det.mon.ep'), eur2(R.monatEP.bav), eur2(0), eur2(0)] },
+    { hl:1, c:[t('det.mon.netto'), eur2(R.monat.bav), eur2(R.monat.av), eur2(R.monat.priv)] }
   ]);
 
-  var diag = tbl(['Kennzahl','Wert'], [
-    { c:['Bruttobeitrag bAV pro Monat', eur2(R.beitragMtl)] },
-    { c:['Nettoaufwand pro Monat (erstes Jahr)', eur2(R.nettoaufwandMtl)] },
-    { c:['Grenzsteuersatz in der Ansparphase (erstes Jahr)', pct(d.grenzsteuer)] },
-    { c:['Ersparnisquote gesamt (Steuer + SV), erstes Jahr', pct(d.ersparnisquote)] },
-    { c:['tatsächliche SV-Ersparnis des Arbeitgebers', eur2(d.svErspAG)] },
-    { c:['tatsächliche SV-Ersparnis des Arbeitnehmers', eur2(d.svErspAN)] },
-    { c:['Anteil der bAV-Beiträge ohne Förderung (erstes Jahr)', pct(d.ngefAnteil)] },
-    { c:['Ausschöpfung des Rechtsanspruchs (4 % BBG-RV)', pct(d.ausschoepfung,1)] },
-    { c:['Versorgungsbezug pro Monat zu Auszahlungsbeginn', eur2(d.vbMonat)] },
-    { c:['Freibetrag Versorgungsbezüge im selben Jahr', eur2(d.freibetrag)] },
-    { hl:1, c:['Verhältnis Versorgungsbezug zu Freibetrag', nf2.format(d.vbQuote)+'×'] },
-    { c:['beitragsfrei mögliches Kapital (Kapitalauszahlung)', eur(d.kapFreiKapital)] },
-    { c:['beitragsfrei mögliches Kapital (lebenslange Rente)', eur(d.kapFreiRente)] },
-    { c:['MEMO: bAV-Rentenzahlungen nach dem Horizont', eur(d.memoRest)] },
-    { c:['MEMO: Depotrente nach dem Horizont', eur(d.memoRestAv)] },
-    { c:['Wiederanlagezins nach Steuern', pct(d.wiederanl)] },
-    { c:['effektive Abgeltungsteuer inkl. Soli/KiSt', pct(d.kapstEff,3)] },
-    { c:['Besteuerungsanteil der gesetzlichen Rente', pct(d.bestAnteil,1)] }
+  var diag = tbl([t('det.h.kennzahl'), t('det.h.wert')], [
+    { c:[t('det.diag.beitrag'), eur2(R.beitragMtl)] },
+    { c:[t('det.diag.aufwand'), eur2(R.nettoaufwandMtl)] },
+    { c:[t('det.diag.grenzsteuer'), pct(d.grenzsteuer)] },
+    { c:[t('det.diag.ersparnis'), pct(d.ersparnisquote)] },
+    { c:[t('det.diag.svAG'), eur2(d.svErspAG)] },
+    { c:[t('det.diag.svAN'), eur2(d.svErspAN)] },
+    { c:[t('det.diag.ngef'), pct(d.ngefAnteil)] },
+    { c:[t('det.diag.aussch'), pct(d.ausschoepfung,1)] },
+    { c:[t('det.diag.agzVar'), eur2(d.agzVar)] },
+    { c:[t('det.diag.agzFix'), eur2(d.agzFix)] },
+    { c:[t('det.diag.agzFixUeber4'), eur2(d.agzFixUeber4)] },
+    { c:[t('det.diag.vbMonat'), eur2(d.vbMonat)] },
+    { c:[t('det.diag.freibetrag'), eur2(d.freibetrag)] },
+    { hl:1, c:[t('det.diag.vbQuote'), nf2.format(d.vbQuote)+'×'] },
+    { c:[t('det.diag.kapFreiKapital'), eur(d.kapFreiKapital)] },
+    { c:[t('det.diag.kapFreiRente'), eur(d.kapFreiRente)] },
+    { c:[t('det.diag.memoRest'), eur(d.memoRest)] },
+    { c:[t('det.diag.memoRestAv'), eur(d.memoRestAv)] },
+    { c:[t('det.diag.wiederanl'), pct(d.wiederanl)] },
+    { c:[t('det.diag.kapstEff'), pct(d.kapstEff,3)] },
+    { c:[t('det.diag.bestAnteil'), pct(d.bestAnteil,1)] }
   ]);
 
   var warn = '';
   if (d.vbQuote > 1.5 || d.ngefAnteil > 0.05 || d.ausschoepfung > 1)
-    warn = '<p class="warn" style="margin-top:8px">Sie liegen außerhalb des begünstigten Korridors: '
-      + (d.ausschoepfung>1 ? 'Über 100 % Ausschöpfung besteht kein Rechtsanspruch auf Entgeltumwandlung mehr. ' : '')
-      + (d.ngefAnteil>0.05 ? 'Ein spürbarer Teil der Beiträge ist weder steuer- noch sozialabgabenbegünstigt — diese Schicht wandert in einen Versicherungsmantel, ohne dafür etwas zu bekommen außer der Beitragspflicht in der KV. ' : '')
-      + (d.vbQuote>1.5 ? 'Der Versorgungsbezug übersteigt den Freibetrag deutlich; die Schutzwirkung des absoluten Freibetrags fällt wie 1/Kapital. ' : '')
+    warn = '<p class="warn" style="margin-top:8px">' + t('det.warn.lead')
+      + (d.ausschoepfung>1 ? t('det.warn.aussch') : '')
+      + (d.ngefAnteil>0.05 ? t('det.warn.ngef') : '')
+      + (d.vbQuote>1.5 ? t('det.warn.vb') : '')
       + '</p>';
 
+  var zeigeFix = S.I.agz_fix > 0;
   var ansparRows = R.A.filter(function(a){return a.alter<=S.I.rentbeg;}).map(function(a){
-    return { c:[a.jahr+' (Alter '+a.alter+')', eur(a.brutto), eur(a.bav_br), eur(a.agz), eur(a.sverp), eur(a.sterp),
-      '<b>'+eur(a.netto_a)+'</b>', eur(a.av_zul), eur(a.k_bav_g+a.k_bav_n), eur(a.k_gef+a.k_ngef+a.sl_w), eur(a.pr_w)] };
+    var c = [t('det.row.year', { jahr: a.jahr, alter: a.alter }), eur(a.brutto), eur(a.bav_br), eur(a.agz_var)];
+    if (zeigeFix) c.push(eur(a.agz_fx));
+    return { c: c.concat([eur(a.sverp), eur(a.sterp),
+      '<b>'+eur(a.netto_a)+'</b>', eur(a.av_zul), eur(a.k_bav_g+a.k_bav_n), eur(a.k_gef+a.k_ngef+a.sl_w), eur(a.pr_w)]) };
   });
-  var anspar = tbl(['Jahr','Brutto','bAV-Beitrag','AG-Zuschuss','SV-Erspar.','Steuer-Erspar.','Nettoaufwand',
-    'Zulagen','Kapital bAV','Kapital AV','Kapital privat'], ansparRows);
+  var ansparH = [t('det.anspar.h.jahr'), t('det.anspar.h.brutto'),
+                 t('det.anspar.h.beitrag'), t('det.anspar.h.agzVar')];
+  if (zeigeFix) ansparH.push(t('det.anspar.h.agzFix'));
+  var anspar = tbl(ansparH.concat([t('det.anspar.h.sv'), t('det.anspar.h.st'), t('det.anspar.h.netto'),
+    t('det.anspar.h.zul'), t('det.anspar.h.kbav'), t('det.anspar.h.kav'), t('det.anspar.h.kpriv')]), ansparRows);
 
   var auszRows = R.Z.filter(function(z){return z.alter<=S.I.planende;}).map(function(z){
-    return { c:[z.jahr+' (Alter '+z.alter+')', eur(z.bav_br), eur(z.bav_kvpv), eur(z.st_bav), eur(z.mind_br),
+    return { c:[t('det.row.year', { jahr: z.jahr, alter: z.alter }),
+      eur(z.bav_br), eur(z.bav_kvpv), eur(z.st_bav), eur(z.mind_br),
       '<b>'+eur(z.bav_net)+'</b>', eur(z.gef_e+z.ngef_e+z.sl_e), '<b>'+eur(z.av_net)+'</b>',
       eur(z.pr_e), '<b>'+eur(z.pr_net)+'</b>'] };
   });
-  var ausz = tbl(['Jahr','bAV brutto','KV/PV','Steuer','Rentenminderung','bAV netto',
-    'AV brutto','AV netto','privat brutto','privat netto'], auszRows);
+  var ausz = tbl([t('det.ausz.h.jahr'), t('det.ausz.h.bavBr'), t('det.ausz.h.kvpv'), t('det.ausz.h.steuer'),
+    t('det.ausz.h.mind'), t('det.ausz.h.bavNet'), t('det.ausz.h.avBr'), t('det.ausz.h.avNet'),
+    t('det.ausz.h.privBr'), t('det.ausz.h.privNet')], auszRows);
 
-  var ann = '<p class="sub">Die Rangfolge hängt an Rechtsfragen, die 2026 noch nicht alle geklärt sind. '
-    + 'Die Zahlen in Klammern sind subjektive Vertrauensgrade.</p>' + tbl(['Annahme','Vertrauen','Anmerkung'], [
-    { c:['Rechengrößen SV 2026, § 32a-Tarif 2026','97 %','SVBezGrV 2026, Steuerfortentwicklungsgesetz'] },
-    { c:['KV/PV-Pflicht auf Versorgungsbezüge','95 %','§§ 229, 250 SGB V'] },
-    { c:['Freibetrag § 226 Abs. 2 S. 2 SGB V (KV)','95 %','unstreitig'] },
-    { c:['Freigrenze statt Freibetrag in der PV','85 %','die häufigste Fehlerquelle in Ratgebertexten'] },
-    { c:['Beitragsfreiheit der AV-Depot-Auszahlung','85 %','keine Versorgungsbezüge'] },
-    { c:['halber Unterschiedsbetrag für nicht geförderte Schichten','80 %','§ 22 Nr. 5 S. 2 Buchst. b i.V.m. § 20 Abs. 1 Nr. 6 S. 2 EStG'] },
-    { c:['Zuschuss nur bis zur tatsächlichen AG-Ersparnis','75 %','Gegenauffassung liest 15 % als reine Pauschale'] },
-    { hl:1, c:['Sonderausgaben-Höchstbetrag 2.340 €','70 %','MODELLANNAHME. Entscheidet, ob ein Kind den Wert des AV-Depots hebt oder senkt'] },
-    { c:['KVdR-Pflichtversicherung im Ruhestand unterstellt','70 %','freiwillig Versicherte nicht geprüft'] }
-  ]) + '<p class="note"><b>Nicht modelliert:</b> Abschläge bei vorzeitigem Rentenbezug, Wirkung der '
-    + 'Entgeltumwandlung auf Kranken-, Arbeitslosen- und Elterngeld, Hinterbliebenenversorgung, '
-    + 'Insolvenzsicherung (PSVaG), Portabilität bei Arbeitgeberwechsel, Kinderabschläge in der PV, '
-    + 'Günstigerprüfung nach § 32d Abs. 6 EStG, Pfändungs- und Grundsicherungsschutz, Langlebigkeitsrisiko '
-    + 'jenseits des Horizonts.</p>';
+  /* Die Vertrauensgrade sind Zahlen und bleiben deshalb unübersetzt; nur
+     Annahme und Anmerkung wandern durch das Wörterbuch. */
+  var annVertrauen = ['97 %','95 %','95 %','85 %','85 %','80 %','75 %','70 %','70 %'];
+  var annRows = annVertrauen.map(function(v, i){
+    var n = i + 1;
+    return { hl: n === 8 ? 1 : 0,
+             c: [t('det.ann.r'+n+'.a'), pct(parseFloat(v)/100, 0), t('det.ann.r'+n+'.c')] };
+  });
+  var ann = '<p class="sub">' + t('det.ann.intro') + '</p>'
+    + tbl([t('det.ann.h.annahme'), t('det.ann.h.vertrauen'), t('det.ann.h.anmerkung')], annRows)
+    + '<p class="note">' + t('det.ann.notmodelled') + '</p>';
 
-  var prinzip = '<p>Ein Vergleich von <i>Bruttobeiträgen</i> wäre unfair: Entgeltumwandlung kommt aus dem Brutto, '
-    + 'privates Sparen aus dem Netto. Deshalb wird der <b>Nettoaufwand</b> gleichgesetzt:</p>'
-    + '<p style="font-family:var(--mono);font-size:.82rem;background:var(--chip);padding:9px 11px;border-radius:9px">'
-    + 'Nettoaufwand = Bruttobeitrag − Lohnsteuerersparnis − ersparter AN-Anteil zur Sozialversicherung</p>'
-    + '<p>Genau dieser Betrag wird in allen drei Optionen investiert. Was übrig bleibt, ist ein Vergleich der '
-    + '<i>Förderarchitekturen</i>, nicht der Einzahlungshöhen.</p>'
-    + '<p><b>Steueraufschub ist für sich genommen wertlos:</b> (1−t)·(1+r)ⁿ = (1+r)ⁿ·(1−t). Multiplikation '
-    + 'kommutiert. Es bleiben nur vier Werttreiber:</p>'
-    + '<ol style="padding-left:1.2em;margin:.3em 0"><li>Tarifarbitrage t₀ − t₁</li>'
-    + '<li>Fremdgeld — Arbeitgeberzuschuss bzw. Zulagen</li>'
-    + '<li>steuerfreie Thesaurierung — keine Vorabpauschale</li>'
-    + '<li>neue Abgaben, die nur eine Option treffen — KV/PV auf Versorgungsbezüge</li></ol>'
-    + '<p>Punkt 4 ist der dominante Nachteil der bAV, Punkt 2 ihr einziger struktureller Vorteil. '
-    + 'Die Rendite der bAV <b>fällt streng monoton in der Beitragshöhe</b>, weil der Freibetrag absolut ist und '
-    + 'seine Schutzwirkung wie 1/K abnimmt — es gibt kein inneres Optimum.</p>'
-    + '<p>Bei Vorgabe des Nettoaufwands wird der Bruttobeitrag per Bisektion zurückgerechnet: N(B) ist stetig und '
-    + 'streng monoton wachsend (dN/dB = 1 − Grenz-SV-Satz − Grenzsteuersatz > 0), wegen der Knicke bei 4 % und 8 % '
-    + 'der BBG-RV, an den Beitragsbemessungsgrenzen und an den Tarifeckwerten aber nicht geschlossen invertierbar. '
-    + '34 Halbierungen liefern unter einem Zehntelcent.</p>';
+  var prinzip = t('det.prinzip');
 
   $('#details').innerHTML =
-      det('Das Vergleichsprinzip', prinzip, 'd_prinzip')
-    + det('Ergebnis im Detail', erg, 'd_erg', 'Alle drei Optionen kosten in der Ansparphase exakt denselben Betrag aus dem Netto.')
-    + det('Monatliche Leistung, zerlegt', mon, 'd_mon', 'Alle Optionen über denselben Zeitraum verrentet, in heutiger Kaufkraft. Weil Annuitisierung linear ist, addieren sich die Zeilen exakt.')
-    + det('Diagnose', diag + warn, 'd_diag', 'Woran es liegt — und wo Sie außerhalb des begünstigten Korridors stehen.')
-    + det('Ansparphase, Jahr für Jahr', anspar, 'd_anspar')
-    + det('Auszahlungsphase, Jahr für Jahr', ausz, 'd_ausz')
-    + det('Belastbarkeit der Annahmen', ann, 'd_ann');
+      det(t('det.t.prinzip'), prinzip, 'd_prinzip')
+    + det(t('det.t.erg'), erg, 'd_erg', t('det.s.erg'))
+    + det(t('det.t.mon'), mon, 'd_mon', t('det.s.mon'))
+    + det(t('det.t.diag'), diag + warn, 'd_diag', t('det.s.diag'))
+    + det(t('det.t.anspar'), anspar, 'd_anspar')
+    + det(t('det.t.ausz'), ausz, 'd_ausz')
+    + det(t('det.t.ann'), ann, 'd_ann');
 
   $('#details').querySelectorAll('details[data-dk]').forEach(function(dd){
     dd.addEventListener('toggle', function(){
@@ -2351,15 +2421,13 @@ function refresh(){
 function render(){ refresh(); }
 
 $('#pin').onclick = function(){
-  if (PINNED){ PINNED = false; BASE = null; armed = null; BASEDESC = ''; }
-  else { PINNED = true; BASE = R; BASEDESC = 'gemerkter Stand'; }
+  if (PINNED){ PINNED = false; BASE = null; armed = null; BASEKEY = null; }
+  else { PINNED = true; BASE = R; BASEKEY = null; }
   renderCards(); renderSticky();
 };
 $('#share').onclick = function(){
-  var url = location.origin + location.pathname + '#' + encodeState();
-  var done = function(ok){ $('#sharemsg').textContent = ok
-    ? 'Link kopiert. Wer ihn öffnet, sieht genau diese Zahlen — nichts davon läuft über einen Server.'
-    : 'Kopieren ging nicht. Der Link steht jetzt in der Adresszeile.'; };
+  var url = location.origin + location.pathname + location.search + '#' + encodeState();
+  var done = function(ok){ $('#sharemsg').textContent = t(ok ? 'msg.linkCopied' : 'msg.linkFailed'); };
   history.replaceState(null,'','#'+encodeState());
   if (navigator.clipboard && navigator.clipboard.writeText)
     navigator.clipboard.writeText(url).then(function(){done(true);}, function(){done(false);});
@@ -2382,21 +2450,23 @@ $('#file').onchange = function(e){
       var o = JSON.parse(rd.result);
       if (o.I) for (var k in AVModell.DEFAULT_INPUT) if (typeof o.I[k]==='number') S.I[k]=o.I[k];
       if (o.P) for (var p in AVModell.DEFAULT_PARAM) if (typeof o.P[p]==='number') S.P[p]=o.P[p];
-      BASE = null; PINNED = false; armed = null; koppelWarn = null;
+      BASE = null; PINNED = false; armed = null; BASEKEY = null; koppelWarn = null;
       buildInputs(); refresh();
-      $('#sharemsg').textContent = 'Geladen.';
-    } catch(err){ $('#sharemsg').textContent = 'Die Datei ließ sich nicht lesen: ' + err.message; }
+      $('#sharemsg').textContent = t('msg.loaded');
+    } catch(err){ $('#sharemsg').textContent = t('msg.loadError', { msg: err.message }); }
   };
   rd.readAsText(f);
 };
 $('#reset').onclick = function(){
   S.I = Object.assign({}, AVModell.DEFAULT_INPUT);
   S.P = Object.assign({}, AVModell.DEFAULT_PARAM);
-  BASE = null; PINNED = false; armed = null; koppelWarn = null;
+  BASE = null; PINNED = false; armed = null; BASEKEY = null; koppelWarn = null;
   try { localStorage.removeItem(LSKEY); } catch(e){}
-  history.replaceState(null,'',location.pathname);
+  /* Die Sprachwahl in der Adresse überlebt das Zurücksetzen — sie gehört zur
+     Darstellung, nicht zu den Eingaben. */
+  history.replaceState(null,'',location.pathname + location.search);
   buildInputs(); refresh();
-  $('#sharemsg').textContent = 'Zurückgesetzt auf den Basisfall.';
+  $('#sharemsg').textContent = t('msg.reset');
 };
 
 /* Es gibt nur ein Farbschema. Silber auf Petrol ist hier nicht Dekoration,
@@ -2414,6 +2484,7 @@ window.addEventListener('resize', function(){
    nicht Zierrat — er klappt den Fensterinhalt tatsaechlich ein, was auf
    dem Telefon nuetzlich ist. Der Zustand wird mitgespeichert.
    ===================================================================== */
+var WINCHROME = [];
 function dressWindows(){
   var host = document.querySelector('.wrap');
   var wins = [].slice.call(host.querySelectorAll(':scope > header, :scope > section.win'));
@@ -2422,9 +2493,13 @@ function dressWindows(){
     var isHeader = sec.tagName === 'HEADER';
     if (isHeader) sec.className = 'win';
 
+    /* Der Titel kommt aus dem Wörterbuch. Der Schlüssel wandert auf das
+       Textelement der Titelleiste, damit applyStatic() ihn beim Sprachwechsel
+       von selbst wiederfindet. */
     var h = sec.querySelector('h1, h2');
-    var title = sec.getAttribute('data-title')
-             || (h ? h.textContent.replace(/‑/g, '-') : 'Fenster ' + (i+1));
+    var tkey = sec.getAttribute('data-title-key');
+    var title = tkey ? t(tkey).replace(/‑/g, '-')
+             : (h ? h.textContent.replace(/‑/g, '-') : t('win.n', { n: i+1 }));
     if (h) h.remove();
 
     var key = 'w_' + (sec.id || ('n' + i));
@@ -2433,10 +2508,12 @@ function dressWindows(){
 
     var bar = el('div','titlebar');
     bar.appendChild(el('span','sysbox'));
-    bar.appendChild(el('span','tbtext', title));
+    var tb = el('span','tbtext', title);
+    if (tkey) tb.setAttribute('data-i18n', tkey);
+    bar.appendChild(tb);
     var mn = el('button','tbbtn','▬');
     mn.type = 'button';
-    mn.title = 'Minimieren';
+    mn.title = t('win.min');
     mn.setAttribute('aria-expanded', 'true');
     bar.appendChild(mn);
 
@@ -2445,7 +2522,7 @@ function dressWindows(){
     var setRolled = function(r, save){
       sec.classList.toggle('rolled', r);
       mn.textContent = r ? '■' : '▬';
-      mn.title = r ? 'Wiederherstellen' : 'Minimieren';
+      mn.title = t(r ? 'win.restore' : 'win.min');
       mn.setAttribute('aria-expanded', String(!r));
       S.open[key] = !r;
       if (save) saveState();
@@ -2453,6 +2530,10 @@ function dressWindows(){
       if (LAY) LAY.fit();           // Einklappen aendert die Fensterhoehe
     };
     mn.onclick = function(){ setRolled(!sec.classList.contains('rolled'), true); };
+    /* Nur die Beschriftung nachziehen, ohne den Zustand anzufassen. */
+    WINCHROME.push(function(){
+      mn.title = t(sec.classList.contains('rolled') ? 'win.restore' : 'win.min');
+    });
     /* Doppelklick auf die Titelleiste klappt ein - wie unter Windows */
     bar.ondblclick = function(e){ if (e.target !== mn) mn.onclick(); };
     if (S.open[key] === false) setRolled(true, false);
@@ -2545,9 +2626,80 @@ var LAY = (function(){
   };
 })();
 
+/* =====================================================================
+   TEIL 14  —  SPRACHUMSCHALTUNG IN DER OBERFLÄCHE
+   Ein Sprachwechsel wirft nichts weg: der Zustand liegt in S, die Sprache
+   liegt daneben. Neu gebaut werden nur die Teile, deren Beschriftungen im
+   Aufbau festgeschrieben sind — Kennzahlenleiste, Registerkarten, Felder,
+   Fenstertitel. Alles Übrige zeichnet refresh() ohnehin bei jedem Durchgang.
+   ===================================================================== */
+function applyStatic(){
+  document.documentElement.lang = LANG;
+  document.title = t('app.title');
+  var meta = document.querySelector('meta[name=description]');
+  if (meta) meta.setAttribute('content', t('app.meta'));
+  document.querySelectorAll('[data-i18n]').forEach(function(e){
+    e.textContent = t(e.getAttribute('data-i18n'));
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(function(e){
+    e.innerHTML = t(e.getAttribute('data-i18n-html'));
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach(function(e){
+    e.setAttribute('aria-label', tPlain(e.getAttribute('data-i18n-aria')));
+  });
+  WINCHROME.forEach(function(fn){ fn(); });
+}
+
+function buildLangBar(){
+  var host = $('#langrow');
+  if (!host) return;
+  host.innerHTML = '';
+  host.appendChild(el('span','sub', t('ui.lang') + ': '));
+  var seg = el('div','seg btnseg');
+  seg.style.marginLeft = '0';
+  seg.setAttribute('role','group');
+  seg.setAttribute('aria-label', t('ui.lang.aria'));
+  LANGS.forEach(function(l){
+    var b = el('button', null, l.toUpperCase());
+    b.type = 'button';
+    b.title = t('ui.lang.' + l);
+    b.setAttribute('lang', l);
+    b.setAttribute('aria-pressed', LANG === l);
+    b.onclick = function(){ setLang(l); };
+    seg.appendChild(b);
+  });
+  host.appendChild(seg);
+}
+
+function setLang(l){
+  if (l === LANG || LANGS.indexOf(l) < 0) return;
+  LANG = l;
+  try { localStorage.setItem(LANGKEY, l); } catch(e){}
+  /* Die Adresse mitführen, damit ein geteilter Link die Sprache mitbringt und
+     ein Neuladen dabei bleibt. Der Zustand steckt im Fragment und bleibt
+     unangetastet. */
+  try {
+    var q = location.search.replace(/([?&])lang=[^&]*/i, '$1').replace(/[?&]$/, '');
+    q = (q && q !== '?') ? q + '&lang=' + l : '?lang=' + l;
+    history.replaceState(null, '', location.pathname + q + location.hash);
+  } catch(e){}
+  applyLocale();
+  applyStatic();
+  buildLangBar();
+  buildMetricBar(); buildTabs(); buildInputs();
+  sensCache = null; sensSig = null; hoverX = null;
+  detailsRendered = false;
+  refresh();
+  LAY.fit();
+}
+
 /* --- Start --- */
+applyLocale();
 loadState();
+applyStatic();
 dressWindows();
+applyStatic();          /* die Titelleisten gibt es erst jetzt */
+buildLangBar();
 LAY.sync();
 buildMetricBar(); buildTabs(); buildInputs();
 R = AVModell.rechne(S.I, S.P);
@@ -2567,33 +2719,26 @@ if (/^https?:$/.test(location.protocol)) {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function(){
       navigator.serviceWorker.register('service-worker.js').then(function(){
-        if (!installEvt) setInstallHint('<b>Offlinefähig.</b> Die App liegt jetzt im Browser-Cache und läuft '
-          + 'auch ohne Verbindung. Zum Installieren: auf dem iPhone „Teilen“ → „Zum Home-Bildschirm“, '
-          + 'auf Android das Menü → „App installieren“.');
+        if (!installEvt) setInstallHint(t('pwa.offline'));
       }).catch(function(){});
     });
   }
   window.addEventListener('beforeinstallprompt', function(e){
     e.preventDefault(); installEvt = e;
-    setInstallHint('<b>Als App installieren?</b> Dann liegt sie mit eigenem Symbol auf dem Startbildschirm '
-      + 'und läuft offline. <button class="btn pri" id="doinstall" style="margin-left:6px;padding:5px 11px;'
-      + 'min-height:32px;font-size:.8rem">Installieren</button>');
+    setInstallHint(t('pwa.installAsk')
+      + '<button class="btn pri" id="doinstall" style="margin-left:6px;padding:5px 11px;'
+      + 'min-height:32px;font-size:.8rem">' + t('pwa.installBtn') + '</button>');
     var b = $('#doinstall');
     if (b) b.onclick = function(){
       installEvt.prompt();
       installEvt.userChoice.then(function(c){
-        setInstallHint(c.outcome === 'accepted'
-          ? '<b>Installiert.</b> Sie finden die App jetzt unter Ihren übrigen Apps.'
-          : 'Alles klar — die App läuft auch so, und zwar offline.');
+        setInstallHint(t(c.outcome === 'accepted' ? 'pwa.installed' : 'pwa.declined'));
         installEvt = null;
       });
     };
   });
 } else {
-  setInstallHint('<b>Sie haben die Datei direkt geöffnet</b> (<kbd>file://</kbd>). Alles rechnet, alles wird '
-    + 'gespeichert. Nur die beiden PWA-Eigenschaften fehlen: kein Symbol auf dem Startbildschirm und kein '
-    + 'Offline-Cache — den bräuchte es hier auch nicht, die Datei liegt ja bereits auf dem Gerät. '
-    + 'Für die volle App-Erfahrung den Ordner auf einen beliebigen HTTPS-Webspace legen und von dort öffnen.');
+  setInstallHint(t('pwa.file'));
 }
 </script>
 </body>

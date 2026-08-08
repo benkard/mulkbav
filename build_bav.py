@@ -75,7 +75,10 @@ inp = [
     ("netto_ziel", "Monatlicher Nettoaufwand (nur bei Modus 2)",            165,    "EUR",   "Der Betrag, um den Ihr verfuegbares Einkommen im ersten Jahr sinkt. Danach wird der Bruttobeitrag nach der Dynamisierungsregel fortgeschrieben."),
     ("dyn",        "Beitrag mit dem Gehalt dynamisieren? 1 = ja",           1,      "1/0",   "1 = Beitrag steigt mit der Gehaltssteigerung, 0 = nominal konstant."),
     ("agzus",      "Arbeitgeberzuschuss (Anteil des Beitrags)",             0.15,   "",      "Gesetzliches Minimum 15 % ( 1a Abs. 1a BetrAVG). DYNO-Arbeitgeber zahlen oft mehr - hier eintragen, was im Vertrag steht."),
-    ("agzus_sv",   "Zuschussmodus: 0 = voller Beitrag, 1 = sv-freier Anteil, 2 = spitz", 2, "0/1/2", "2 ist der Gesetzeswortlaut: 1a Abs. 1a BetrAVG schuldet den Zuschuss nur, SOWEIT der Arbeitgeber tatsaechlich Sozialversicherungsbeitraege spart. Liegt Ihr Entgelt ueber beiden Beitragsbemessungsgrenzen, spart er nichts - und schuldet nichts. 1 ist die verbreitete pauschale Praxis, 0 eine freiwillige oder tarifvertragliche Zusage."),
+    ("agz_fix",    "Fester AG-Zuschuss zusaetzlich (EUR je Monat)",         0,      "EUR",   "Betragsunabhaengiger Festzuschuss aus Tarifvertrag oder Betriebsvereinbarung - bei der Deutschen Bahn und in vielen Tarifwerken ueblich, dort ZUSAETZLICH zu den 15 % nach  1a Abs. 1a BetrAVG. Er ist arbeitgeberfinanzierte Zuwendung nach  3 Nr. 63 EStG und belegt den 8-%-Topf sowie die 4-%-Beitragsfreiheit ( 1 Abs. 1 S. 1 Nr. 9 SvEV) VORRANGIG; die eigene Entgeltumwandlung wird insoweit verdraengt und teurer."),
+    ("agz_fix_dyn","Festen Zuschuss dynamisieren? 1 = ja",                  0,      "1/0",   "0 = nominal konstant (Voreinstellung: Festbetraege stehen meist nominal im Tarifvertrag), 1 = steigt mit der Gehalts- bzw. Tarifsteigerung."),
+    ("agz_fix_min","Mindest-Eigenbeitrag fuer den festen Zuschuss (EUR/Monat)", 0,  "EUR",   "Matching-Modelle knuepfen den Festbetrag an eine Mindest-Eigenleistung. 0 = bedingungslos; dann fliesst er in jedem aktiven Jahr, auch bei Beitrag null. Vorsicht: ein wirklich bedingungsloser Zuschuss ist kein Differenzeffekt der Umwandlungsentscheidung und verzerrt den Vergleich zugunsten der bAV."),
+    ("agzus_sv",   "Zuschussmodus: 0 = voller Beitrag, 1 = sv-freier Anteil, 2 = spitz", 2, "0/1/2", "Gilt nur fuer den prozentualen Zuschuss; der feste Zuschuss oben ist davon unberuehrt. 2 ist der Gesetzeswortlaut: 1a Abs. 1a BetrAVG schuldet den Zuschuss nur, SOWEIT der Arbeitgeber tatsaechlich Sozialversicherungsbeitraege spart. Liegt Ihr Entgelt ueber beiden Beitragsbemessungsgrenzen, spart er nichts - und schuldet nichts. 1 ist die verbreitete pauschale Praxis, 0 eine freiwillige oder tarifvertragliche Zusage."),
     ("auszform",   "bAV-Auszahlung: 1 = Kapital, 2 = lebenslange Rente",    1,      "1/2",   "Kapital: voll steuerpflichtig im Zuflussjahr, KV/PV auf 120 Monate verteilt ( 229 Abs. 1 S. 3 SGB V)."),
     ("rentfak",    "Rentenfaktor bAV (EUR Monatsrente je 10.000 EUR)",      26,     "EUR",   "Nur relevant bei Auszahlungsform 2. 26 EUR entspricht ca. 3,1 % Entnahmequote."),
     ("rentdyn",    "Dynamik der bAV-Rente p.a.",                            0.01,   "",      "Ueberschussbeteiligung / Fondsentwicklung in der Rentenphase."),
@@ -388,6 +391,7 @@ UB_COLS = [("i", "Schritt", 8, '0'), ("lo", "lo", 14, EUR2), ("hi", "hi", 14, EU
            ("mid", "B = (lo+hi)/2", 14, EUR2), ("svf", "sv-frei", 12, EUR2),
            ("drv", "D RV-Bem.", 12, EUR2), ("dkv", "D KV-Bem.", 12, EUR2),
            ("svan", "SV-Ersp. AN", 12, EUR2), ("svag", "SV-Ersp. AG", 12, EUR2),
+           ("agfx", "AG fest", 12, EUR2),
            ("agz", "AG-Zuschuss", 12, EUR2), ("stf", "steuerfrei", 12, EUR2),
            ("vorsm", "Vorsorgeaufw.", 13, EUR2), ("zvem", "zvE mit bAV", 13, EUR2),
            ("argm", "Tarifarg.", 13, EUR2), ("estm", "ESt", 13, EUR2),
@@ -426,13 +430,14 @@ for t in range(NIT):
         u("lo", f"=IF({Cp['nb']}<{U['ziel']},{Cp['mid']},{Cp['lo']})")
         u("hi", f"=IF({Cp['nb']}<{U['ziel']},{Cp['hi']},{Cp['mid']})")
     u("mid", f"=({C['lo']}+{C['hi']})/2")
-    u("svf", f"=MIN({C['mid']},{P['sv_frei_q']}*{U['bbgrv0']})")
+    u("agfx", f"=IF({C['mid']}/12+0.000000001<{IN['agz_fix_min']},0,12*{IN['agz_fix']})")
+    u("svf", f"=MIN({C['mid']},MAX(0,{P['sv_frei_q']}*{U['bbgrv0']}-{C['agfx']}))")
     u("drv", f"=MIN({U['g0']},{U['bbgrv0']})-MIN({U['g0']}-{C['svf']},{U['bbgrv0']})")
     u("dkv", f"=MIN({U['g0']},{U['bbgkv0']})-MIN({U['g0']}-{C['svf']},{U['bbgkv0']})")
     u("svan", f"={C['drv']}*({P['rv_an']}+{P['av_an']})+{C['dkv']}*(({P['kv_allg']}+{P['kv_zus']})/2+{P['pv_an_eff']})")
     u("svag", f"={C['drv']}*({P['rv_an']}+{P['av_an']})+{C['dkv']}*(({P['kv_allg']}+{P['kv_zus']})/2+{P['pv_an']})")
     u("agz", f"=IF({IN['agzus_sv']}=2,MIN({IN['agzus']}*{C['mid']},{C['svag']}),"
-             f"{IN['agzus']}*IF({IN['agzus_sv']}=1,{C['svf']},{C['mid']}))")
+             f"{IN['agzus']}*IF({IN['agzus_sv']}=1,{C['svf']},{C['mid']}))+{C['agfx']}")
     u("stf", f"=MIN({C['mid']},MAX(0,{P['st_frei_q']}*{U['bbgrv0']}-{C['agz']}))")
     u("vorsm", f"=MIN({U['g0']}-{C['svf']},{U['bbgrv0']})*{P['rv_an']}"
                f"+MIN({U['g0']}-{C['svf']},{U['bbgkv0']})*(0.96*({P['kv_allg']}+{P['kv_zus']})/2+{P['pv_an_eff']})")
@@ -510,6 +515,8 @@ A_COLS = [
     ("bav_br",    "bAV Brutto-\nbeitrag", 11, EUR),
     ("bav_stf",   "davon st.-\nfrei 3/63", 11, EUR),
     ("bav_svf",   "davon\nsv-frei", 11, EUR),
+    ("agz_fx",    "AG-Zuschuss\nfest", 11, EUR),
+    ("agz_var",   "AG-Zuschuss\nprozentual", 11, EUR),
     ("agz",       "AG-\nZuschuss", 11, EUR),
     ("bav_ein",   "Einzahlung\nbAV gesamt", 11, EUR),
     ("bav_gef",   "davon ge-\nfoerdert 3/63", 12, EUR),
@@ -609,13 +616,20 @@ for t in range(N):
 
     # bAV
     f("bav_br", f"=MIN({C['brutto']},12*({BEITRAG})*IF({IN['dyn']}=1,{C['lohnidx']},1))*{C['aktiv']}")
-    # Der 8-%-Topf des 3 Nr. 63 EStG wird zuerst vom Arbeitgeberbeitrag belegt,
-    # der Rest steht der Entgeltumwandlung des Arbeitnehmers zur Verfuegung.
-    f("bav_svf", f"=MIN({C['bav_br']},{P['sv_frei_q']}*{C['bbgrv']})")
+    # Fester, betragsunabhaengiger Zuschuss. Faellt weg, wenn der eigene
+    # Monatsbeitrag die vereinbarte Mindestschwelle nicht erreicht.
+    f("agz_fx", f"={C['aktiv']}*IF({C['bav_br']}/12+0.000000001<{IN['agz_fix_min']},0,"
+                f"12*{IN['agz_fix']}*IF({IN['agz_fix_dyn']}=1,{C['lohnidx']},1))")
+    # Der 4-%-Topf des 1 Abs. 1 S. 1 Nr. 9 SvEV und der 8-%-Topf des 3 Nr. 63 EStG
+    # werden zuerst vom Arbeitgeberbeitrag belegt, der Rest steht der Entgelt-
+    # umwandlung des Arbeitnehmers zur Verfuegung.
+    f("bav_svf", f"=MIN({C['bav_br']},MAX(0,{P['sv_frei_q']}*{C['bbgrv']}-{C['agz_fx']}))")
     # Modus 2 ( 1a Abs. 1a BetrAVG woertlich): Zuschuss nur bis zur tatsaechlichen
     # Ersparnis des Arbeitgebers. Oberhalb beider Beitragsbemessungsgrenzen ist sie null.
-    f("agz", f"=IF({IN['agzus_sv']}=2,MIN({IN['agzus']}*{C['bav_br']},{C['sverp_ag']}),"
-             f"{IN['agzus']}*IF({IN['agzus_sv']}=1,{C['bav_svf']},{C['bav_br']}))")
+    # Der feste Zuschuss ist davon unberuehrt und kommt oben drauf.
+    f("agz_var", f"=IF({IN['agzus_sv']}=2,MIN({IN['agzus']}*{C['bav_br']},{C['sverp_ag']}),"
+                 f"{IN['agzus']}*IF({IN['agzus_sv']}=1,{C['bav_svf']},{C['bav_br']}))")
+    f("agz", f"={C['agz_var']}+{C['agz_fx']}")
     f("bav_stf", f"=MIN({C['bav_br']},MAX(0,{P['st_frei_q']}*{C['bbgrv']}-{C['agz']}))")
     f("bav_ein", f"={C['bav_br']}+{C['agz']}")
     f("bav_gef", f"=MIN({C['bav_ein']},{P['st_frei_q']}*{C['bbgrv']})")
@@ -1117,6 +1131,15 @@ diag = [
     ("Anteil der bAV-Beitraege OHNE Foerderung (erstes Jahr)",
      f"=IF(Ansparphase!${AC['bav_ein']}${R0}=0,0,Ansparphase!${AC['bav_ngef']}${R0}/Ansparphase!${AC['bav_ein']}${R0})",
      PCT, "Alles oberhalb von 8 % der BBG-RV ist weder steuer- noch sozialabgabenbeguenstigt. Diese Schicht wandert in einen Versicherungsmantel, ohne dafuer etwas zu bekommen - ausser der Beitragspflicht in der KV. Ist dieser Anteil gross, ist die bAV strukturell unterlegen."),
+    ("Arbeitgeberzuschuss prozentual (erstes Jahr)",
+     f"=Ansparphase!${AC['agz_var']}${R0}", EUR,
+     "Der Teil nach 1a Abs. 1a BetrAVG bzw. der vertraglich zugesagte Prozentsatz, gerechnet nach dem eingestellten Zuschussmodus."),
+    ("Fester Arbeitgeberzuschuss (erstes Jahr)",
+     f"=Ansparphase!${AC['agz_fx']}${R0}", EUR,
+     "Betragsunabhaengiger Festzuschuss aus Tarifvertrag oder Betriebsvereinbarung. Null, wenn der eigene Monatsbeitrag die eingestellte Mindestschwelle nicht erreicht."),
+    ("Fester Zuschuss oberhalb des 4-%-Topfes (erstes Jahr)",
+     f"=MAX(0,Ansparphase!${AC['agz_fx']}${R0}-{P['sv_frei_q']}*Ansparphase!${AC['bbgrv']}${R0})", EUR,
+     "Dieser Teil waere beim Arbeitnehmer beitragspflichtiges Arbeitsentgelt. Das Modell rechnet die zusaetzliche Beitragslast NICHT gegen und ueberschaetzt die bAV insoweit. Sollte null sein."),
     ("Ausschoepfung des Rechtsanspruchs nach 1a BetrAVG (4 % BBG)",
      f"=IF(Ansparphase!${AC['bbgrv']}${R0}=0,0,Ansparphase!${AC['bav_br']}${R0}/({P['sv_frei_q']}*Ansparphase!${AC['bbgrv']}${R0}))",
      PCT, "Ueber 100 % besteht kein Rechtsanspruch mehr auf Entgeltumwandlung; darueber hinaus ist die Zustimmung des Arbeitgebers noetig."),
@@ -1276,6 +1299,7 @@ txt = [
     ("", "1) bAV (Direktversicherung, ETF-basiert, z.B. DYNO)"),
     ("", "   + Beitrag steuerfrei bis 8 % der BBG-RV ( 3 Nr. 63 EStG), sozialabgabenfrei bis 4 % ( 1 Abs. 1 S. 1 Nr. 9 SvEV)"),
     ("", "   + Arbeitgeberzuschuss von mindestens 15 % ( 1a Abs. 1a BetrAVG) - das ist der eigentliche Renditetreiber"),
+    ("", "   + ggf. zusaetzlich ein tarifvertraglicher FESTBETRAG unabhaengig vom Monatsbeitrag (z.B. Deutsche Bahn)"),
     ("", "   - Leistung voll steuerpflichtig ( 22 Nr. 5 S. 1 EStG); Kapitalabfindung trifft in einem Jahr den Spitzensteuersatz"),
     ("", "   - Kranken- und Pflegeversicherung auf die volle Leistung, Beitragssatz allein vom Rentner ( 229, 250 SGB V)"),
     ("", "   - Entgeltumwandlung mindert die Entgeltpunkte und damit die gesetzliche Rente"),
@@ -1301,7 +1325,15 @@ txt = [
     ("", "- Oberhalb der Beitragsbemessungsgrenzen ist die Entgeltumwandlung sozialversicherungsrechtlich neutral: die"),
     ("", "  Bemessungsgrundlage bleibt gedeckelt, also spart weder Arbeitnehmer noch Arbeitgeber Beitraege, und es gehen"),
     ("", "  auch keine Entgeltpunkte verloren. Beides folgt aus derselben Differenz und ist im Modell zwingend gekoppelt."),
-    ("", "  Der Zuschussmodus 2 zieht daraus die Konsequenz und setzt den Zuschuss dann auf null."),
+    ("", "  Der Zuschussmodus 2 zieht daraus die Konsequenz und setzt den prozentualen Zuschuss dann auf null."),
+    ("", "- Der FESTE Arbeitgeberzuschuss (z.B. Deutsche Bahn) ist betragsunabhaengig und vom Zuschussmodus unberuehrt: er"),
+    ("", "  beruht auf Tarifvertrag oder Betriebsvereinbarung, nicht auf 1a Abs. 1a BetrAVG, und kommt oben drauf."),
+    ("", "  Als arbeitgeberfinanzierte Zuwendung nach 3 Nr. 63 EStG belegt er den 8-%-Topf und die 4-%-Beitragsfreiheit"),
+    ("", "  VORRANGIG; die eigene Entgeltumwandlung wird insoweit verdraengt und teurer. Sein Barwert waechst nicht mit dem"),
+    ("", "  Beitrag - oekonomisch ist er ein Sockel, kein Hebel: er hebt den Durchschnittsertrag, nicht die Grenzrendite."),
+    ("", "  NICHT abgebildet: uebersteigt der feste Zuschuss allein 4 % der BBG-RV, waere der Ueberhang beim Arbeitnehmer"),
+    ("", "  beitragspflichtiges Arbeitsentgelt. Das Modell rechnet diese Beitragslast nicht gegen und ueberschaetzt die bAV"),
+    ("", "  insoweit; das Blatt 'Kennzahlen' weist den Ueberhang aus. Vertrauensgrad der Vorrang-Lesart ca. 80 %."),
     ("", "- Beitraege gelten als unterjaehrig geleistet (Verzinsung mit (1+r)^0,5 im Einzahlungsjahr)."),
     ("", "- In der Auszahlungsphase wird die Vorabpauschale nicht mehr fortgeschrieben; sie waere durch die Anrechnung auf den"),
     ("", "  realisierten Gewinn ( 19 InvStG) barwertig weitgehend neutral."),

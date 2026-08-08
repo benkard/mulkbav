@@ -93,6 +93,41 @@ Diese werden von anderen Blättern referenziert — beim Einfügen von Zeilen **
   (RV voll, KV zu 96 %, PV voll). Genauigkeit ca. 1 %
 - Beiträge unterjährig: Verzinsung mit (1+r)^0,5 im Einzahlungsjahr
 
+### Arbeitgeberzuschuss: zwei additive Komponenten
+
+Seit der Erweiterung zerfällt der Zuschuss in `agz = agz_var + agz_fx`:
+
+| Komponente | Zelle | Rechtsgrund | Verhalten |
+|---|---|---|---|
+| `agz_var` — prozentual | `C26`, Modus `C30` | § 1a Abs. 1a BetrAVG bzw. Versorgungsordnung | proportional zum Beitrag, im Modus 2 auf die tatsächliche AG-Ersparnis gedeckelt |
+| `agz_fx` — Festbetrag | `C27`, `C28`, `C29` | Tarifvertrag / Betriebsvereinbarung (z. B. Deutsche Bahn) | betragsunabhängig, vom Zuschussmodus unberührt, oben drauf |
+
+Der Festbetrag ist **arbeitgeberfinanzierte Zuwendung nach § 3 Nr. 63 EStG** und belegt
+deshalb den 8-%-Topf des § 3 Nr. 63 EStG *und* die 4-%-Beitragsfreiheit des
+§ 1 Abs. 1 S. 1 Nr. 9 SvEV **vorrangig** (Vertrauen ~80 %):
+
+```
+agz_fx  = aktiv · [beitrag_mtl ≥ agz_fix_min] · 12 · agz_fix · (dyn ? Lohnindex : 1)
+bav_svf = min(bav_br, max(0, 4 % · BBG_RV − agz_fx))        ← Verdrängung
+agz_var = f(bav_svf, sverp_ag, Modus)
+bav_stf = min(bav_br, max(0, 8 % · BBG_RV − agz_fx − agz_var))
+```
+
+Die Reihenfolge ist zyklenfrei: `agz_fx` hängt nur am Beitrag, nicht an `sverp_ag`.
+Ökonomisch ist der Festbetrag ein **Sockel, kein Hebel** — er hebt den Durchschnittsertrag
+stark, die Grenzrendite des nächsten Beitragseuros senkt er sogar leicht
+(∂²Ertrag/∂agz_fix ∂beitrag ≤ 0), weil er dem Eigenbeitrag Freibetrag wegnimmt.
+
+Die Mindestschwelle `agz_fix_min` macht N(B) **unstetig**: an der Schwelle springt der
+Nettoaufwand nach oben (Basisfall, 150 €/Monat fest ab 300 €/Monat Eigenbeitrag:
+164,54 € → 173,08 €). Monoton bleibt N, die Bisektion konvergiert also weiter, aber
+Zielwerte im Sprungintervall sind schlicht nicht erreichbar — `resid` zeigt das an.
+
+**Nicht modelliert:** Übersteigt `agz_fx` allein 4 % der BBG-RV, wäre der Überhang beim
+Arbeitnehmer beitragspflichtiges Arbeitsentgelt. Diese Beitragslast wird nicht gegen-
+gerechnet; das Blatt `Kennzahlen` und die Diagnosetabelle der Web-App weisen den Überhang
+separat aus. Bei 2026er Werten greift das ab 338 €/Monat Festzuschuss.
+
 ### Schichtenmodell
 
 Beide geförderten Produkte werden in **zwei Schichten** geführt, weil sonst derselbe Euro
@@ -188,6 +223,7 @@ Alle im Blatt `Parameter` änderbar.
 | Beitragsfreiheit der Altersvorsorgedepot-Auszahlung | ~85 % | Keine Versorgungsbezüge |
 | Halber Unterschiedsbetrag für nicht geförderte Schichten | ~80 % | § 22 Nr. 5 S. 2 Buchst. b i.V.m. § 20 Abs. 1 Nr. 6 S. 2 EStG |
 | Zuschuss nur bis zur tatsächlichen AG-Ersparnis (Modus 2) | ~75 % | Gegenauffassung liest 15 % als reine Pauschale = Modus 1 |
+| Fester AG-Zuschuss belegt 4-%- und 8-%-Topf vorrangig | ~80 % | Arbeitgeberfinanzierte Zuwendung nach § 3 Nr. 63 EStG; verdrängt eigene Umwandlung |
 | **Sonderausgaben-Höchstbetrag 2.340 €** | **~70 %** | **Modellannahme.** Bestimmt, ob ein Kind den Wert des AV-Depots hebt oder senkt |
 | Günstigerprüfung als Maximum, nicht Summe | ~90 % | § 10a Abs. 2 EStG |
 | Modell unterstellt KVdR-Pflichtversicherung im Ruhestand | ~70 % | Freiwillig Versicherte nicht geprüft |

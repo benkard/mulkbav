@@ -5,7 +5,11 @@ Ergebnisse, aber bedienbar von Menschen, die keine Tabellenkalkulation aufmachen
 
 | Datei | Rolle |
 |---|---|
-| `index.html` | **Die ganze App.** Rechenkern, Oberfläche, Diagramme, Texte — eine Datei, keine externen Abhängigkeiten. Läuft per Doppelklick. |
+| `index.html` | **Die ganze App.** Rechenkern, Oberfläche, Diagramme — eine Datei, keine externen Abhängigkeiten außer den vier Wörterbüchern. Läuft per Doppelklick. |
+| `i18n.de.js` | Wörterbuch Deutsch. Hauptsprache und Rückfallebene. |
+| `i18n.en.js` | Wörterbuch Englisch. |
+| `i18n.la.js` | Wörterbuch Latein. |
+| `i18n.ja.js` | Wörterbuch Japanisch. |
 | `manifest.json` | Macht die App installierbar (Name, Farben, Symbole). |
 | `service-worker.js` | Offline-Cache, `stale-while-revalidate`. |
 | `icon-*.png` | App-Symbole, 192 / 512 / 512-maskable. |
@@ -14,7 +18,8 @@ Ergebnisse, aber bedienbar von Menschen, die keine Tabellenkalkulation aufmachen
 
 ## 1. Weitergeben — drei Wege
 
-**a) Nur die Datei.** `index.html` verschicken. Sie ist vollständig autark: Doppelklick genügt,
+**a) Nur die Dateien.** `index.html` samt den vier `i18n.*.js` verschicken — sie gehören
+zusammen und müssen im selben Ordner liegen. Doppelklick genügt,
 alles rechnet, Eingaben werden im Browser gespeichert. Was fehlt, ist nur die PWA-Hülle —
 kein Symbol auf dem Startbildschirm, kein Offline-Cache. Beides braucht es hier auch nicht,
 die Datei liegt ja schon auf dem Gerät. Die App sagt das dem Nutzer auch selbst.
@@ -45,14 +50,15 @@ selbst zu aktualisieren.
 
 ## 3. Aufbau der Datei
 
-`index.html` ist in elf nummerierte Teile gegliedert:
+`index.html` ist in nummerierte Teile gegliedert:
 
 | Teil | Inhalt |
 |---|---|
+| 0 | **Sprachen** — `t()`, Sprachwahl, Rückfall auf Deutsch |
 | 1 | **Rechenkern** — Portierung von `build_bav.py`. Reine Funktionen, kein DOM |
-| 2 | Felddefinitionen: 80 Eingaben mit Bereich, Einheit, Erklärung, Fundstelle |
+| 2 | Felddefinitionen: 80 Eingaben mit Bereich, Einheit, Wörterbuchschlüssel |
 | 3 | Zustand, `localStorage`, Kodierung für den Teilen-Link |
-| 4 | Formatierung (de-DE, Komma als Dezimaltrenner in beiden Richtungen) |
+| 4 | Formatierung und Zahleneingabe, sprachabhängig |
 | 5 | Kennzahlen |
 | 6 | Aufbau der Oberfläche |
 | 7 | Ergebniskarten mit Δ-Anzeige |
@@ -63,6 +69,7 @@ selbst zu aktualisieren.
 | 11 | Installation und Offline-Betrieb |
 | 12 | Fensterrahmen: Titelleisten und Minimieren |
 | 13 | Kachelung: ein, zwei oder drei Fensterspalten |
+| 14 | Sprachumschaltung in der Oberfläche |
 
 Der Rechenkern in Teil 1 ist **die einzige Stelle, an der gerechnet wird.** Er ist zeichengenau
 aus `build_bav.py` übertragen; Änderungen an der Rechtslage gehören in beide Dateien.
@@ -99,6 +106,85 @@ Bruttobeitrags.
 Fällt der Nettoaufwand für das erste Jahr auf null — weil man dann bereits ausgeschieden ist —,
 existiert die Umkehrung nicht. Die App sagt das statt still nichts zu tun.
 
+## 3b. Vier Sprachen
+
+Deutsch ist die Hauptsprache; Englisch, Latein und Japanisch sind Übersetzungen derselben
+Rechtslage, kein zweiter Rechtsstand. **Die Normzitate bleiben in allen Sprachen deutsch**
+(`§ 1a BetrAVG`, `§ 226 Abs. 2 S. 2 SGB V`, …) — sie sind die Primärquellen und haben keine
+amtliche Übersetzung; eine eigene wäre hier keine Hilfe, sondern eine Fehlerquelle. Ebenso
+bleiben zwei Produktnamen stehen, weil sie Eigennamen sind: `Altersvorsorgedepot` und
+`Versorgungsbezüge`; im Japanischen mit Glosse (`Versorgungsbezüge（企業年金等の給付）`).
+
+**Wahl der Sprache**, in dieser Reihenfolge:
+
+1. `?lang=de|en|la|ja` in der Adresse — teilbar, überschreibt alles,
+2. die gemerkte Wahl in `localStorage` unter `altersvorsorge.lang`,
+3. `navigator.language`: `ja…` → Japanisch, `en…` → Englisch, sonst Deutsch.
+   **Latein wird nie automatisch gewählt** — ein Browser, der `la` meldet, meint es fast sicher
+   nicht als Anzeigesprache.
+
+**Zu den beiden neuen Fassungen.** Das Latein ist pragmatisches Neulatein: klassische Syntax,
+aber gebildete Neuprägungen für Moderne (`pensio operativa`, `impensa pura`, `valor praesens`,
+`usura interna`). Römische Ziffern wären ein Witz auf Kosten der Lesbarkeit — und die
+Trennzeichenkonvention ist ohnehin jünger als jede lateinische Quelle. Das Japanische folgt
+dem, was für Software dieser Art dort üblich ist: Erklärtexte in です・ます, Feldbeschriftungen
+als Nominalphrasen im 体言止め. Für die Schrift ist der `--ui`-Stapel um MS PGothic, Hiragino,
+Yu Gothic und Meiryo erweitert — eine Rasterschrift mit harten Kanten passt zum Thema.
+
+Der japanische Satzbau erzwingt, wofür die Funktionsform der Einträge da ist. Das Fazit lautet
+im Deutschen „X liegt vorn mit W — D mehr als Y“, im Japanischen dagegen
+`Xが首位です（W）。YをD上回ります。` — Verb am Ende, Vergleichsgröße mit を statt „als“. Als
+Verkettung fester Bausteine ließe sich das nicht bauen.
+
+Der Umschalter oben im Kopffenster schreibt beides fort, Speicher und Adresse. Der Teilen-Link
+nimmt die Suchzeichenfolge mit, der Zustand steckt weiter im Fragment — beides stört sich nicht.
+
+**Aufbau der Wörterbücher.** Ein Eintrag ist entweder eine Zeichenkette oder eine Funktion
+`(p, f) → string`. Die Funktionsform ist keine Bequemlichkeit, sondern notwendig: ein Satz ist
+nicht die Verkettung seiner Teile. Stellung, Numerus und Rektion hängen an der Sprache, und
+`'mehr als ' + nom` funktioniert nur, solange beide Sprachen denselben Satzbau haben. Deshalb
+bekommen die Funktionen **Rohwerte** — Zahlen, keine fertigen Textstücke — und formatieren
+selbst über `f` (`f.eur`, `f.pct`, `f.nf2`, …). Sichtbar wird der Unterschied etwa im Fazit:
+das Deutsche braucht dort einen Genitiv (`der bAV`), das Englische eine Präposition.
+
+```
+t('n.beitrag.ueber8', { v8: v8 })
+  de: 'Über 8 % der Beitragsbemessungsgrenze RV (' + f.eur(p.v8) + ' im Jahr). …'
+  en: 'Above 8 % of the pension-insurance contribution ceiling (' + f.eur(p.v8) + ' per year). …'
+```
+
+**Schlüsselschema.** Eingabefelder liegen unter `f.<src>:<key>.label|hint|unit|o<wert>`,
+die Optionen also unter ihrem *Wert*, nicht unter ihrem Index — dann bleibt die Zuordnung
+richtig, wenn eine Option dazukommt. `FIELDS`, `OPTS` und `METRICS` tragen ihre Texte nicht
+mehr als Feld, sondern als `Object.defineProperty`-Zugriffsfunktion: `f.label` steht unverändert
+an jeder Aufrufstelle und liefert nach einem Sprachwechsel von selbst den neuen Wert.
+
+**Fehlt ein Eintrag**, greift Deutsch; fehlt auch der, erscheint der Schlüssel selbst im
+Klartext. Ein stiller Leerstring wäre die schlechtere Wahl — er verschwindet unbemerkt.
+
+**Zahlen.** Umgeschaltet wird nur die Zifferngruppierung — `de` und `la` → `de-DE`,
+`en` → `en-GB`, `ja` → `ja-JP`; die Währung bleibt überall der nachgestellte Euro:
+`75.000,00 €` bzw. `75,000.00 €`. Die Eingabe nimmt **beide**
+Schreibweisen an, damit ein Sprachwechsel keine getippte Zahl entwertet. Die Regel in
+`parseNum`: stehen beide Zeichen im Text, ist das rechte das Dezimalzeichen; steht nur eines
+und folgen ihm genau drei Ziffern, ist es die Tausendergruppe der aktuellen Sprache
+(`GRUPPEN`: `.` für de und la, `,` für en und ja). Damit
+bleibt allein `1,234` mehrdeutig — und genau dort entscheidet die Sprache.
+
+**Was ein Sprachwechsel nicht anfasst:** die Eingaben, den Referenzstand und die Ergebnisse.
+`setLang` baut nur die Teile neu, deren Beschriftungen beim Aufbau festgeschrieben werden
+(Kennzahlenleiste, Registerkarten, Felder, Fenstertitel); alles Übrige zeichnet `refresh()`
+ohnehin bei jedem Durchgang. Der Referenzstand merkt sich deshalb den *Feldschlüssel* und
+nicht den fertigen Satz — sonst stünde nach dem Wechsel „vor der Änderung von …“ noch in der
+alten Sprache da.
+
+**Prüfung.** `pruefe.js` (Entwicklungswerkzeug, wird vom Service Worker nicht ausgeliefert) lädt die Seite kopflos in
+jsdom, schaltet alle vier Sprachen durch, klappt jeden Abschnitt auf, erzwingt über fünf Szenarien
+die bedingten Texte und prüft: kein unaufgelöster Schlüssel, keine deutschen Reste im
+englischen Modus außer den erlaubten Fachbegriffen, kein sichtbar gebliebener Schlüssel, und
+— die eigentliche Invariante —
+**identische Rechenergebnisse in allen vier Sprachen**.
+
 ## 4. Prüfung
 
 Der Kern ist gegen die Excel-Mappe geprüft, sechs unabhängige Fälle, jeweils rund 20 Aggregate:
@@ -111,6 +197,10 @@ Der Kern ist gegen die Excel-Mappe geprüft, sechs unabhängige Fälle, jeweils 
 | **AVD verrentet** | 5,2 · 10⁻¹⁵ |
 | **AVD verrentet + 30 % Einmalbetrag** | 3,6 · 10⁻¹⁵ |
 | **beide Produkte verrentet, Splitting, PKV, andere Zeitachse, 2 Kinder** | 4,4 · 10⁻¹⁵ |
+| **fester AG-Zuschuss 100 €/Monat** | exakt (< 10⁻⁹ auf allen Jahreswerten) |
+| **fester Zuschuss 400 €/Monat, 4-%-Topf erschöpft** | exakt |
+| **fester Zuschuss mit Mindestschwelle, ober- und unterhalb** | exakt |
+| **Mindestschwelle + Modus 2 (Bisektion über die Sprungstelle)** | exakt |
 
 > Der Prüfanker ist **erhalten geblieben**: `build_bav.py` wurde für die Depotverrentung
 > mitgezogen (neue Eingaben, drei neue Spalten im Blatt `Auszahlung`, zweite Memo-Zeile im
@@ -177,6 +267,13 @@ Die Testskripte liegen unter `outputs/tests/`, `./tests/alle.sh` fährt alles du
   sättigt; der Monatsbeitrag meldet das Überschreiten der 4-%- und der 8-%-Grenze der
   Beitragsbemessungsgrenze RV. Beides sind Schwellen, an denen der Regler seine Wirkung
   verliert oder die Rechtslage wechselt — ohne Hinweis dreht man ratlos weiter.
+- **Fester Arbeitgeberzuschuss** (Regler „Fester Zuschuss zusätzlich“, darunter der Schalter
+  für die Dynamisierung, unter „Weitere Angaben“ die Mindest-Eigenleistung). Tarifvertragliche
+  Festbeträge — Deutsche Bahn und viele andere — hängen nicht am Umwandlungsbetrag und stehen
+  neben den 15 % des § 1a Abs. 1a BetrAVG. Der Regler meldet, wenn der Festbetrag den 4-%-Topf
+  des § 1 Abs. 1 S. 1 Nr. 9 SvEV vorrangig belegt und dadurch die eigene Umwandlung verdrängt,
+  und warnt oberhalb von 4 % der BBG-RV (2026: 338 €/Monat), wo das Modell die dann fällige
+  Beitragspflicht des Überhangs bewusst nicht gegenrechnet.
 - **Klartext-Fazit** in einem Satz: wer vorn liegt, um wie viel, und welcher Posten des
   Wasserfalls den Abstand hauptsächlich trägt. Beschreibend formuliert, nicht empfehlend.
   Angehängt ein Belastbarkeitstest über ±1 Prozentpunkt Bruttorendite, der ausdrücklich sagt,

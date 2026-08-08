@@ -1,7 +1,7 @@
 /* Altersvorsorge-Vergleich — Service Worker
  *
  * Strategie: stale-while-revalidate für alles im Scope.
- * Die App ist eine einzige statische Datei ohne Backend; Korrektheit hängt
+ * Die App besteht aus einer Seite und vier Woerterbuechern, ohne Backend; Korrektheit hängt
  * also nicht an Frische, wohl aber Verfügbarkeit. Deshalb wird sofort aus
  * dem Cache geliefert und im Hintergrund aktualisiert. Beim Aktivieren
  * werden alte Cache-Versionen gelöscht.
@@ -9,10 +9,14 @@
  * Beim Ändern der App die Version hochzählen — sonst sieht ein bereits
  * installierter Client die Änderung erst nach zwei Aufrufen.
  */
-const VERSION = 'av-v11';
+const VERSION = 'av-v15';
 const ASSETS = [
   './',
   './index.html',
+  './i18n.de.js',
+  './i18n.en.js',
+  './i18n.la.js',
+  './i18n.ja.js',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
@@ -22,7 +26,12 @@ const ASSETS = [
 self.addEventListener('install', (e) => {
   e.waitUntil(
     caches.open(VERSION)
-      .then((c) => c.addAll(ASSETS).catch(() => c.add('./index.html')))
+      /* addAll ist atomar: fehlt eine Datei, faellt alles durch. Der
+         Rueckfall auf die blosse Seite waere dann aber eine App ohne
+         Woerterbuch — deshalb die drei Pflichtdateien zusammen. */
+      .then((c) => c.addAll(ASSETS)
+        .catch(() => c.addAll(['./index.html', './i18n.de.js', './i18n.en.js',
+                               './i18n.la.js', './i18n.ja.js'])))
       .then(() => self.skipWaiting())
   );
 });
