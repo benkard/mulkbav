@@ -5,9 +5,21 @@
    4. sucht nach unaufgelösten Schlüsseln und deutschen Resten im EN-Modus. */
 const fs = require('fs');
 const path = require('path');
-const { JSDOM } = require('/tmp/node_modules/jsdom');
+/* jsdom liegt je nach Umgebung neben dem Skript oder in einem
+   Wegwerf-Verzeichnis. Erst der normale Auflösungsweg, dann /tmp;
+   schlägt beides fehl, sagen wir, wie man es nachinstalliert. */
+const { JSDOM } = (() => {
+  for (const id of ['jsdom', '/tmp/node_modules/jsdom']) {
+    try { return require(id); } catch (e) { /* naechster Versuch */ }
+  }
+  console.error('jsdom fehlt.  Abhilfe:  npm i jsdom   (oder: cd /tmp && npm i jsdom)');
+  process.exit(2);
+})();
 
-const APP = '/sessions/compassionate-eloquent-ptolemy/mnt/Altersvorsorgerechner/app';
+/* Das Verzeichnis des Skriptes ist zugleich das der App. Fruehere
+   Fassungen hatten hier einen absoluten Pfad — der ueberlebte den
+   Wechsel der Arbeitsumgebung nicht. */
+const APP = __dirname;
 let html = fs.readFileSync(path.join(APP, 'index.html'), 'utf8');
 // Die beiden Wörterbücher werden eingebettet, damit der Test ohne
 // Ressourcenlader auskommt; inhaltlich ist das dasselbe wie <script src>.

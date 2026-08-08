@@ -78,11 +78,6 @@ body{margin:0;background:var(--desk);color:var(--ink);font:13px/1.45 var(--ui);
   padding:2px 2px 2px 3px;margin:2px;font-weight:700;font-size:12px;user-select:none}
 .tbtext{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
   letter-spacing:.01em;padding-left:2px}
-/* Systemmenue-Kasten links: unter 3.1 ein Kasten mit waagerechtem Strich */
-.sysbox{width:17px;height:15px;flex:0 0 auto;background:var(--face);position:relative;
-  border:1px solid;border-color:var(--white) var(--black) var(--black) var(--white)}
-.sysbox::after{content:"";position:absolute;left:2px;right:2px;top:6px;height:2px;
-  background:var(--black);border-top:1px solid var(--gray)}
 .tbbtn{width:17px;height:15px;flex:0 0 auto;padding:0;background:var(--face);color:var(--black);
   font:9px/13px var(--ui);cursor:pointer;
   border:1px solid;border-color:var(--white) var(--black) var(--black) var(--white)}
@@ -2480,7 +2475,7 @@ window.addEventListener('resize', function(){
 /* =====================================================================
    TEIL 12  —  FENSTERRAHMEN
    Jeder Abschnitt bekommt eine Titelleiste im Stil von Windows 3.1:
-   Systemmenue-Kasten links, Titel, Minimieren rechts. Der Knopf ist
+   Titel links, Minimieren rechts. Der Knopf ist
    nicht Zierrat — er klappt den Fensterinhalt tatsaechlich ein, was auf
    dem Telefon nuetzlich ist. Der Zustand wird mitgespeichert.
    ===================================================================== */
@@ -2507,7 +2502,6 @@ function dressWindows(){
     while (sec.firstChild) body.appendChild(sec.firstChild);
 
     var bar = el('div','titlebar');
-    bar.appendChild(el('span','sysbox'));
     var tb = el('span','tbtext', title);
     if (tkey) tb.setAttribute('data-i18n', tkey);
     bar.appendChild(tb);
