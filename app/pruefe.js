@@ -21,9 +21,13 @@ const { JSDOM } = (() => {
    Wechsel der Arbeitsumgebung nicht. */
 const APP = __dirname;
 let html = fs.readFileSync(path.join(APP, 'index.html'), 'utf8');
-// Die beiden Wörterbücher werden eingebettet, damit der Test ohne
-// Ressourcenlader auskommt; inhaltlich ist das dasselbe wie <script src>.
-for (const f of ['i18n.de.js', 'i18n.en.js', 'i18n.la.js', 'i18n.ja.js']) {
+// Die Wörterbücher werden eingebettet, damit der Test ohne Ressourcenlader
+// auskommt; inhaltlich ist das dasselbe wie <script src>. Die Liste wird nicht
+// gepflegt, sondern aus index.html gelesen — eine neue Sprache soll den Test
+// nicht stillschweigend an einem leeren Objekt vorbeilaufen lassen.
+const WB = [...html.matchAll(/<script src="(i18n\.[a-z][a-z0-9-]*\.js)"><\/script>/g)].map(m => m[1]);
+if (WB.length < 2) { console.error('Keine Wörterbücher in index.html gefunden.'); process.exit(2); }
+for (const f of WB) {
   html = html.replace('<script src="' + f + '"></script>',
     '<script>' + fs.readFileSync(path.join(APP, f), 'utf8') + '</script>');
 }
@@ -63,6 +67,21 @@ setTimeout(() => {
   const bad = [];
   const check = (name, cond, info) => (cond ? ok : bad).push(name + (info ? ' — ' + info : ''));
 
+  /* Zuerst: hat das Hauptskript ueberhaupt geparst? Ein Syntaxfehler darin —
+     etwa ein Blockkommentar, den ein '*' vor einem Schraegstrich vorzeitig
+     schliesst — laesst jede spaetere Zeile an einem undefined scheitern und
+     verschuettet die eigentliche Meldung. Deshalb hier abbrechen, nicht
+     weiterlaufen. */
+  if (typeof w.LANGS === 'undefined' || typeof w.t !== 'function' || !w.S) {
+    console.log('ABBRUCH: das Hauptskript in index.html hat nicht geparst.');
+    fehler.forEach(f => console.log('  ' + f));
+    process.exit(2);
+  }
+  check('Hauptskript geparst', true, w.LANGS.length + ' Sprachen');
+  const WBSOLL = w.LANGS.length;
+  check('ein Wörterbuch je Sprache in LANGS',
+    w.LANGS.every(l => w.DICT[l] && Object.keys(w.DICT[l]).length > 0),
+    w.LANGS.filter(l => !w.DICT[l] || !Object.keys(w.DICT[l]).length).join(' '));
   check('Wörterbücher geladen', !!w.I18N_DE && !!w.I18N_EN && !!w.I18N_LA && !!w.I18N_JA);
   check('Startsprache aus ?lang=de', w.LANG === 'de', 'LANG=' + w.LANG);
   check('keine Skriptfehler beim Start', fehler.length === 0, fehler.join(' | '));
@@ -193,6 +212,58 @@ setTimeout(() => {
   check('kein deutscher Fließtext in LA',
     !/(Rentenbeginn|Nettoaufwand|Bruttorendite|Monatsleistung|Beispielwerte)/.test(laTxt),
     (laTxt.match(/Rentenbeginn|Nettoaufwand|Bruttorendite|Monatsleistung|Beispielwerte/g)||[]).join(' '));
+
+  // --- Teilsprachen: Rückfall auf Deutsch muss greifen, nicht klaffen ---
+  // Der Rückfall ist kein Schönheitsfehler, sondern die Zusicherung: fehlt ein
+  // Schlüssel, erscheint der deutsche Eintrag — nie ein Leerstring und nie der
+  // Schlüssel selbst. Genau das wird hier für jede Teilsprache nachgewiesen.
+  Object.keys(w.TEILWEISE).forEach(function(l){
+    w.setLang(l);
+    const eigen = Object.keys(w.DICT[l]);
+    const fehlend = Object.keys(w.I18N_DE).filter(k => !(k in w.DICT[l]));
+    check('Teilsprache ' + l + ': Schlüssel eigen/geerbt',
+      eigen.length > 0 && fehlend.length > 0, eigen.length + '/' + fehlend.length);
+    // Kein eigener Eintrag darf leer sein oder den Typ wechseln.
+    const kaputt = eigen.filter(k => typeof w.DICT[l][k] !== typeof w.I18N_DE[k]
+                                  || w.DICT[l][k] === '');
+    check('Teilsprache ' + l + ': Typen und Leerstrings', kaputt.length === 0, kaputt.join(' '));
+    // Jeder geerbte Schlüssel liefert den deutschen Text — nicht den Schlüssel.
+    const durchgefallen = fehlend.filter(k => typeof w.I18N_DE[k] === 'string'
+                                           && w.t(k) !== w.I18N_DE[k]);
+    check('Teilsprache ' + l + ': Rückfall liefert Deutsch',
+      durchgefallen.length === 0, durchgefallen.slice(0,3).join(' '));
+    // Und die Sprachleiste sagt es dem Nutzer.
+    const zeile = w.$('#langrow');
+    const hinweis = [].slice.call(zeile.children)
+      .filter(n => n.className === 'sub' && n.style.flexBasis === '100%');
+    check('Teilsprache ' + l + ': Hinweis in der Sprachleiste',
+      hinweis.length === 1 && /<b>/.test(hinweis[0].innerHTML));
+  });
+  // Umgekehrt: Vollsprachen dürfen den Hinweis NICHT zeigen.
+  w.LANGS.filter(l => !w.TEILWEISE[l]).forEach(function(l){
+    w.setLang(l);
+    const zeile = w.$('#langrow');
+    const hinweis = [].slice.call(zeile.children)
+      .filter(n => n.className === 'sub' && n.style.flexBasis === '100%');
+    check('Vollsprache ' + l + ': kein Teilhinweis', hinweis.length === 0);
+    check('Vollsprache ' + l + ': Wörterbuch vollständig',
+      Object.keys(w.DICT[l]).length === Object.keys(w.I18N_DE).length,
+      Object.keys(w.DICT[l]).length + ' von ' + Object.keys(w.I18N_DE).length);
+  });
+  // Dreibuchstabige Codes müssen den Adressparameter überstehen.
+  ['grc','nds','bar','got','goh','gmh'].forEach(function(l){
+    w.setLang('de'); w.setLang(l);
+    check('Adresse trägt ' + l, new RegExp('lang=' + l + '(?:&|$)').test(w.location.search),
+      w.location.search);
+  });
+  // Bindestrich-Untertags (Registervarianten) müssen denselben Weg überstehen
+  // — sowohl das Setzen der Adresse als auch das Zurücklesen via pickLang().
+  ['de-x-amt','de-x-sales'].forEach(function(l){
+    w.setLang('de'); w.setLang(l);
+    check('Adresse trägt ' + l, new RegExp('lang=' + l + '(?:&|$)').test(w.location.search),
+      w.location.search);
+    check('pickLang liest ' + l + ' zurück', w.pickLang() === l, w.pickLang());
+  });
 
   // --- zurück auf Deutsch ---
   w.setLang('de');

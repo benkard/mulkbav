@@ -132,6 +132,31 @@ input[type=text]:focus-visible,input[type=number]:focus-visible{outline-offset:-
   background:repeating-conic-gradient(var(--face) 0% 25%, var(--face-lt) 0% 50%) 0 0/2px 2px}
 .seg.btnseg{margin-left:auto;align-self:flex-end;padding-bottom:2px}
 .seg.btnseg button{font-size:11px;padding:3px 9px;min-height:22px}
+
+/* ---------- Sprachauswahl (Panel) ---------- *
+   Der Anker traegt position:relative, damit das absolut gesetzte Panel
+   an IHM haengt und nicht am Viewport; z-index ueber den Fenstern, weil
+   es sonst unter der naechsten Kachel verschwindet.                      */
+/* Linksbuendig, nicht rechts: die Kopfzeile wird von links gelesen, und eine
+   rechts ans Ende geschobene Leiste verschwindet neben der Unterzeile. */
+.langwrap{position:relative}
+.langbtn{appearance:none;background:var(--face);color:var(--ink);
+  font:11px var(--ui);padding:3px 10px;min-height:22px;cursor:pointer;white-space:nowrap;
+  border:1px solid var(--black);
+  box-shadow:inset 1px 1px 0 var(--white), inset -1px -1px 0 var(--gray)}
+.langbtn[aria-expanded=true]{font-weight:700;
+  box-shadow:inset 1px 1px 0 var(--gray), inset -1px -1px 0 var(--white)}
+/* Das Panel haengt an derselben Kante wie der Knopf — links. */
+.langpop{position:absolute;left:0;top:calc(100% + 3px);z-index:50;
+  background:var(--face);border:1px solid var(--black);padding:7px 8px 6px;
+  box-shadow:inset 1px 1px 0 var(--white), inset -1px -1px 0 var(--gray), 2px 2px 0 rgba(0,0,0,.35);
+  max-width:min(92vw,420px)}
+.langpop[hidden]{display:none}
+.langgrp+.langgrp{margin-top:6px}
+.langgrp-h{font:italic 10px var(--ui);letter-spacing:.4px;opacity:.75;margin-bottom:2px}
+.langpop .seg.btnseg{margin-left:0;align-self:auto;padding-bottom:0}
+.langlegend{font:10px var(--ui);opacity:.6;margin-top:7px;
+  border-top:1px solid var(--gray);padding-top:4px}
 #cards{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 @media(max-width:640px){#cards{grid-template-columns:1fr}}
 /* Gekachelt haengt die Enge nicht mehr am Schirm, sondern am Fenster.
@@ -457,9 +482,24 @@ a{color:var(--navy)}
 </div>
 
 <script src="i18n.de.js"></script>
+<script src="i18n.de-x-amt.js"></script>
+<script src="i18n.de-x-sales.js"></script>
 <script src="i18n.en.js"></script>
 <script src="i18n.la.js"></script>
 <script src="i18n.ja.js"></script>
+<script src="i18n.nl.js"></script>
+<script src="i18n.fr.js"></script>
+<script src="i18n.tr.js"></script>
+<script src="i18n.uk.js"></script>
+<script src="i18n.eo.js"></script>
+<script src="i18n.eu.js"></script>
+<script src="i18n.nds.js"></script>
+<script src="i18n.bar.js"></script>
+<script src="i18n.got.js"></script>
+<script src="i18n.goh.js"></script>
+<script src="i18n.gmh.js"></script>
+<script src="i18n.grc.js"></script>
+<script src="i18n.sa.js"></script>
 <script>
 /* =====================================================================
    TEIL 0  —  SPRACHEN
@@ -474,21 +514,95 @@ a{color:var(--navy)}
    Sprache. Deshalb bekommen die Funktionen ROHWERTE (Zahlen) und formatieren
    selbst ueber f, statt fertige Textstuecke einzusetzen.
    ===================================================================== */
-var LANGS = ['de','en','la','ja'], LANGKEY = 'altersvorsorge.lang';
-var DICT = { de: window.I18N_DE || {}, en: window.I18N_EN || {},
-             la: window.I18N_LA || {}, ja: window.I18N_JA || {} };
+/* Sprachcodes nach ISO 639-1, wo es einen gibt, sonst 639-3. Dreibuchstabig
+   sind grc (Altgriechisch — el waere Neugriechisch und damit schlicht falsch),
+   nds (Niederdeutsch) und bar (Bairisch); keine dieser drei Sprachen hat einen
+   zweibuchstabigen Code. */
+var LANGS = ['de','de-x-amt','de-x-sales','en','nl','nds','bar','fr','eu','eo','tr','uk',
+             'got','goh','gmh','la','grc','sa','ja'];
+var LANGKEY = 'altersvorsorge.lang';
+var DICT = { de: window.I18N_DE  || {}, en:  window.I18N_EN  || {},
+             nl: window.I18N_NL  || {}, nds: window.I18N_NDS || {},
+             bar:window.I18N_BAR || {}, fr:  window.I18N_FR  || {},
+             eu: window.I18N_EU  || {}, eo:  window.I18N_EO  || {},
+             tr: window.I18N_TR  || {}, uk:  window.I18N_UK  || {},
+             got:window.I18N_GOT || {}, goh: window.I18N_GOH || {},
+             gmh:window.I18N_GMH || {}, la:  window.I18N_LA  || {},
+             grc:window.I18N_GRC || {}, sa:  window.I18N_SA  || {},
+             ja: window.I18N_JA  || {},
+             'de-x-amt':   window.I18N_DE_X_AMT   || {},
+             'de-x-sales': window.I18N_DE_X_SALES || {} };
 var FMT = {};                     /* wird in applyLocale() gefuellt */
 
+/* Autonyme fuer die Schaltflaechen. Ein Kuerzel im Knopf, der volle Name im
+   title — und zwar in der jeweiligen Sprache selbst, nicht uebersetzt: wer
+   Ukrainisch sucht, erkennt „Українська“ auch dann, wenn die Oberflaeche
+   gerade auf Baskisch steht. Das spart nebenbei 14×14 Woerterbucheintraege. */
+var AUTONYM = {
+  de:'Deutsch', en:'English', nl:'Nederlands', nds:'Plattdüütsch',
+  bar:'Boarisch', fr:'Français', eu:'Euskara', eo:'Esperanto',
+  tr:'Türkçe', uk:'Українська',
+  /* Die drei historischen Stufen tragen ihr jeweils zeitgenoessisches
+     Selbstbezeichnungswort: gutiska razda ist in Wulfilas Bibel belegt,
+     diutisc bei Notker, diutsch im klassischen Mittelhochdeutschen. */
+  got:'Gutiska razda', goh:'Diutisc', gmh:'Diutsch',
+  la:'Latina', grc:'Ἀρχαία Ἑλληνική', sa:'संस्कृतम्', ja:'日本語',
+  /* Registervarianten des Deutschen (BCP 47 § 2.2.7, privater Untertag):
+     keine Sprachen, sondern Stilebenen — das Autonym nennt daher den
+     Registernamen, nicht "Deutsch" ein zweites Mal. */
+  'de-x-amt': 'Amtsdeutsch', 'de-x-sales': 'Vertriebsdeutsch'
+};
+
+/* Teiluebersetzte Sprachen: Oberflaeche, Feldnamen, Tabellenkoepfe und
+   Diagrammlegenden liegen vor, die langen juristischen Erlaeuterungen
+   fallen ueber tRaw() auf das Deutsche zurueck. Seit der zweiten Fassung
+   sind alle vormals teiluebersetzten Sprachen vollstaendig (459 von 459
+   Schluesseln); diese Tabelle ist daher aktuell leer, bleibt aber stehen,
+   weil pruefe.js sie erwartet und weil rechtslaeufige Sprachen (siehe
+   VORGEMERKT unten) hier voraussichtlich zuerst als Teilfassung landen. */
+var TEILWEISE = { };
+
+/* =====================================================================
+   VORGEMERKT — noch nicht gebaut. Beruehrt nicht die Woerterbuecher,
+   sondern diesen Abschnitt und das Stilblatt; deshalb steht es hier.
+
+   RECHTSLAEUFIGE SPRACHEN: he, fa, ar.
+   Die Uebersetzung ist der billige Teil. Zu tun waere:
+   - applyStatic() setzt bisher nur documentElement.lang; es braucht
+     zusaetzlich dir = RTL[LANG] ? 'rtl' : 'ltr' und eine Tabelle
+     var RTL = { he:1, fa:1, ar:1 };
+   - im Stilblatt margin-left/right und padding-left/right durch die
+     logischen Eigenschaften (margin-inline-start/-end) ersetzen, sonst
+     kippt die Kachelung. Die .seg-Leisten und .titlebar sind betroffen.
+   - Teil 8 zeichnet auf Canvas: dort gibt es keinen Bidi-Algorithmus.
+     Achsenbeschriftung, Legenden und der Wasserfall muessten gespiegelt
+     werden (ctx.setTransform mit negativem x plus Textanker rechts).
+     Das ist der eigentliche Aufwand, nicht die Sprache.
+   - fa und ar: LOCALES auf 'fa-u-nu-latn' bzw. 'ar-u-nu-latn' setzen,
+     sonst liefert ICU ostarabische Ziffern (۱۲۳۴) neben einem €.
+
+   Die Registervarianten des Deutschen (de-x-amt, de-x-sales) sind seit
+   der zweiten Fassung gebaut: siehe LANGS, DICT, AUTONYM oben sowie
+   pickLang() unten. LOCALES/GRUPPEN brauchten keine neuen Eintraege,
+   weil die bestehenden ||-Fallbacks ('de-DE' bzw. '.') fuer beide schon
+   das Richtige tun.
+   ===================================================================== */
+
 /* Vorrang: ?lang= in der Adresse (teilbar) > gemerkte Wahl > Browsersprache.
-   Latein wird nie automatisch gewählt — ein Browser, der la meldet, meint es
-   fast sicher nicht als Anzeigesprache. */
+   Die toten und konstruierten Sprachen werden nie automatisch gewaehlt — ein
+   Browser, der la meldet, meint es fast sicher nicht als Anzeigesprache. */
 function pickLang(){
-  var q = /[?&]lang=([a-z]{2})/i.exec(location.search);
+  /* Grundcode 2-3 Buchstaben, danach beliebig viele BCP-47-Privatuntertags
+     (-x-amt, -x-sales, ...), je 1-8 alphanumerische Zeichen. */
+  var q = /[?&]lang=([a-z]{2,3}(?:-x-[a-z0-9]{1,8})*)/i.exec(location.search);
   if (q && LANGS.indexOf(q[1].toLowerCase()) >= 0) return q[1].toLowerCase();
   try { var s = localStorage.getItem(LANGKEY); if (LANGS.indexOf(s) >= 0) return s; } catch(e){}
   var n = ((navigator.languages && navigator.languages[0]) || navigator.language || 'de').toLowerCase();
-  if (/^ja/.test(n)) return 'ja';
-  if (/^en/.test(n)) return 'en';
+  /* Laengster Praefix zuerst, damit nds vor nl und de nicht verdeckt wird. */
+  var auto = ['nds','bar','ja','nl','fr','eu','eo','tr','uk','en'];
+  for (var i = 0; i < auto.length; i++){
+    if (n === auto[i] || n.indexOf(auto[i] + '-') === 0) return auto[i];
+  }
   return 'de';
 }
 var LANG = pickLang();
@@ -1325,8 +1439,18 @@ function encodeState() {
    bekommt die kontinentale Schreibweise — römische Ziffern wären ein Witz auf
    Kosten der Lesbarkeit, und die Trennzeichenkonvention ist ohnehin jünger
    als jede lateinische Quelle. Japanisch gruppiert wie das Englische. */
-var LOCALES = { de:'de-DE', en:'en-GB', la:'de-DE', ja:'ja-JP' };
-var GRUPPEN = { de:'.', en:',', la:'.', ja:',' };
+var LOCALES = { de:'de-DE', en:'en-GB', nl:'nl-NL', nds:'de-DE', bar:'de-DE',
+                fr:'fr-FR', eu:'eu-ES', eo:'de-DE', tr:'tr-TR', uk:'uk-UA',
+                got:'de-DE', goh:'de-DE', gmh:'de-DE',
+                la:'de-DE', grc:'de-DE', sa:'de-DE', ja:'ja-JP' };
+/* Nur fuer den mehrdeutigen Eingabefall „1,234“ relevant, siehe parseNum().
+   Sprachen mit schmalem Leerraum als Tausendertrenner (fr, uk) bekommen
+   U+202F: dann matcht weder Punkt noch Komma, und beide werden als
+   Dezimalzeichen gelesen — genau richtig. */
+var GRUPPEN = { de:'.', en:',', nl:'.', nds:'.', bar:'.',
+                fr:' ', eu:'.', eo:'.', tr:'.', uk:' ',
+                got:'.', goh:'.', gmh:'.',
+                la:'.', grc:'.', sa:'.', ja:',' };
 var LOCALE = 'de-DE', nf0 = null, nf2 = null, nfp = null;
 function applyLocale(){
   LOCALE = LOCALES[LANG] || 'de-DE';
@@ -2644,26 +2768,186 @@ function applyStatic(){
   WINCHROME.forEach(function(fn){ fn(); });
 }
 
+/* =====================================================================
+   SPRACHAUSWAHL
+
+   Neunzehn Knoepfe nebeneinander sind keine Auswahl mehr, sondern eine
+   Wand. Also: ein Knopf oeffnet ein Panel, das Panel gliedert nach
+   Sprachverwandtschaft. Die Gliederung ist genealogisch und flach —
+   eine Partition der Menge LANGS, keine Baumnavigation; ein Baum mit
+   19 Blaettern hat mehr Knoten als Blaetter und kostet nur Klicks.
+
+   WARUM DIE GRUPPENNAMEN LATEINISCH SIND. Sie muessten sonst in jede
+   der 19 Sprachen uebersetzt werden — sechs Gruppen mal 19 Sprachen
+   sind 114 zusaetzliche Woerterbucheintraege, davon etliche in
+   Gotisch, Sanskrit und Althochdeutsch, fuer die es die Termini
+   „Indogermanistik" schlicht nicht gibt. Dasselbe Argument, das oben
+   die Autonyme begruendet: eine sprachneutrale Konvention statt n²
+   Eintraege. Die wissenschaftliche Nomenklatur ist im Lateinischen
+   ohnehin zu Hause (Linné lässt gruessen), und wer „Germanica" liest,
+   erkennt seine Gruppe in jeder der 19 Oberflaechensprachen wieder.
+
+   Das Kreuz † markiert historische Sprachstufen ohne heutige
+   Sprechergemeinschaft — got, goh, gmh, la, grc, sa.
+   ===================================================================== */
+var FAMILIEN = [
+  /* Registervarianten sind keine eigenen Sprachen, sondern Stilebenen
+     derselben (BCP 47 § 2.2.7). Sie stehen deshalb zusammen und zuerst,
+     nicht verteilt im germanischen Zweig. */
+  { tax:'Theodisca — registra', langs:['de','de-x-amt','de-x-sales'] },
+  { tax:'Germanica',            langs:['nds','nl','en','bar','gmh','goh','got'] },
+  { tax:'Italica',              langs:['fr','la'] },
+  { tax:'Indoeuropaea cetera',  langs:['uk','grc','sa'] },
+  { tax:'Extra Indoeuropaeam',  langs:['eu','tr','ja'] },
+  { tax:'Ficta',                langs:['eo'] }
+];
+/* Zweigangabe fuer die Sammelgruppen, damit „cetera" nicht nur ein
+   Restposten ist: sie steht im title des jeweiligen Knopfes. */
+var ZWEIG = { uk:'Slavica', grc:'Hellenica', sa:'Indoaryana',
+              eu:'lingua sola (isolata)', tr:'Turcica', ja:'Iaponica' };
+var HISTORISCH = { got:1, goh:1, gmh:1, la:1, grc:1, sa:1 };
+
+/* Konsistenzpruefung zur Ladezeit: die Familien muessen eine Partition
+   von LANGS sein — keine Sprache doppelt, keine vergessen. Eine neue
+   Sprache in LANGS ohne Eintrag hier faellt sonst lautlos aus dem
+   Panel heraus, und genau das ist der Fehler, den niemand bemerkt. */
+(function(){
+  var flach = FAMILIEN.reduce(function(a,g){ return a.concat(g.langs); }, []);
+  var fehlt = LANGS.filter(function(l){ return flach.indexOf(l) < 0; });
+  var zuviel = flach.filter(function(l){ return LANGS.indexOf(l) < 0; });
+  var doppelt = flach.filter(function(l,i){ return flach.indexOf(l) !== i; });
+  if (fehlt.length || zuviel.length || doppelt.length){
+    console.warn('FAMILIEN ist keine Partition von LANGS —',
+                 'fehlt:', fehlt, 'unbekannt:', zuviel, 'doppelt:', doppelt);
+  }
+})();
+
+var langPopOffen = false;
+
+function langKnopf(l){
+  /* Registervarianten (de-x-amt, de-x-sales) sind zu lang fuer den
+     Knopf ("DE-X-AMT"); der Teil nach dem letzten Bindestrich reicht
+     zur Unterscheidung, weil lang="..." und AUTONYM ohnehin den vollen
+     Code bzw. Namen tragen. */
+  var kurz = l.indexOf('-') >= 0 ? l.slice(l.lastIndexOf('-') + 1) : l;
+  var b = el('button', null, kurz.toUpperCase() + (HISTORISCH[l] ? ' †' : ''));
+  b.type = 'button';
+  /* Der Name steht im Autonym da, nicht uebersetzt — siehe AUTONYM. */
+  b.title = AUTONYM[l]
+          + (ZWEIG[l] ? ' — ' + ZWEIG[l] : '')
+          + (TEILWEISE[l] ? ' — ' + t('ui.lang.partial') : '');
+  b.setAttribute('lang', l);
+  b.setAttribute('aria-label', AUTONYM[l]);
+  b.setAttribute('aria-pressed', LANG === l);
+  return b;
+}
+
 function buildLangBar(){
   var host = $('#langrow');
   if (!host) return;
   host.innerHTML = '';
-  host.appendChild(el('span','sub', t('ui.lang') + ': '));
-  var seg = el('div','seg btnseg');
-  seg.style.marginLeft = '0';
-  seg.setAttribute('role','group');
-  seg.setAttribute('aria-label', t('ui.lang.aria'));
-  LANGS.forEach(function(l){
-    var b = el('button', null, l.toUpperCase());
-    b.type = 'button';
-    b.title = t('ui.lang.' + l);
-    b.setAttribute('lang', l);
-    b.setAttribute('aria-pressed', LANG === l);
-    b.onclick = function(){ setLang(l); };
-    seg.appendChild(b);
+  langPopOffen = false;
+
+  var wrap = el('div','langwrap');
+
+  var knopf = el('button','langbtn', t('ui.lang') + ': ' + AUTONYM[LANG] + ' ▾');
+  knopf.type = 'button';
+  knopf.id = 'langbtn';
+  knopf.setAttribute('lang', LANG);
+  /* aria-haspopup="dialog" passt zum role="dialog" des Panels; aria-expanded
+     traegt den Zustand. Beides zusammen ist das Muster, das Screenreader als
+     Aufklappmenue ansagen (WAI-ARIA 1.2 § 5.2.6). */
+  knopf.setAttribute('aria-haspopup','dialog');
+  knopf.setAttribute('aria-expanded','false');
+  knopf.setAttribute('aria-controls','langpop');
+
+  var pop = el('div','langpop');
+  pop.id = 'langpop';
+  pop.hidden = true;
+  pop.setAttribute('role','dialog');
+  pop.setAttribute('aria-modal','false');
+  pop.setAttribute('aria-label', t('ui.lang.aria'));
+
+  FAMILIEN.forEach(function(g){
+    var box = el('div','langgrp');
+    box.setAttribute('role','group');
+    box.setAttribute('aria-label', g.tax);
+    box.appendChild(el('div','langgrp-h', g.tax));
+    var seg = el('div','seg btnseg');
+    seg.style.marginLeft = '0';
+    g.langs.forEach(function(l){
+      var b = langKnopf(l);
+      b.onclick = function(){ langPopSchliessen(false); setLang(l); };
+      seg.appendChild(b);
+    });
+    box.appendChild(seg);
+    pop.appendChild(box);
   });
-  host.appendChild(seg);
+
+  /* Legende zum Kreuz. Sprachneutral gehalten (Zeichen + lateinischer
+     Terminus), aus demselben Grund wie die Gruppennamen. */
+  var leg = el('div','langlegend', '† linguae mortuae');
+  pop.appendChild(leg);
+
+  knopf.onclick = function(){ langPopOffen ? langPopSchliessen(true) : langPopOeffnen(); };
+
+  wrap.appendChild(knopf);
+  wrap.appendChild(pop);
+  host.appendChild(wrap);
+
+  if (TEILWEISE[LANG]){
+    var n = el('div','sub');
+    n.style.cssText = 'flex-basis:100%;margin-top:3px';
+    n.innerHTML = t('ui.lang.partialNote');
+    host.appendChild(n);
+  }
 }
+
+function langPopOeffnen(){
+  var pop = $('#langpop'), knopf = $('#langbtn');
+  if (!pop || !knopf) return;
+  pop.hidden = false;
+  knopf.setAttribute('aria-expanded','true');
+  langPopOffen = true;
+  /* Der Fokus wandert auf die gerade aktive Sprache — das ist die Stelle,
+     von der aus der Nutzer denkt, nicht der Anfang der Liste. */
+  var akt = pop.querySelector('button[aria-pressed=true]') || pop.querySelector('button');
+  if (akt) akt.focus();
+}
+
+function langPopSchliessen(fokusZurueck){
+  var pop = $('#langpop'), knopf = $('#langbtn');
+  if (!pop || !knopf) return;
+  pop.hidden = true;
+  knopf.setAttribute('aria-expanded','false');
+  langPopOffen = false;
+  if (fokusZurueck) knopf.focus();
+}
+
+/* Die beiden Weltzustandsbeobachter werden EINMAL angemeldet, nicht bei
+   jedem buildLangBar() — sonst haetten wir nach n Sprachwechseln n
+   Handler, die alle dasselbe tun (ein klassisches Leck). */
+document.addEventListener('keydown', function(e){
+  if (!langPopOffen) return;
+  if (e.key === 'Escape'){ e.preventDefault(); langPopSchliessen(true); return; }
+  if (e.key !== 'Tab') return;
+  /* Fokusfalle: das Panel ist ein Dialog, also zyklisch. Die Liste der
+     fokussierbaren Elemente ist hier trivial — es sind ausschliesslich
+     Knoepfe, keine versteckten, keine tabindex=-1. */
+  var pop = $('#langpop');
+  if (!pop) return;
+  var f = [].slice.call(pop.querySelectorAll('button'));
+  if (!f.length) return;
+  var i = f.indexOf(document.activeElement);
+  e.preventDefault();
+  var j = e.shiftKey ? (i <= 0 ? f.length - 1 : i - 1) : (i < 0 || i === f.length - 1 ? 0 : i + 1);
+  f[j].focus();
+}, true);
+document.addEventListener('pointerdown', function(e){
+  if (!langPopOffen) return;
+  var wrap = e.target && e.target.closest ? e.target.closest('.langwrap') : null;
+  if (!wrap) langPopSchliessen(false);
+}, true);
 
 function setLang(l){
   if (l === LANG || LANGS.indexOf(l) < 0) return;

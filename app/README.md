@@ -5,11 +5,11 @@ Ergebnisse, aber bedienbar von Menschen, die keine Tabellenkalkulation aufmachen
 
 | Datei | Rolle |
 |---|---|
-| `index.html` | **Die ganze App.** Rechenkern, Oberfläche, Diagramme — eine Datei, keine externen Abhängigkeiten außer den vier Wörterbüchern. Läuft per Doppelklick. |
-| `i18n.de.js` | Wörterbuch Deutsch. Hauptsprache und Rückfallebene. |
-| `i18n.en.js` | Wörterbuch Englisch. |
-| `i18n.la.js` | Wörterbuch Latein. |
-| `i18n.ja.js` | Wörterbuch Japanisch. |
+| `index.html` | **Die ganze App.** Rechenkern, Oberfläche, Diagramme — eine Datei, keine externen Abhängigkeiten außer den Wörterbüchern. Läuft per Doppelklick. |
+| `i18n.de.js` | Wörterbuch Deutsch. Hauptsprache und Rückfallebene. **Vollständig.** |
+| `i18n.en.js` `i18n.nl.js` `i18n.fr.js` `i18n.la.js` `i18n.ja.js` | Englisch, Niederländisch, Französisch, Latein, Japanisch. **Vollständig** (459 Schlüssel). |
+| `i18n.nds.js` `i18n.bar.js` `i18n.eu.js` `i18n.eo.js` `i18n.tr.js` `i18n.uk.js` | Niederdeutsch, Bairisch, Baskisch, Esperanto, Türkisch, Ukrainisch. **Teilweise** (315 Schlüssel, siehe 3b). |
+| `i18n.got.js` `i18n.goh.js` `i18n.gmh.js` `i18n.grc.js` `i18n.sa.js` | Gotisch, Althochdeutsch, Mittelhochdeutsch, Altgriechisch, Sanskrit. **Teilweise**. |
 | `manifest.json` | Macht die App installierbar (Name, Farben, Symbole). |
 | `service-worker.js` | Offline-Cache, `stale-while-revalidate`. |
 | `icon-*.png` | App-Symbole, 192 / 512 / 512-maskable. |
@@ -18,7 +18,7 @@ Ergebnisse, aber bedienbar von Menschen, die keine Tabellenkalkulation aufmachen
 
 ## 1. Weitergeben — drei Wege
 
-**a) Nur die Dateien.** `index.html` samt den vier `i18n.*.js` verschicken — sie gehören
+**a) Nur die Dateien.** `index.html` samt allen neunzehn `i18n.*.js` verschicken — sie gehören
 zusammen und müssen im selben Ordner liegen. Doppelklick genügt,
 alles rechnet, Eingaben werden im Browser gespeichert. Was fehlt, ist nur die PWA-Hülle —
 kein Symbol auf dem Startbildschirm, kein Offline-Cache. Beides braucht es hier auch nicht,
@@ -106,24 +106,114 @@ Bruttobeitrags.
 Fällt der Nettoaufwand für das erste Jahr auf null — weil man dann bereits ausgeschieden ist —,
 existiert die Umkehrung nicht. Die App sagt das statt still nichts zu tun.
 
-## 3b. Vier Sprachen
+## 3b. Neunzehn Sprachen
 
-Deutsch ist die Hauptsprache; Englisch, Latein und Japanisch sind Übersetzungen derselben
-Rechtslage, kein zweiter Rechtsstand. **Die Normzitate bleiben in allen Sprachen deutsch**
+Deutsch ist die Hauptsprache; alle übrigen sind Übersetzungen derselben Rechtslage, kein
+zweiter Rechtsstand. **Die Normzitate bleiben in allen Sprachen deutsch**
 (`§ 1a BetrAVG`, `§ 226 Abs. 2 S. 2 SGB V`, …) — sie sind die Primärquellen und haben keine
 amtliche Übersetzung; eine eigene wäre hier keine Hilfe, sondern eine Fehlerquelle. Ebenso
 bleiben zwei Produktnamen stehen, weil sie Eigennamen sind: `Altersvorsorgedepot` und
 `Versorgungsbezüge`; im Japanischen mit Glosse (`Versorgungsbezüge（企業年金等の給付）`).
 
+| | Sprachen | Schlüssel |
+|---|---|---|
+| **vollständig** | `de` `de-x-amt` `de-x-sales` `en` `nl` `fr` `la` `ja` `nds` `bar` `eu` `eo` `tr` `uk` `got` `goh` `gmh` `grc` `sa` | 459 |
+| **teilweise** | — | — |
+
+Alle neunzehn Sprachen sind inzwischen vollständige Wörterbücher (459 von 459 Schlüsseln); die
+Tabellenzeile „teilweise“ bleibt stehen, weil `TEILWEISE` in `index.html` als Mechanismus
+weiterlebt — sie ist nur derzeit leer. Ursprünglich war die Auswahl strukturell, nicht nach
+Zeichenzahl: zuerst übersetzt wurde, was man anfasst oder als Überschrift liest —
+Feldbeschriftungen, Einheiten, Auswahlwerte, Fenstertitel, Kennzahlen, Tabellenköpfe,
+Diagrammlegenden, Meldungen; die langen juristischen Erläuterungen (die `?`-Texte an den
+Feldern, das Fazit, die Notizen unter den Feldern, der ganze Rechenweg) kamen erst in einer
+zweiten Fassung dazu. Für die drei historischen Sprachstufen und für Sanskrit und Altgriechisch
+ist der Vertrauensgrad in diesen Fließtext-Passagen entsprechend niedriger als in den
+Feldbeschriftungen selbst — siehe die Kopfkommentare der jeweiligen `i18n.*.js`-Datei für die
+genauen Prozentsätze und die dort neu geprägten Fachbegriffe.
+
+**Die drei alten germanischen Fassungen** (`got` Gotisch, `goh` Althochdeutsch,
+`gmh` Mittelhochdeutsch) sind kein Scherz, sondern eine Probe darauf, wie viel Fachsprache eine
+Sprachstufe trägt. Nur `goh` und `gmh` sind Vorstufen des Deutschen; **Gotisch ist ostgermanisch
+und damit eine Schwester, keine Ahnin** — es steht hier, weil es das älteste umfangreich
+überlieferte Germanisch überhaupt ist. Das Ergebnis ist ein klares Gefälle, und es folgt genau
+der Verstädterung:
+
+- **Gotisch** hat mit Wulfilas Bibel ein Korpus von rund 3.000 Lexemen, praktisch keines
+  davon wirtschaftlich. Belegt sind immerhin `faihu` (Vermögen), `gild` (Abgabe), `wokrs` (Zins,
+  Lk 19,23 *miþ wokra*), `mizdo` (Lohn), `asneis` (Lohnarbeiter). Alles Übrige — `haubidafaihu`
+  für Kapital, `gagaleikeins` für Vergleich — ist geprägt. Vertrauensgrad ≈ 30 %.
+- **Althochdeutsch** gewinnt durch Tatian und Notker: `gelt`, `zins`, `lon`, `wuohhar` sind
+  belegt, und **`widarmezzon` steht im Tatian genau für lateinisch *comparare*** — der
+  Fenstertitel ist also kein Kunstwort. Vertrauensgrad ≈ 50 %.
+- **Mittelhochdeutsch** ist die tragfähigste Stufe, weil es bereits eine städtische Geld- und
+  Rechtssprache gibt. Drei Treffer sind keine Prägung, sondern der jeweilige Terminus:
+  **`houbetguot`** ist das Kapital, **`lîpgedinge`** die lebenslange Leibrente, **`tiurunge`**
+  der Preisanstieg — also die Inflation. Dazu `gülte`, `stiure`, `wuocher`, `gewin`, `koste`.
+  Vertrauensgrad ≈ 65 %.
+
+**Gotisch steht in lateinischer Umschrift** (Streitberg), nicht im Wulfila-Alphabet
+(U+10330–1034F). Der Grund ist der Grundsatz aus § 2: die App lädt keine Schriften von fremden
+Domains. Für gotische Schrift gibt es auf keinem verbreiteten System eine vorinstallierte Datei
+— 𐌰𐌻𐌻𐌰𐌹𐌼 wären leere Kästchen. Die Umschrift ist ohnehin die Form, in der das Gotische gelesen
+wird. Wer die Schrift will, braucht eine eingebettete Schriftart und damit eine andere
+Grundsatzentscheidung.
+
+### Registervarianten des Deutschen: gebaut
+
+**„Beamtendeutsch“ und „Vertrieb“** sind keine Sprachen, sondern Stilebenen derselben Sprache —
+sie stehen daher nach BCP 47 § 2.2.7 unter `de` mit privatem Untertag: `de-x-amt` und
+`de-x-sales`, in `i18n.de-x-amt.js` und `i18n.de-x-sales.js`. Anders als bei den übrigen
+Sprachen genügt hier keine Teilfassung: der Witz liegt gerade im Fließtext, den eine
+Teilübersetzung weglassen würde. Derselbe § 1a BetrAVG heißt im Amtsdeutsch „Ein Rechtsanspruch
+besteht ausschließlich bis zur Höhe von 4 vom Hundert der Beitragsbemessungsgrenze der
+Rentenversicherung“ und im Vertriebsdeutsch „Bis zu 4 % on top — geschenkt vom Gesetzgeber!“ —
+beide beschreiben exakt dieselbe Rechtslage, und der Vergleich ist der Punkt. Die Zahlen ändern
+sich auch dort nicht; `pruefe.js` prüft das wie bei jeder anderen Sprache ohne Sonderfall.
+
+Technisch brauchte das drei Änderungen: `pickLang()` matcht seither zusätzlich zur
+Grundsprache beliebig viele `-x-[a-z0-9]{1,8}`-Untertags; `LANGS` und `DICT` bekamen
+Einträge mit Bindestrich; `LOCALES`/`GRUPPEN` brauchten dagegen **keine** neuen Einträge, weil
+ihre bestehenden `||`-Rückfälle (`'de-DE'` bzw. `'.'`) für beide Varianten schon das Richtige
+liefern. Der Sprachknopf zeigt nicht den vollen Code (`DE-X-AMT` wäre zu lang für die
+zweizeilige Schaltfläche), sondern nur den Teil nach dem letzten Bindestrich (`AMT`, `SALES`);
+`lang="…"` und das Autonym im `title` tragen weiterhin den vollen Code bzw. den vollen Namen.
+
+### Vorgemerkt, noch nicht gebaut
+
+**Rechtsläufige Sprachen (`he`, `fa`, `ar`).** Die Übersetzung ist der billige Teil. Teuer ist
+dreierlei: `applyStatic()` muss neben `lang` auch `dir` setzen; im Stilblatt müssen
+`margin-left`/`-right` durch die logischen Eigenschaften ersetzt werden, sonst kippt die
+Kachelung; und Teil 8 zeichnet auf Canvas, wo es **keinen Bidi-Algorithmus gibt** — Achsen,
+Legenden und der Wasserfall müssten von Hand gespiegelt werden. Dazu `fa-u-nu-latn` und
+`ar-u-nu-latn` in `LOCALES`, sonst liefert ICU ostarabische Ziffern (۱۲۳۴) neben einem `€`.
+Die Einzelheiten stehen als Kommentarblock in `index.html` direkt bei `TEILWEISE`.
+
+**Codes.** ISO 639-1, wo es einen gibt, sonst 639-3. Dreibuchstabig sind `grc`
+(**nicht** `el` — das wäre Neugriechisch), `nds` und `bar`; keine der drei hat einen
+zweibuchstabigen Code. Deshalb matcht `pickLang()` `[a-z]{2,3}` als Grundcode, optional gefolgt
+von den erwähnten `-x-…`-Untertags.
+
 **Wahl der Sprache**, in dieser Reihenfolge:
 
-1. `?lang=de|en|la|ja` in der Adresse — teilbar, überschreibt alles,
+1. `?lang=…` in der Adresse — teilbar, überschreibt alles,
 2. die gemerkte Wahl in `localStorage` unter `altersvorsorge.lang`,
-3. `navigator.language`: `ja…` → Japanisch, `en…` → Englisch, sonst Deutsch.
-   **Latein wird nie automatisch gewählt** — ein Browser, der `la` meldet, meint es fast sicher
-   nicht als Anzeigesprache.
+3. `navigator.language`, nach BCP-47-Teilkette (`xx` oder `xx-…`).
+   **Latein, Altgriechisch, Sanskrit und Esperanto werden nie automatisch gewählt** — ein
+   Browser, der `la` meldet, meint es fast sicher nicht als Anzeigesprache.
 
-**Zu den beiden neuen Fassungen.** Das Latein ist pragmatisches Neulatein: klassische Syntax,
+Die Knöpfe tragen das Kürzel, der `title` das **Autonym** (`Українська`, `Plattdüütsch`,
+`संस्कृतम्`) — nicht den übersetzten Namen. Wer Ukrainisch sucht, erkennt `Українська` auch dann,
+wenn die Oberfläche gerade auf Baskisch steht; nebenbei spart das 14 × 14 Wörterbucheinträge.
+
+**Zahlenformat.** `LOCALES` bildet jeden Code auf ein ICU-Tag ab, `GRUPPEN` auf das
+Tausenderzeichen, das `parseNum()` beim mehrdeutigen `1,234` heranzieht. Sprachen ohne eigene
+ICU-Daten (`nds`, `bar`, `eo`, `la`, `grc`, `sa`) bekommen `de-DE`: Devanāgarī-Ziffern neben
+einem `€` wären eine Schikane, keine Genauigkeit, und griechische Buchstabenzahlen erst recht.
+`fr` gruppiert mit U+202F, `uk` mit U+00A0 — beides so, wie ICU es tatsächlich setzt, nachgeprüft
+gegen `formatToParts`.
+
+**Zu Latein und Japanisch.** Das Latein ist pragmatisches Neulatein: klassische Syntax,
 aber gebildete Neuprägungen für Moderne (`pensio operativa`, `impensa pura`, `valor praesens`,
 `usura interna`). Römische Ziffern wären ein Witz auf Kosten der Lesbarkeit — und die
 Trennzeichenkonvention ist ohnehin jünger als jede lateinische Quelle. Das Japanische folgt
@@ -179,11 +269,27 @@ nicht den fertigen Satz — sonst stünde nach dem Wechsel „vor der Änderung 
 alten Sprache da.
 
 **Prüfung.** `pruefe.js` (Entwicklungswerkzeug, wird vom Service Worker nicht ausgeliefert) lädt die Seite kopflos in
-jsdom, schaltet alle vier Sprachen durch, klappt jeden Abschnitt auf, erzwingt über fünf Szenarien
-die bedingten Texte und prüft: kein unaufgelöster Schlüssel, keine deutschen Reste im
+jsdom, schaltet alle neunzehn Sprachen durch, klappt jeden Abschnitt auf, erzwingt über fünf
+Szenarien die bedingten Texte und prüft: kein unaufgelöster Schlüssel, keine deutschen Reste im
 englischen Modus außer den erlaubten Fachbegriffen, kein sichtbar gebliebener Schlüssel, und
 — die eigentliche Invariante —
-**identische Rechenergebnisse in allen vier Sprachen**.
+**identische Rechenergebnisse in allen neunzehn Sprachen**.
+
+Die Liste der Wörterbücher liest das Skript aus `index.html` statt sie zu pflegen: eine neue
+Sprache soll den Test nicht stillschweigend an einem leeren Objekt vorbeilaufen lassen. Das
+Regex für die `<script src="i18n….js">`-Tags lässt dabei auch Bindestriche im Dateinamen zu
+(`i18n.de-x-amt.js`), nicht nur zwei- bis dreibuchstabige Codes. Für Teilsprachen — sobald es
+wieder welche gibt — wird zusätzlich der Rückfall selbst nachgewiesen: jeder nicht übersetzte
+Schlüssel muss den *deutschen Text* liefern, nie einen Leerstring und nie den Schlüssel; kein
+eigener Eintrag darf den Typ wechseln (Zeichenkette ↔ Funktion); der Hinweis unter dem
+Umschalter steht genau bei den Teilsprachen und sonst nirgends. Umgekehrt wird für jede
+Vollsprache — das sind inzwischen alle neunzehn — nachgewiesen, dass ihr Wörterbuch tatsächlich
+459 von 459 Schlüsseln trägt und der Teilhinweis NICHT erscheint. Für die beiden
+Registervarianten des Deutschen wird zusätzlich geprüft, dass der Bindestrich-Untertag die
+Adresszeile und den Rückweg durch `pickLang()` übersteht. Bricht das Hauptskript beim Parsen —
+der wahrscheinlichste Fall ist ein Blockkommentar, den ein Regex-Literal vorzeitig schliesst —,
+steigt das Skript mit einer klaren Meldung aus, statt an einem `undefined` zu straucheln.
+154 Prüfungen.
 
 ## 4. Prüfung
 

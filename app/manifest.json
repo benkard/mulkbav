@@ -47,14 +47,19 @@
       "url": "./?lang=en"
     },
     {
-      "name": "Latine",
-      "short_name": "LA",
-      "url": "./?lang=la"
+      "name": "Nederlands",
+      "short_name": "NL",
+      "url": "./?lang=nl"
     },
     {
-      "name": "日本語",
-      "short_name": "JA",
-      "url": "./?lang=ja"
+      "name": "Plattdüütsch",
+      "short_name": "NDS",
+      "url": "./?lang=nds"
+    },
+    {
+      "name": "Boarisch",
+      "short_name": "BAR",
+      "url": "./?lang=bar"
     }
   ]
 }
