@@ -10,6 +10,9 @@ Ergebnisse, aber bedienbar von Menschen, die keine Tabellenkalkulation aufmachen
 | `i18n.en.js` `i18n.nl.js` `i18n.fr.js` `i18n.la.js` `i18n.ja.js` | Englisch, Niederländisch, Französisch, Latein, Japanisch. **Vollständig** (459 Schlüssel). |
 | `i18n.nds.js` `i18n.bar.js` `i18n.eu.js` `i18n.eo.js` `i18n.tr.js` `i18n.uk.js` | Niederdeutsch, Bairisch, Baskisch, Esperanto, Türkisch, Ukrainisch. **Teilweise** (315 Schlüssel, siehe 3b). |
 | `i18n.got.js` `i18n.goh.js` `i18n.gmh.js` `i18n.grc.js` `i18n.sa.js` | Gotisch, Althochdeutsch, Mittelhochdeutsch, Altgriechisch, Sanskrit. **Teilweise**. |
+| `i18n.ine-x-proto.js` | Urindogermanisch, LIV²/Rix-Notation mit Laryngalen und Asterisk. Kein ISO-639-3-Code möglich (639-3 vergibt keine Codes an Rekonstruate), daher BCP-47-Privatuntertag `ine-x-proto`. **Vollständig**. |
+| `i18n.jbo.js` `i18n.tok.js` | Lojban, Toki Pona. Toki Pona speichert sitelen Lasina (ASCII); das Stilblatt setzt für `lang="tok"` ligaturfähige sitelen-pona-Zeichensätze, die die ASCII-Wörter zu Logographen binden — ohne installierten Zeichensatz bleibt lesbares Latein statt PUA-Kästchen. **Vollständig**. |
+| `i18n.akk-x-ob.js` | Altbabylonisch in Keilschrift (U+12000…). Erzeugt aus `i18n.akk-x-ob.translit.js` durch `node akk-keilschrift.js`; die Umschrift ist die Quelle, die Keilschrift das Erzeugnis. Codepunkte werden zur Bauzeit über die Unicode-Namenstabelle aufgelöst statt von Hand gesetzt. **Vollständig**. |
 | `manifest.json` | Macht die App installierbar (Name, Farben, Symbole). |
 | `service-worker.js` | Offline-Cache, `stale-while-revalidate`. |
 | `icon-*.png` | App-Symbole, 192 / 512 / 512-maskable. |
@@ -18,7 +21,7 @@ Ergebnisse, aber bedienbar von Menschen, die keine Tabellenkalkulation aufmachen
 
 ## 1. Weitergeben — drei Wege
 
-**a) Nur die Dateien.** `index.html` samt allen neunzehn `i18n.*.js` verschicken — sie gehören
+**a) Nur die Dateien.** `index.html` samt allen dreiundzwanzig `i18n.*.js` verschicken — sie gehören
 zusammen und müssen im selben Ordner liegen. Doppelklick genügt,
 alles rechnet, Eingaben werden im Browser gespeichert. Was fehlt, ist nur die PWA-Hülle —
 kein Symbol auf dem Startbildschirm, kein Offline-Cache. Beides braucht es hier auch nicht,
@@ -120,7 +123,7 @@ bleiben zwei Produktnamen stehen, weil sie Eigennamen sind: `Altersvorsorgedepot
 | **vollständig** | `de` `de-x-amt` `de-x-sales` `en` `nl` `fr` `la` `ja` `nds` `bar` `eu` `eo` `tr` `uk` `got` `goh` `gmh` `grc` `sa` | 459 |
 | **teilweise** | — | — |
 
-Alle neunzehn Sprachen sind inzwischen vollständige Wörterbücher (459 von 459 Schlüsseln); die
+Alle dreiundzwanzig Sprachen sind inzwischen vollständige Wörterbücher (459 von 459 Schlüsseln); die
 Tabellenzeile „teilweise“ bleibt stehen, weil `TEILWEISE` in `index.html` als Mechanismus
 weiterlebt — sie ist nur derzeit leer. Ursprünglich war die Auswahl strukturell, nicht nach
 Zeichenzahl: zuerst übersetzt wurde, was man anfasst oder als Überschrift liest —
@@ -269,11 +272,11 @@ nicht den fertigen Satz — sonst stünde nach dem Wechsel „vor der Änderung 
 alten Sprache da.
 
 **Prüfung.** `pruefe.js` (Entwicklungswerkzeug, wird vom Service Worker nicht ausgeliefert) lädt die Seite kopflos in
-jsdom, schaltet alle neunzehn Sprachen durch, klappt jeden Abschnitt auf, erzwingt über fünf
+jsdom, schaltet alle dreiundzwanzig Sprachen durch, klappt jeden Abschnitt auf, erzwingt über fünf
 Szenarien die bedingten Texte und prüft: kein unaufgelöster Schlüssel, keine deutschen Reste im
 englischen Modus außer den erlaubten Fachbegriffen, kein sichtbar gebliebener Schlüssel, und
 — die eigentliche Invariante —
-**identische Rechenergebnisse in allen neunzehn Sprachen**.
+**identische Rechenergebnisse in allen dreiundzwanzig Sprachen**.
 
 Die Liste der Wörterbücher liest das Skript aus `index.html` statt sie zu pflegen: eine neue
 Sprache soll den Test nicht stillschweigend an einem leeren Objekt vorbeilaufen lassen. Das
@@ -283,7 +286,7 @@ wieder welche gibt — wird zusätzlich der Rückfall selbst nachgewiesen: jeder
 Schlüssel muss den *deutschen Text* liefern, nie einen Leerstring und nie den Schlüssel; kein
 eigener Eintrag darf den Typ wechseln (Zeichenkette ↔ Funktion); der Hinweis unter dem
 Umschalter steht genau bei den Teilsprachen und sonst nirgends. Umgekehrt wird für jede
-Vollsprache — das sind inzwischen alle neunzehn — nachgewiesen, dass ihr Wörterbuch tatsächlich
+Vollsprache — das sind inzwischen alle dreiundzwanzig — nachgewiesen, dass ihr Wörterbuch tatsächlich
 459 von 459 Schlüsseln trägt und der Teilhinweis NICHT erscheint. Für die beiden
 Registervarianten des Deutschen wird zusätzlich geprüft, dass der Bindestrich-Untertag die
 Adresszeile und den Rückweg durch `pickLang()` übersteht. Bricht das Hauptskript beim Parsen —

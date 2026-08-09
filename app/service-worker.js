@@ -1,7 +1,7 @@
 /* Altersvorsorge-Vergleich — Service Worker
  *
  * Strategie: stale-while-revalidate für alles im Scope.
- * Die App besteht aus einer Seite und neunzehn Woerterbuechern, ohne Backend; Korrektheit hängt
+ * Die App besteht aus einer Seite und dreiundzwanzig Woerterbuechern, ohne Backend; Korrektheit hängt
  * also nicht an Frische, wohl aber Verfügbarkeit. Deshalb wird sofort aus
  * dem Cache geliefert und im Hintergrund aktualisiert. Beim Aktivieren
  * werden alte Cache-Versionen gelöscht.
@@ -9,7 +9,7 @@
  * Beim Ändern der App die Version hochzählen — sonst sieht ein bereits
  * installierter Client die Änderung erst nach zwei Aufrufen.
  */
-const VERSION = 'av-v21';
+const VERSION = 'av-v25';
 const ASSETS = [
   './',
   './index.html',
@@ -32,6 +32,11 @@ const ASSETS = [
   './i18n.grc.js',
   './i18n.sa.js',
   './i18n.ja.js',
+  './i18n.ine-x-proto.js',
+  './i18n.jbo.js',
+  './i18n.tok.js',
+  './i18n.akk-x-ob.js',
+  './sitelen-sa/sitelen-pona-pona.otf',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',

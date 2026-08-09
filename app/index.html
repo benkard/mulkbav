@@ -86,6 +86,69 @@ body{margin:0;background:var(--desk);color:var(--ink);font:13px/1.45 var(--ui);
 .win.rolled .winbody{display:none}
 
 /* ---------- Schrift ---------- */
+/* sitelen pona fuer Toki Pona. Die Woerterbuchdatei speichert sitelen
+   Lasina, also ASCII; die hier genannten Zeichensaetze binden die
+   ASCII-Woerter ueber Standardligaturen (liga/calt) zu Logographen.
+   Ist keiner davon installiert, bleibt lesbares Latein stehen — das
+   ist der Grund, warum hier ASCII und nicht die UCSUR-Belegung
+   U+F1900… gespeichert wird: die PUA-Fassung faellt ohne Zeichensatz
+   auf leere Kaestchen zurueck, diese hier auf Klartext.
+   "sitelen sa" liegt als Datei bei (sitelen-sa/sitelen-pona-pona.otf,
+   Unlicense) und steht deshalb vor den auf Systeminstallation
+   angewiesenen Alternativen: sie greift garantiert, unabhaengig davon,
+   was auf dem Geraet der lesenden Person installiert ist.
+   font-feature-settings ist noetig, weil Ligaturen ausserhalb von
+   Textfluss-Kontexten (Knoepfe, Tabellenzellen) sonst deaktiviert
+   sind; font-variant-ligatures allein reicht dafuer nicht.
+   text-rendering:optimizeLegibility schaltet zusaetzlich die
+   kontextuellen Ligaturen im Layout-Schritt frei (von sitelen sa selbst
+   fuer den Latein-zu-Logogramm-Weg empfohlen). */
+@font-face{
+  font-family:"sitelen sa";
+  src:url("sitelen-sa/sitelen-pona-pona.otf") format("opentype");
+  font-display:swap}
+/* --ui und --mono selbst umbiegen, nicht nur font-family auf [lang="tok"]
+   setzen: .btn, .opt .big & Co. schreiben font-family:var(--ui) bzw.
+   var(--mono) und stehen im Stylesheet NACH dieser Regel. Bei gleicher
+   Spezifitaet (Klasse vs. Attributselektor, je 0,1,0) gewinnt die spaetere
+   Regel im Quelltext — var(--ui) haette also wieder MS Sans Serif
+   eingesetzt. Custom Properties vererben sich dagegen unabhaengig von der
+   Selektor-Reihenfolge; wird --ui hier neu definiert, sehen alle
+   Nachfahren, die var(--ui)/var(--mono) verwenden, automatisch den
+   sitelen-sa-Stack. (Kein var(--ui) als Fallback INNERHALB dieser
+   Neudefinition: ein selbstreferenzierendes Custom Property gilt am
+   Element seiner eigenen Deklaration als zyklisch und wird ungueltig —
+   deshalb hier die Fallback-Ketten ausgeschrieben statt verkettet.) */
+[lang="tok"]{
+  --ui:"sitelen sa","linja pona","Fairfax Pona HD","sitelen seli kiwen mono",
+       "linja sike","nasin-nanpa","MS Sans Serif","Microsoft Sans Serif",
+       Tahoma,Geneva,Verdana,Arial,"MS PGothic","Hiragino Kaku Gothic ProN",
+       "Yu Gothic UI",Meiryo,"Noto Sans JP",sans-serif;
+  --mono:"sitelen sa","linja pona","Fairfax Pona HD","sitelen seli kiwen mono",
+         "linja sike","nasin-nanpa","Fixedsys","Lucida Console","Courier New",
+         "MS Gothic","Hiragino Kaku Gothic ProN","Noto Sans Mono CJK JP",monospace}
+[lang="tok"], [lang="tok"] *{
+  font-family:var(--ui);
+  font-feature-settings:"liga" 1,"calt" 1;
+  font-variant-ligatures:common-ligatures contextual;
+  text-rendering:optimizeLegibility}
+/* Urindogermanisch braucht Kombinationszeichen (Ringel unter m n r l,
+   Hatschek ueber k g, tiefgestellte Indizes an den Laryngalen). Die
+   Windows-Bitmapschriften des Stilblatts haben davon nichts; ohne
+   Umschaltung erscheinen Ersatzkaestchen mitten im Wort. */
+/* Keilschrift liegt in U+12000…U+1247F. Santakku steht zuerst, weil es als
+   einziger der genannten Zeichensaetze altbabylonische Zeichenformen hat;
+   die Referenzglyphen des Unicode-Standards sind neuassyrisch und damit
+   rund tausend Jahre zu jung. Ohne einen davon: leere Kaestchen. Anders
+   als bei sitelen pona gibt es hier keine sanfte Ruecknahme — Keilschrift
+   braucht eigene Zeichen und laesst sich nicht aus Latein ligieren. */
+[lang="akk-x-ob"], [lang="akk-x-ob"] *{
+  font-family:"Santakku","SantakkuM","Assurbanipal","CuneiformComposite",
+              "Noto Sans Cuneiform","Segoe UI Historic",sans-serif;
+  line-height:1.7}
+[lang="ine-x-proto"], [lang="ine-x-proto"] *{
+  font-family:"Charis SIL","Gentium Plus","Doulos SIL","Segoe UI",
+              "DejaVu Sans","Times New Roman",serif}
 h1{font-size:15px;margin:0 0 2px;font-weight:700}
 h2{font-size:13px;margin:0 0 3px;font-weight:700}
 h3{font-size:12px;margin:12px 0 5px;font-weight:700}
@@ -487,6 +550,10 @@ a{color:var(--navy)}
 <script src="i18n.en.js"></script>
 <script src="i18n.la.js"></script>
 <script src="i18n.ja.js"></script>
+<script src="i18n.ine-x-proto.js"></script>
+<script src="i18n.jbo.js"></script>
+<script src="i18n.tok.js"></script>
+<script src="i18n.akk-x-ob.js"></script>
 <script src="i18n.nl.js"></script>
 <script src="i18n.fr.js"></script>
 <script src="i18n.tr.js"></script>
@@ -519,7 +586,8 @@ a{color:var(--navy)}
    nds (Niederdeutsch) und bar (Bairisch); keine dieser drei Sprachen hat einen
    zweibuchstabigen Code. */
 var LANGS = ['de','de-x-amt','de-x-sales','en','nl','nds','bar','fr','eu','eo','tr','uk',
-             'got','goh','gmh','la','grc','sa','ja'];
+             'got','goh','gmh','la','grc','sa','ja','ine-x-proto','jbo','tok',
+             'akk-x-ob'];
 var LANGKEY = 'altersvorsorge.lang';
 var DICT = { de: window.I18N_DE  || {}, en:  window.I18N_EN  || {},
              nl: window.I18N_NL  || {}, nds: window.I18N_NDS || {},
@@ -530,8 +598,11 @@ var DICT = { de: window.I18N_DE  || {}, en:  window.I18N_EN  || {},
              gmh:window.I18N_GMH || {}, la:  window.I18N_LA  || {},
              grc:window.I18N_GRC || {}, sa:  window.I18N_SA  || {},
              ja: window.I18N_JA  || {},
-             'de-x-amt':   window.I18N_DE_X_AMT   || {},
-             'de-x-sales': window.I18N_DE_X_SALES || {} };
+             jbo:window.I18N_JBO || {}, tok: window.I18N_TOK || {},
+             'de-x-amt':     window.I18N_DE_X_AMT     || {},
+             'de-x-sales':   window.I18N_DE_X_SALES   || {},
+             'ine-x-proto':  window.I18N_INE_X_PROTO  || {},
+             'akk-x-ob':     window.I18N_AKK_X_OB     || {} };
 var FMT = {};                     /* wird in applyLocale() gefuellt */
 
 /* Autonyme fuer die Schaltflaechen. Ein Kuerzel im Knopf, der volle Name im
@@ -550,7 +621,18 @@ var AUTONYM = {
   /* Registervarianten des Deutschen (BCP 47 § 2.2.7, privater Untertag):
      keine Sprachen, sondern Stilebenen — das Autonym nennt daher den
      Registernamen, nicht "Deutsch" ein zweites Mal. */
-  'de-x-amt': 'Amtsdeutsch', 'de-x-sales': 'Vertriebsdeutsch'
+  'de-x-amt': 'Amtsdeutsch', 'de-x-sales': 'Vertriebsdeutsch',
+  /* Konstruierte Sprachen tragen ihr eigenes Selbstbezeichnungswort;
+     Lojban nennt sich la .lojban., Toki Pona toki pona. Das
+     Urindogermanische kann sich per definitionem nicht selbst nennen
+     — es ist unbelegt. Es steht deshalb mit dem rekonstruierten Wort
+     fuer "Zunge, Sprache" da, mit Asterisk, wie sich das gehoert. */
+  jbo:'la .lojban.', tok:'toki pona', 'ine-x-proto':'*dn\u0325\u01F5\u02B0w\u00E9h\u2082s',
+  /* li\u0161\u0101num akkad\u00fbm, in Keilschrift — die Sprache nennt sich
+     selbst, wie alle anderen hier auch. Ohne Keilschriftzeichensatz
+     erscheinen Kaestchen; derselbe Preis wie bei jeder Schrift jenseits
+     von Latein-1. */
+  'akk-x-ob':'\u{12145}\u{12157}\u{12248}\u{1220D}\u{1231D} \u{1201D}\u{12157}\u{1204D}\u{12311}\u{1231D}'
 };
 
 /* Teiluebersetzte Sprachen: Oberflaeche, Feldnamen, Tabellenkoepfe und
@@ -1442,7 +1524,9 @@ function encodeState() {
 var LOCALES = { de:'de-DE', en:'en-GB', nl:'nl-NL', nds:'de-DE', bar:'de-DE',
                 fr:'fr-FR', eu:'eu-ES', eo:'de-DE', tr:'tr-TR', uk:'uk-UA',
                 got:'de-DE', goh:'de-DE', gmh:'de-DE',
-                la:'de-DE', grc:'de-DE', sa:'de-DE', ja:'ja-JP' };
+                la:'de-DE', grc:'de-DE', sa:'de-DE', ja:'ja-JP',
+                jbo:'en-GB', tok:'en-GB', 'ine-x-proto':'de-DE',
+                'akk-x-ob':'de-DE' };
 /* Nur fuer den mehrdeutigen Eingabefall „1,234“ relevant, siehe parseNum().
    Sprachen mit schmalem Leerraum als Tausendertrenner (fr, uk) bekommen
    U+202F: dann matcht weder Punkt noch Komma, und beide werden als
@@ -1450,7 +1534,9 @@ var LOCALES = { de:'de-DE', en:'en-GB', nl:'nl-NL', nds:'de-DE', bar:'de-DE',
 var GRUPPEN = { de:'.', en:',', nl:'.', nds:'.', bar:'.',
                 fr:' ', eu:'.', eo:'.', tr:'.', uk:' ',
                 got:'.', goh:'.', gmh:'.',
-                la:'.', grc:'.', sa:'.', ja:',' };
+                la:'.', grc:'.', sa:'.', ja:',',
+                jbo:',', tok:',', 'ine-x-proto':'.',
+                'akk-x-ob':'.' };
 var LOCALE = 'de-DE', nf0 = null, nf2 = null, nfp = null;
 function applyLocale(){
   LOCALE = LOCALES[LANG] || 'de-DE';
@@ -2771,26 +2857,37 @@ function applyStatic(){
 /* =====================================================================
    SPRACHAUSWAHL
 
-   Neunzehn Knoepfe nebeneinander sind keine Auswahl mehr, sondern eine
+   Dreiundzwanzig Knoepfe nebeneinander sind keine Auswahl mehr, sondern eine
    Wand. Also: ein Knopf oeffnet ein Panel, das Panel gliedert nach
    Sprachverwandtschaft. Die Gliederung ist genealogisch und flach —
    eine Partition der Menge LANGS, keine Baumnavigation; ein Baum mit
-   19 Blaettern hat mehr Knoten als Blaetter und kostet nur Klicks.
+   23 Blaettern hat mehr Knoten als Blaetter und kostet nur Klicks.
 
    WARUM DIE GRUPPENNAMEN LATEINISCH SIND. Sie muessten sonst in jede
-   der 19 Sprachen uebersetzt werden — sechs Gruppen mal 19 Sprachen
-   sind 114 zusaetzliche Woerterbucheintraege, davon etliche in
+   der 23 Sprachen uebersetzt werden — sieben Gruppen mal 23 Sprachen
+   sind 161 zusaetzliche Woerterbucheintraege, davon etliche in
    Gotisch, Sanskrit und Althochdeutsch, fuer die es die Termini
    „Indogermanistik" schlicht nicht gibt. Dasselbe Argument, das oben
    die Autonyme begruendet: eine sprachneutrale Konvention statt n²
    Eintraege. Die wissenschaftliche Nomenklatur ist im Lateinischen
    ohnehin zu Hause (Linné lässt gruessen), und wer „Germanica" liest,
-   erkennt seine Gruppe in jeder der 19 Oberflaechensprachen wieder.
+   erkennt seine Gruppe in jeder der 23 Oberflaechensprachen wieder.
 
-   Das Kreuz † markiert historische Sprachstufen ohne heutige
-   Sprechergemeinschaft — got, goh, gmh, la, grc, sa.
+   Das Kreuz † markiert Sprachstufen ohne heutige Sprecher-
+   gemeinschaft — got, goh, gmh, la, grc, sa, ine-x-proto und akk-x-ob.
+   Beim Urindogermanischen ist das Kreuz streng genommen zu
+   schwach: die anderen sechs sind tot, aber belegt; dieses ist
+   nie aufgeschrieben worden und existiert ausschliesslich als
+   Rekonstruat. Der Asterisk vor jeder Form sagt das genauer,
+   als es ein Kreuz im Knopf koennte.
    ===================================================================== */
 var FAMILIEN = [
+  /* Das Urindogermanische steht allein und zuerst: es ist kein Zweig
+     neben den anderen, sondern deren gemeinsame Wurzel. Es in
+     „Indoeuropaea cetera" einzureihen waere ein Kategorienfehler —
+     der Vorfahr ist kein Geschwister. Daher eine eigene Gruppe,
+     obendrein mit dem Kreuz, denn gesprochen wird es lange nicht mehr. */
+  { tax:'Radix',                langs:['ine-x-proto'] },
   /* Registervarianten sind keine eigenen Sprachen, sondern Stilebenen
      derselben (BCP 47 § 2.2.7). Sie stehen deshalb zusammen und zuerst,
      nicht verteilt im germanischen Zweig. */
@@ -2798,14 +2895,24 @@ var FAMILIEN = [
   { tax:'Germanica',            langs:['nds','nl','en','bar','gmh','goh','got'] },
   { tax:'Italica',              langs:['fr','la'] },
   { tax:'Indoeuropaea cetera',  langs:['uk','grc','sa'] },
-  { tax:'Extra Indoeuropaeam',  langs:['eu','tr','ja'] },
-  { tax:'Ficta',                langs:['eo'] }
+  { tax:'Extra Indoeuropaeam',  langs:['eu','tr','ja','akk-x-ob'] },
+  /* Ficta versammelt das planmaessig Gemachte. Die drei sind sich
+     darin unaehnlich genug, dass der Zweig sie unterscheidet:
+     Esperanto ist naturalistisch (europaeisches Lexikon, agglutinierende
+     Regelmaessigkeit), Lojban logizistisch (praedikatenlogische
+     Semantik, eindeutige Grammatik), Toki Pona minimalistisch
+     (120 Woerter, Bedeutung entsteht im Kontext). */
+  { tax:'Ficta',                langs:['eo','jbo','tok'] }
 ];
 /* Zweigangabe fuer die Sammelgruppen, damit „cetera" nicht nur ein
    Restposten ist: sie steht im title des jeweiligen Knopfes. */
 var ZWEIG = { uk:'Slavica', grc:'Hellenica', sa:'Indoaryana',
-              eu:'lingua sola (isolata)', tr:'Turcica', ja:'Iaponica' };
-var HISTORISCH = { got:1, goh:1, gmh:1, la:1, grc:1, sa:1 };
+              eu:'lingua sola (isolata)', tr:'Turcica', ja:'Iaponica',
+              'ine-x-proto':'lingua proto-indoeuropaea reficta',
+              eo:'naturalistica', jbo:'logica', tok:'minimalistica',
+              'akk-x-ob':'Semitica — Babylonica vetus' };
+var HISTORISCH = { got:1, goh:1, gmh:1, la:1, grc:1, sa:1, 'ine-x-proto':1,
+                   'akk-x-ob':1 };
 
 /* Konsistenzpruefung zur Ladezeit: die Familien muessen eine Partition
    von LANGS sein — keine Sprache doppelt, keine vergessen. Eine neue
