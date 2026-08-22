@@ -434,7 +434,7 @@ window.I18N_BAR = {
   'calc.sub': 'Fia oi, de’s nochvoizioang wuin.',
   'share.sub': 'Eahnare Ogom liang ausschließlich in dem Browser (<kbd>localStorage</kbd>). Nix werd iwatrong, es gibt koan Server und koan Tracker.',
   'footer.1': '<b>Koa Steia- oda Aunlogeberodung.</b> A Modej is koa Vatrog. D’Rechtslogn 2026 zua reformiatn privatn Oitersvuasorg is a mehrare Stelln no ned endgültig gklärt; de Aunahma mit’m niadrigstn Vatraunsgrad steng unta „Rechawég → Belastborkeit vo de Aunahma“ und san dert aa zum ändan.',
-  'footer.2': 'Rechnakern oans zu oans iwatrong aus’m Excel-Modej <span class="pill">bAV-DYNO_vs_Altersvorsorgedepot_vs_ETF.xlsx</span> und gengan drei Testfäj auf Maschinngenauigkeit prüaft (grössde relative Obweichung 1,3·10<sup>&minus;14</sup>).',
+  'footer.2': 'Rechnakern oans zu oans iwatrong aus’m ursprünglichn Excel-Modej und gengan drei Testfäj auf Maschinngenauigkeit prüaft (grössde relative Obweichung 1,3·10<sup>&minus;14</sup>).',
   'metric.monat.desc': 'Konstante Monatszoihung iwa de ganze Auszoihungsphas mit demsejbm Weat, in heitiga Kaffkraft. De oazige Zoi, de si direkt mit Eahnam heitign Nettoeikomma vagleichn lasst.',
   'metric.ertrag.desc': 'Wos de Mégglichkeit in heitiga Kaffkraft iwa an eignan Eisotz aussi obwirft: Barweat vo olle Netto-Leistunga minus Barweat vom Nettoaufwand.',
   'metric.irr.desc': 'Renditn auf an tatsächlich eigsetztn Nettobetrog, nominal. Direkt vagleichboar mit da eigstejtn Bruttorenditn vom ETF — da Untaschied is gnau des, wos Fördarung und Obgom zsamm kostn oda bringan.',

@@ -479,7 +479,7 @@ window.I18N_GMH = {
   'calc.sub': 'Allen, die disem wege volgen wellen.',
   'share.sub': 'Iuwer wort sint aleine in disem werke (<kbd>localStorage</kbd>). Niht wirt gesendet, enist deheiniu maht noch spehære.',
   'footer.1': '<b>Enist niht rehtes noch schatzes rât.</b> Daz bilde enist niht triuwe. Rehtes stant 2026 nâch der niuwe der sînen sorge ist in manegen steten noch niht geendet; dise gesetzede mit minnestem getriuwe stânt under „Wec der rechenunge → Vestenunge der wænungen“ unde mügen dâ gewendet werden.',
-  'footer.2': 'Der rechenunge kerne ist aleine von dem Excel-bilde <span class="pill">bAV-DYNO_vs_Altersvorsorgedepot_vs_ETF.xlsx</span> abegeleitet unde wider drî fresen nâch des sumeres rihte gekoret (meiste gelîche underscheit 1,3·10<sup>&minus;14</sup>).',
+  'footer.2': 'Der rechenunge kerne ist aleine von dem êrsten Excel-bilde abegeleitet unde wider drî fresen nâch des sumeres rihte gekoret (meiste gelîche underscheit 1,3·10<sup>&minus;14</sup>).',
   'metric.monat.desc': 'Gelîchiu mânôtlîchiu gâbe al gülte-zît mit dem selben werte, nâch hiutigem werde. Ein mâze, daz man widermezzen mac mit iuwerem lûteren schatze nû.',
   'metric.ertrag.desc': 'Daz, sô diz nâch hiutigem werde über iuwer eigen werc tuot: der wert nû aller lûteren gâben âne den wert nû der lûteren nütze.',
   'metric.irr.desc': 'Wuocher an dem wærlîche gelegeten lûteren schatze, nâch namen. Widermezzet mit dem gesetzeten allen wuochere des ETF — der underscheit ist der, daz gâbe unde gelt zesamene kosten oder gebent.',

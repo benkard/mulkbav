@@ -262,7 +262,7 @@ window.I18N_JBO = {
   'ui.lang.partialNote': 'ti bangu cu <b>po\'o pagbu se fanva</b>: lo samtci selfla .e lo se punji cmene .e lo tanbo stedu .e lo pixra ciksi cu zvati .i ku\'i lo clani flalu ciksi — lo <span class="qm" style="cursor:default">?</span> lisri, lo se jalge, lo lanli pluta — cu se cusku bau la .dotco. .i lo flalu judri (BetrAVG, EStG, SGB V) cu dotco bau ro bangu: lo se turni versio cu po\'o zvati bau la .dotco.',
   'sb.up': 'ko klama ga\'u lo se jalge',
   'footer.1': '<b>ti na flalu ja sorcu stidi.</b> lo ciste na se javni .i lo 2026 flalu be lo cnino sivni gunsisti sorcu cu na mulno se jdice vi so\'i da .i lo sruma poi mleca la\'u se xusra cu zvati lo "lanli pluta → lo tsali be lo sruma" gi\'e ka\'e se galfi vi ti',
-  'footer.2': 'lo lanli midju cu se fukpi lo tanbo ciste <span class="pill">bAV-DYNO_vs_Altersvorsorgedepot_vs_ETF.xlsx</span> gi\'e se cipra ci lo mupli co\'u lo minji preciso (lo zmadu parbi frica cu 1,3·10<sup>&minus;14</sup>)',
+  'footer.2': 'lo lanli midju cu se fukpi lo tanbo ciste gi\'e se cipra ci lo mupli co\'u lo minji preciso (lo zmadu parbi frica cu 1,3·10<sup>&minus;14</sup>)',
 
   /* ---------------- Die drei Optionen ---------------- */
   'opt.bav.name': 'lo gunka gunsisti sorcu (galfi lo sumji jdini)',

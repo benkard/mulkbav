@@ -483,7 +483,7 @@ window.I18N_GOH = {
   'calc.sub': 'Allen, die disemo wege folgen wellent.',
   'share.sub': 'Iuweriu wort sint eino in disemo werke (<kbd>localStorage</kbd>). Niowiht wirdit gisant, ni ist iemer noh gisehan.',
   'footer.1': '<b>Ni ist ewa- odo scazes rat.</b> Daz bilidi ist ni triuwa. Rehtes stant 2026 zi der niuwera sinera sorgu ist in manegen steten noh ni giendot; disiu gisezzida mit minnistero gitruwidu stant untar „Weg der rehhanungu → Fastnissi dero wanungo“ inti mugun dar gikeret werdan.',
-  'footer.2': 'Der rehhanungu kerno ist eino fona demo Excel-bilide <span class="pill">bAV-DYNO_vs_Altersvorsorgedepot_vs_ETF.xlsx</span> abageleitit inti wider dri fresa nah des sumeres rihti gikoron (meisto gilih untarscheit 1,3·10<sup>&minus;14</sup>).',
+  'footer.2': 'Der rehhanungu kerno ist eino fona demo êriston Excel-bilide abageleitit inti wider dri fresa nah des sumeres rihti gikoron (meisto gilih untarscheit 1,3·10<sup>&minus;14</sup>).',
   'metric.monat.desc': 'Gilihiu manodlihiu gift al gelte-zit mit demo selben werde, nah hiutigemo werde. Ein mez, daz man widarmezzon mag mit iuweremo lutaren scazze nu.',
   'metric.ertrag.desc': 'Daz, so disiu wisa nah hiutigemo werde ubar iuwer eigan werc tuot: der wert nu allero lutarero gifto ana den wert nu der lutaren nuzzida.',
   'metric.irr.desc': 'Wuohhar an demo warlihho gilegiten lutaren scazze, nah namen. Widarmezzot mit demo gisezziten allen wuohhare des ETF — der untarscheit ist der, daz gift inti gelt saman koston odo geband.',

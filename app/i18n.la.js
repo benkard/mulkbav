@@ -228,7 +228,7 @@ window.I18N_LA = {
   'ui.lang.partialNote': 'Haec lingua <b>ex parte conversa</b> est: facies, nomina camporum, capita tabularum, indices diagrammatum adsunt. Longae explicationes iuridicae — textus <span class="qm" style="cursor:default">?</span> ad campos, iudicium, ratio computandi — Germanice apparent. Locorum citationes (BetrAVG, EStG, SGB V) in omni lingua Germanicae manent: publice aliter non exstant.',
   'sb.up': 'Sursum ad exitum',
   'footer.1': '<b>Non est consilium tributarium neque de collocando.</b> Exemplar non est contractus. Ius anni 2026 de provisione privata reformata pluribus locis nondum certum est; suppositiones minimae fidei sub „Ratio computandi → Firmitas suppositionum“ stant et ibi mutari possunt.',
-  'footer.2': 'Nucleus computandi ad litteram ex exemplari Excel <span class="pill">bAV-DYNO_vs_Altersvorsorgedepot_vs_ETF.xlsx</span> translatus et tribus casibus ad praecisionem machinae probatus (maxima discrepantia relativa 1,3·10<sup>&minus;14</sup>).',
+  'footer.2': 'Nucleus computandi ad litteram ex exemplari Excel pristino translatus et tribus casibus ad praecisionem machinae probatus (maxima discrepantia relativa 1,3·10<sup>&minus;14</sup>).',
 
   /* ---------------- Tres rationes ---------------- */
   'opt.bav.name': 'Pensio operativa (conversio mercedis)',

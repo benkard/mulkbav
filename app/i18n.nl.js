@@ -231,7 +231,7 @@ window.I18N_NL = {
   'ui.lang.partialNote': 'Deze taal is <b>gedeeltelijk vertaald</b>: interface, veldnamen, tabelkoppen en grafieklegenda’s zijn er. De lange juridische toelichtingen — de <span class="qm" style="cursor:default">?</span>-teksten bij de velden, de conclusie en de berekening — verschijnen in het Duits. De wetsverwijzingen (BetrAVG, EStG, SGB V) zijn in elke taal Duits: officieel bestaan ze niet anders.',
   'sb.up': 'Omhoog naar de uitkomst',
   'footer.1': '<b>Geen fiscaal of beleggingsadvies.</b> Een model is geen contract. De rechtstoestand 2026 rond het hervormde privépensioen is op meerdere punten nog niet definitief opgehelderd; de aannames met het laagste vertrouwen staan onder „Berekening → Houdbaarheid van de aannames“ en zijn daar ook aan te passen.',
-  'footer.2': 'Rekenkern één op één overgezet uit het Excel-model <span class="pill">bAV-DYNO_vs_Altersvorsorgedepot_vs_ETF.xlsx</span> en tegen drie testgevallen op machineprecisie getoetst (grootste relatieve afwijking 1,3·10<sup>&minus;14</sup>).',
+  'footer.2': 'Rekenkern één op één overgezet uit het oorspronkelijke Excel-model en tegen drie testgevallen op machineprecisie getoetst (grootste relatieve afwijking 1,3·10<sup>&minus;14</sup>).',
 
   /* ---------------- De drie opties ---------------- */
   'opt.bav.name': 'bAV (salarisuitruil)',

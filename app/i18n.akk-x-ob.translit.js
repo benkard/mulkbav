@@ -281,7 +281,7 @@ window.I18N_AKK_X_OB = {
   'ui.lang.partialNote': 'lišānum annûm <b>zittam ištēn</b> nabalkut: šumātum ša ṭuppim, šumātum ša minâtim, rēšātum ša ṭuppātim u šumātum ša palgim ibaššī. awâtum ša ṣimdatim rapšātum — awâtum ša <span class="qm" style="cursor:default">?</span>, awâtum gamirtum, u padān minâtim — ina lišānim ša mātim ištēn ibaššiā. šumātum ša ṣimdatim ([[BetrAVG, EStG, SGB V]]) ina kal lišānī ina lišānim ša mātim šaṭrā: ina ṣimdatim annītumma ibašši.',
   'sb.up': 'ana elīš ana awâtim gamirtim',
   'footer.1': '<b>lā awât miksim, lā awât {SAG.DU}.</b> ṭuppum lā riksum šī. ṣimdatum ša 2026 ana {SAG.DU} eššim ša šībūtim ina ašrī mādûtim lā gamrat; dīnātum ša tukultim maṭītim ina "padān minâtim → dannūtum ša dīnātim" šaṭrā u ina annîm innakkirā.',
-  'footer.2': 'libbi minâtim ištēn ana ištēn ištu {DUB} <span class="pill">[[bAV-DYNO_vs_Altersvorsorgedepot_vs_ETF.xlsx]]</span> leqûm u ana šalāš mitharātim adi {ZAG} ša ilim maṣi (nakārum rabûm 1,3·10<sup>&minus;14</sup>).',
+  'footer.2': 'libbi minâtim ištēn ana ištēn ištu {DUB} panîm leqûm u ana šalāš mitharātim adi {ZAG} ša ilim maṣi (nakārum rabûm 1,3·10<sup>&minus;14</sup>).',
 
   /* ---------------- Die drei Optionen ---------------- */
   'opt.bav.name': '{LU2}-{MASH} ša {E2} šiprim (nakārum ša {A2})',

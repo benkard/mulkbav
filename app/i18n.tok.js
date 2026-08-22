@@ -269,7 +269,7 @@ window.I18N_TOK = {
   'ui.lang.partialNote': 'toki ni li <b>kipisi taso</b>: nimi pi ilo, nimi pi ijo, lawa pi lipu nanpa, en nimi pi sitelen li lon. taso toki suli pi lipu lawa — sitelen <span class="qm" style="cursor:default">?</span>, toki pini, en nasin nanpa — li lon toki Tosi. nimi lipu (BetrAVG, EStG, SGB V) li awen lon toki Tosi lon toki ale: lipu lawa li lon nasin ni taso.',
   'sb.up': 'o tawa sewi, tawa pini',
   'footer.1': '<b>ni li sona ala pi mani lawa, li sona ala pi mani awen.</b> ilo nanpa li lipu ala. lipu lawa pi 2026 pi mani awen sin li ken ala pini lon ijo mute; nasin pi sona lili li lon "nasin nanpa → wawa pi nasin mi", li ken ante lon ni.',
-  'footer.2': 'nasin nanpa li kama tan lipu nanpa <span class="pill">bAV-DYNO_vs_Altersvorsorgedepot_vs_ETF.xlsx</span>, li lukin lon nasin tu wan, li sama lon nasin pi ilo sona (ante suli li 1,3·10<sup>&minus;14</sup>).',
+  'footer.2': 'nasin nanpa li kama tan lipu nanpa open, li lukin lon nasin tu wan, li sama lon nasin pi ilo sona (ante suli li 1,3·10<sup>&minus;14</sup>).',
 
   /* ---------------- Die drei Optionen ---------------- */
   'opt.bav.name': 'mani awen pali (pana tan mani ale)',

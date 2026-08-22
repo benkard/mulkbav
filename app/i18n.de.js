@@ -229,7 +229,7 @@ window.I18N_DE = {
   'ui.lang.partialNote': 'Diese Sprache ist <b>teilweise übersetzt</b>: Oberfläche, Feldnamen, Tabellenköpfe und Diagrammlegenden liegen vor. Die langen juristischen Erläuterungen — die <span class="qm" style="cursor:default">?</span>-Texte an den Feldern, das Fazit und der Rechenweg — erscheinen auf Deutsch. Die Fundstellen (BetrAVG, EStG, SGB V) sind ohnehin in jeder Sprache deutsch: amtlich gibt es sie nur so.',
   'sb.up': 'Nach oben zum Ergebnis',
   'footer.1': '<b>Keine Steuer- oder Anlageberatung.</b> Ein Modell ist kein Vertrag. Die Rechtslage 2026 zur reformierten privaten Altersvorsorge ist an mehreren Stellen noch nicht abschließend geklärt; die Annahmen mit dem geringsten Vertrauensgrad stehen unter „Rechenweg → Belastbarkeit der Annahmen“ und sind dort auch änderbar.',
-  'footer.2': 'Rechenkern eins zu eins portiert aus dem Excel-Modell <span class="pill">bAV-DYNO_vs_Altersvorsorgedepot_vs_ETF.xlsx</span> und gegen drei Testfälle auf Maschinengenauigkeit geprüft (größte relative Abweichung 1,3·10<sup>&minus;14</sup>).',
+  'footer.2': 'Rechenkern eins zu eins portiert aus dem ursprünglichen Excel-Modell und gegen drei Testfälle auf Maschinengenauigkeit geprüft (größte relative Abweichung 1,3·10<sup>&minus;14</sup>).',
 
   /* ---------------- Die drei Optionen ---------------- */
   'opt.bav.name': 'bAV (Entgeltumwandlung)',

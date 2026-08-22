@@ -138,7 +138,7 @@ setTimeout(() => {
 
   // Deutsche Reste im englischen Modus: Umlaute und typisch deutsche Wörter.
   // Fachbegriffe und Normzitate bleiben absichtlich deutsch.
-  const erlaubt = /Altersvorsorgedepot|Versorgungsbez|BetrAVG|EStG|SGB|InvStG|SvEV|SolzG|BMF|BGBl|SVBezGrV|Steuerfortentwicklungsgesetz|Rentenwertbestimmungsverordnung|Altersvorsorgereformgesetz|Vorabpauschale|KVdR|PSVaG|Bezugsgr|bAV|Entgeltumwandlung|Baden-W|Deutsche Bahn|DYNO|Deutsch|Sprache/;
+  const erlaubt = /Altersvorsorgedepot|Versorgungsbez|BetrAVG|EStG|SGB|InvStG|SvEV|SolzG|BMF|BGBl|SVBezGrV|Steuerfortentwicklungsgesetz|Rentenwertbestimmungsverordnung|Altersvorsorgereformgesetz|Vorabpauschale|KVdR|PSVaG|Bezugsgr|bAV|Entgeltumwandlung|Baden-W|Deutsche Bahn|Deutsch|Sprache/;
   const woerter = enText.split(/\s+/).filter(x => /[äöüßÄÖÜ]/.test(x) && !erlaubt.test(x));
   check('keine deutschen Reste im EN-Modus', woerter.length === 0, [...new Set(woerter)].slice(0, 25).join(' '));
 

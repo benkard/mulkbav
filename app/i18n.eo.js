@@ -435,7 +435,7 @@ window.I18N_EO = {
   'calc.sub': 'Por ĉiuj, kiuj volas sekvi la kalkulon.',
   'share.sub': 'Viaj indikoj troviĝas ekskluzive en ĉi tiu retumilo (<kbd>localStorage</kbd>). Nenio estas transdonata, ne ekzistas servilo nek spurilo.',
   'footer.1': '<b>Neniu imposta aŭ investa konsilo.</b> Modelo ne estas kontrakto. La laŭleĝa stato 2026 pri la reformita privata pensiprovizo ne estas ĉie fine klarigita; la supozoj kun la plej malalta fidindeco staras sub „Kalkulvojo → Fidindeco de la supozoj“ kaj estas tie ankaŭ ŝanĝeblaj.',
-  'footer.2': 'Kalkula kerno unu-al-unu portita el la Excel-modelo <span class="pill">bAV-DYNO_vs_Altersvorsorgedepot_vs_ETF.xlsx</span> kaj kontrolita kontraŭ tri testkazoj ĝis maŝina precizeco (plej granda relativa devio 1,3·10<sup>&minus;14</sup>).',
+  'footer.2': 'Kalkula kerno unu-al-unu portita el la origina Excel-modelo kaj kontrolita kontraŭ tri testkazoj ĝis maŝina precizeco (plej granda relativa devio 1,3·10<sup>&minus;14</sup>).',
   'metric.monat.desc': 'Konstanta monata pago tra la tuta elpagofazo kun la sama valoro, en hodiaŭa aĉetpovo. La sola nombro, kiu rekte kompareblas kun via hodiaŭa neta enspezo.',
   'metric.ertrag.desc': 'Kion la eblo en hodiaŭa aĉetpovo rezultigas preter la propra investo: nuna valoro de ĉiuj netaj elpagoj minus nuna valoro de la neta elspezo.',
   'metric.irr.desc': 'Rendimento sur la efektive investita neta sumo, nominala. Rekte komparebla kun la agordita kruda rendimento de la ETF — la diferenco estas ĝuste tio, kion subvencio kaj kotizoj kune kostas aŭ alportas.',

@@ -279,7 +279,7 @@ window.I18N_INE_X_PROTO = {
   'ui.lang.partialNote': '*h₁éh₂ dn̥ǵʰwéh₂s <b>déh₂mo-wr̥téh₂</b> h₁ésti: h₃ókʷ-wékʷā, réh₁ti-nómn̥h₂, plh₂téh₂s-stedʰmn̥h₂, ǵʰérbʰmn̥-wékʷā h₁sónti. *dʰéh₁mn̥-wékʷā dl̥h₃ǵʰā — <span class="qm" style="cursor:default">?</span>-wékʷā, lipóm, réh₁tyos pn̥tḗh₂s — dótskāi dn̥ǵʰwéh₂i h₁sónti. *dʰéh₁mn̥-nómn̥h₂ (BetrAVG, EStG, SGB V) h₂énti dn̥ǵʰwéh₂su dótskā h₁sónti: h₃rēǵs-dʰh₁tā tóri tāi h₁sónti.',
   'sb.up': '*úperi h₁éy, lipóm h₂éd',
   'footer.1': '*<b>né teutodéh₃ti-wékʷos, né pék̑u-wékʷos.</b> *nóh₃mn̥ né dʰh₁tóm h₁ésti. *2026-osyo dʰéh₁mn̥ néwoi swé-ǵr̥h₂tupék̑wei so’i-loi né sm̥ dʰh₁tóm h₁ésti; ménesa mính₂u-ménesa „réh₁tyos pn̥tḗh₂s → ménesōm tólh₂mn̥“ h₁sónti, h₂éltromn̥ā-kʷe.',
-  'footer.2': '*réh₁tyos k̑ērd h₁óynom h₁óynom lipóm <span class="pill">bAV-DYNO_vs_Altersvorsorgedepot_vs_ETF.xlsx</span> h₂epó bʰr̥tóm, tri-mn̥ mn̥dʰh₁tói dr̥k̑tóm (méǵh₂ h₂éltromn̥ 1,3·10<sup>&minus;14</sup>).',
+  'footer.2': '*réh₁tyos k̑ērd h₁óynom h₁óynom lipóm h₂epó bʰr̥tóm, tri-mn̥ mn̥dʰh₁tói dr̥k̑tóm (méǵh₂ h₂éltromn̥ 1,3·10<sup>&minus;14</sup>).',
 
   /* ---------------- Die drei Optionen ---------------- */
   'opt.bav.name': '*wérǵoǵr̥h₂tupék̑u (pék̑u-h₂éltromn̥)',

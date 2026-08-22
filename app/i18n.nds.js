@@ -433,7 +433,7 @@ window.I18N_NDS = {
   'calc.sub': 'För all, de dat nakieken wüllt.',
   'share.sub': 'Ehr Angaven liggt alleen in disse Browser (<kbd>localStorage</kbd>). Nix ward överdragen, dat gifft keen Server un keen Tracker.',
   'footer.1': '<b>Keen Steuer- oder Anlaagberaden.</b> En Modell is keen Vertrag. De Rechtslaag 2026 to de reformeerte private Öllersvörsorg is an mehr Steden noch nich sluttich klaart; de Annahmen mit den lüttsten Vertroensgraad staht ünner „Reekweg → Belastborkeit vun de Annahmen“ un sünd dor ok to ännern.',
-  'footer.2': 'Reekkeern een to een överdragen ut dat Excel-Modell <span class="pill">bAV-DYNO_vs_Altersvorsorgedepot_vs_ETF.xlsx</span> un gegen dree Testfäll op Maschienngenauigkeit pröövt (grötte relative Afwieken 1,3·10<sup>&minus;14</sup>).',
+  'footer.2': 'Reekkeern een to een överdragen ut dat ursprüngliche Excel-Modell un gegen dree Testfäll op Maschienngenauigkeit pröövt (grötte relative Afwieken 1,3·10<sup>&minus;14</sup>).',
   'metric.monat.desc': 'Kunstant Maandbetahlen över de hele Utbetahlensphaas mit den sülvigen Wart, in hüdige Koopkraft. De enkige Tall, de sik direkt mit Ehr hüdig Nettoinkamen verglieken lett.',
   'metric.ertrag.desc': 'Wat de Mööglichkeit in hüdige Koopkraft över den egen Insatz erut afwirft: Barwart vun all Netto-Leisten minus Barwart vun de Nettoutgaav.',
   'metric.irr.desc': 'Rendit op den wohrhaftig insetten Nettobetrag, nominaal. Direkt to verglieken mit de instellte Bruttorendit vun’n ETF — de Ünnerscheed is nau dat, wat Förderung un Afgaven tosamen kösten oder bringt.',

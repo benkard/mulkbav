@@ -234,7 +234,7 @@ window.I18N_FR = {
   'ui.lang.partialNote': 'Cette langue est <b>traduite en partie</b> : interface, noms de champs, en-têtes de tableaux et légendes de graphiques sont là. Les longues explications juridiques — les textes <span class="qm" style="cursor:default">?</span> des champs, la conclusion et le détail du calcul — s’affichent en allemand. Les références légales (BetrAVG, EStG, SGB V) restent allemandes dans toutes les langues : officiellement, elles n’existent pas autrement.',
   'sb.up': 'Remonter au résultat',
   'footer.1': '<b>Ni conseil fiscal ni conseil en placement.</b> Un modèle n’est pas un contrat. L’état du droit 2026 sur l’épargne retraite privée réformée n’est pas définitivement fixé sur plusieurs points ; les hypothèses les moins sûres figurent sous « Détail du calcul → Robustesse des hypothèses » et y sont modifiables.',
-  'footer.2': 'Moteur de calcul porté à l’identique depuis le modèle Excel <span class="pill">bAV-DYNO_vs_Altersvorsorgedepot_vs_ETF.xlsx</span> et vérifié à la précision machine sur trois cas de test (écart relatif maximal 1,3·10<sup>&minus;14</sup>).',
+  'footer.2': 'Moteur de calcul porté à l’identique depuis le modèle Excel d’origine et vérifié à la précision machine sur trois cas de test (écart relatif maximal 1,3·10<sup>&minus;14</sup>).',
 
   /* ---------------- Les trois options ---------------- */
   'opt.bav.name': 'bAV (abandon de salaire)',
