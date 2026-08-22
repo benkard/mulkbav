@@ -1,5 +1,5 @@
 /* =====================================================================
-   Wörterbuch Altbabylonisch — UMSCHRIFT, QUELLE (459 Schlüssel).
+   Wörterbuch Altbabylonisch — UMSCHRIFT, QUELLE (461 Schlüssel).
 
    Diese Datei wird NICHT ausgeliefert. Sie ist die lesbare Quelle, aus
    der akk-keilschrift.js die Keilschriftfassung i18n.akk-x-ob.js
@@ -282,6 +282,8 @@ window.I18N_AKK_X_OB = {
   'sb.up': 'ana elīš ana awâtim gamirtim',
   'footer.1': '<b>lā awât miksim, lā awât {SAG.DU}.</b> ṭuppum lā riksum šī. ṣimdatum ša 2026 ana {SAG.DU} eššim ša šībūtim ina ašrī mādûtim lā gamrat; dīnātum ša tukultim maṭītim ina "padān minâtim → dannūtum ša dīnātim" šaṭrā u ina annîm innakkirā.',
   'footer.2': 'libbi minâtim ištēn ana ištēn ištu {DUB} panîm leqûm u ana šalāš mitharātim adi {ZAG} ša ilim maṣi (nakārum rabûm 1,3·10<sup>&minus;14</sup>).',
+  'footer.imprint': 'awât epišim',
+  'footer.privacy': 'awât naṣāri ṭuppātim',
 
   /* ---------------- Die drei Optionen ---------------- */
   'opt.bav.name': '{LU2}-{MASH} ša {E2} šiprim (nakārum ša {A2})',

@@ -235,6 +235,8 @@ window.I18N_FR = {
   'sb.up': 'Remonter au résultat',
   'footer.1': '<b>Ni conseil fiscal ni conseil en placement.</b> Un modèle n’est pas un contrat. L’état du droit 2026 sur l’épargne retraite privée réformée n’est pas définitivement fixé sur plusieurs points ; les hypothèses les moins sûres figurent sous « Détail du calcul → Robustesse des hypothèses » et y sont modifiables.',
   'footer.2': 'Moteur de calcul porté à l’identique depuis le modèle Excel d’origine et vérifié à la précision machine sur trois cas de test (écart relatif maximal 1,3·10<sup>&minus;14</sup>).',
+  'footer.imprint': 'Mentions légales',
+  'footer.privacy': 'Politique de confidentialité',
 
   /* ---------------- Les trois options ---------------- */
   'opt.bav.name': 'bAV (abandon de salaire)',

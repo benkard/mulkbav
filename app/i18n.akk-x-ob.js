@@ -1,5 +1,5 @@
 /* =====================================================================
-   Wörterbuch Altbabylonisch — KEILSCHRIFT, ERZEUGT (459 Schlüssel).
+   Wörterbuch Altbabylonisch — KEILSCHRIFT, ERZEUGT (461 Schlüssel).
 
    ERZEUGTE DATEI — nicht von Hand ändern. Quelle ist
    i18n.akk-x-ob.translit.js; nach jeder Änderung dort neu bauen:
@@ -290,6 +290,8 @@ window.I18N_AKK_X_OB = {
   'sb.up': '𒀀𒈾 𒂊𒇷𒅖 𒀀𒈾 𒀀𒉿𒋾𒅎 𒂵𒈪𒅕𒋾𒅎',
   'footer.1': '<b>𒆷 𒀀𒉿𒀜 𒈪𒅅𒋛𒅎, 𒆷 𒀀𒉿𒀜 𒊕𒁺.</b> 𒁾𒁍𒌝 𒆷 𒊑𒅅𒋧 𒅆. 𒍣𒅎𒁕𒌈 𒊭 2026 𒀀𒈾 𒊕𒁺 𒂠𒋆 𒊭 𒅆𒁍𒋾𒅎 𒄿𒈾 𒀸𒊑 𒈠𒁺𒋾𒅎 𒆷 𒃵𒊏𒀜; 𒁲𒈾𒌈 𒊭 𒌅𒆰𒋾𒅎 𒈠𒁲𒋾𒅎 𒄿𒈾 "𒉺𒁕𒀭 𒈪𒈾𒋾𒅎 → 𒁕𒀭𒉡𒌈 𒊭 𒁲𒈾𒋾𒅎" 𒊭𒀜𒊏 𒌋 𒄿𒈾 𒀭𒉏 𒅔𒈾𒀝𒆠𒊏.',
   'footer.2': '𒇷𒅁𒁉 𒈪𒈾𒋾𒅎 𒅖𒋼𒂗 𒀀𒈾 𒅖𒋼𒂗 𒅖𒌅 𒁾 𒉺𒉏 𒇷𒆪𒌝 𒌋 𒀀𒈾 𒊭𒆷𒀸 𒈪𒀉𒄩𒊏𒋾𒅎 𒀀𒁲 𒍠 𒊭 𒄿𒇷𒅎 𒈠𒍣 (𒈾𒅗𒊒𒌝 𒊏𒁍𒌝 1,3·10<sup>&minus;14</sup>).',
+  'footer.imprint': '𒀀𒉿𒀜 𒂊𒁉𒋆',
+  'footer.privacy': '𒀀𒉿𒀜 𒈾𒍝𒊑 𒁾𒉺𒋾𒅎',
 
   /* ---------------- Die drei Optionen ---------------- */
   'opt.bav.name': '𒇽-𒈦 𒊭 𒂍 𒅆𒅁𒊑𒅎 (𒈾𒅗𒊒𒌝 𒊭 𒀉)',

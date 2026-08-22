@@ -230,6 +230,8 @@ window.I18N_DE = {
   'sb.up': 'Nach oben zum Ergebnis',
   'footer.1': '<b>Keine Steuer- oder Anlageberatung.</b> Ein Modell ist kein Vertrag. Die Rechtslage 2026 zur reformierten privaten Altersvorsorge ist an mehreren Stellen noch nicht abschließend geklärt; die Annahmen mit dem geringsten Vertrauensgrad stehen unter „Rechenweg → Belastbarkeit der Annahmen“ und sind dort auch änderbar.',
   'footer.2': 'Rechenkern eins zu eins portiert aus dem ursprünglichen Excel-Modell und gegen drei Testfälle auf Maschinengenauigkeit geprüft (größte relative Abweichung 1,3·10<sup>&minus;14</sup>).',
+  'footer.imprint': 'Impressum',
+  'footer.privacy': 'Datenschutzerklärung',
 
   /* ---------------- Die drei Optionen ---------------- */
   'opt.bav.name': 'bAV (Entgeltumwandlung)',

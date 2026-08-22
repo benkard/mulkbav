@@ -1,5 +1,5 @@
 /* =====================================================================
-   Wörterbuch Urindogermanisch — VOLLSTÄNDIG (459 Schlüssel).
+   Wörterbuch Urindogermanisch — VOLLSTÄNDIG (461 Schlüssel).
 
    SPRACHCODE. ine ist der ISO-639-5-Sammelcode für die indogermanische
    Familie, nicht für die Grundsprache; einen eigenen ISO-Code hat das
@@ -280,6 +280,8 @@ window.I18N_INE_X_PROTO = {
   'sb.up': '*úperi h₁éy, lipóm h₂éd',
   'footer.1': '*<b>né teutodéh₃ti-wékʷos, né pék̑u-wékʷos.</b> *nóh₃mn̥ né dʰh₁tóm h₁ésti. *2026-osyo dʰéh₁mn̥ néwoi swé-ǵr̥h₂tupék̑wei so’i-loi né sm̥ dʰh₁tóm h₁ésti; ménesa mính₂u-ménesa „réh₁tyos pn̥tḗh₂s → ménesōm tólh₂mn̥“ h₁sónti, h₂éltromn̥ā-kʷe.',
   'footer.2': '*réh₁tyos k̑ērd h₁óynom h₁óynom lipóm h₂epó bʰr̥tóm, tri-mn̥ mn̥dʰh₁tói dr̥k̑tóm (méǵh₂ h₂éltromn̥ 1,3·10<sup>&minus;14</sup>).',
+  'footer.imprint': '*dʰh₁tṓr-bʰi',
+  'footer.privacy': '*wid-mn̥-s pāsti-bʰi',
 
   /* ---------------- Die drei Optionen ---------------- */
   'opt.bav.name': '*wérǵoǵr̥h₂tupék̑u (pék̑u-h₂éltromn̥)',

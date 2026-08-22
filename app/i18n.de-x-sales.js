@@ -1,6 +1,6 @@
 /* =====================================================================
    Wörterbuch Deutsch, Register „Vertrieb" (BCP 47 § 2.2.7, privater
-   Untertag de-x-sales) — VOLLSTÄNDIG (459 Schlüssel).
+   Untertag de-x-sales) — VOLLSTÄNDIG (461 Schlüssel).
 
    Keine Übersetzung, sondern eine Stilvariante derselben Sprache: exakt
    dieselben Zahlen, Formeln und Paragraphen wie im Wörterbuch Deutsch
@@ -248,6 +248,8 @@ window.I18N_DE_X_SALES = {
   'sb.up': 'Rauf zu Ihrem Ergebnis',
   'footer.1': '<b>Wichtig und ehrlich: keine Steuer- oder Anlageberatung.</b> So gut unser Rechner ist — das persönliche Gespräch ersetzt er nicht, und das wollen wir auch gar nicht behaupten. Die Rechtslage 2026 zur reformierten privaten Altersvorsorge ist an einigen Stellen noch offen; wir verstecken das nicht, sondern legen die unsichersten Annahmen unter „Rechenweg → Belastbarkeit der Annahmen" komplett offen — und Sie dürfen jede einzelne davon selbst nachjustieren. So viel Transparenz bekommen Sie sonst nirgends!',
   'footer.2': 'Unser Rechenkern? Eins zu eins aus dem geprüften ursprünglichen Excel-Modell übernommen und an drei Testfällen bis auf Maschinengenauigkeit bestätigt — größte Abweichung 1,3·10<sup>&minus;14</sup>. Das ist die vierzehnte Nachkommastelle. Genauer geht es auf diesem Planeten schlicht nicht. Vergleichen Sie das ruhig mit dem, was Ihnen sonst so vorgerechnet wird!',
+  'footer.imprint': 'Impressum',
+  'footer.privacy': 'Datenschutz',
 
   /* ---------------- Die drei Optionen ---------------- */
   'opt.bav.name': 'Ihre bAV per Entgeltumwandlung',

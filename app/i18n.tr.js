@@ -1,5 +1,5 @@
 /* =====================================================================
-   Türkçe sözlük — TAM (459 anahtar).
+   Türkçe sözlük — TAM (461 anahtar).
    Kanun atıfları bilerek Almanca bırakıldı: birincil kaynak bunlar ve
    resmî çevirileri yok. „bAV“ = Entgeltumwandlung, brüt ücretten yapılan
    işyeri emeklilik kesintisi; Türk mevzuatında birebir karşılığı yok.
@@ -434,6 +434,8 @@ window.I18N_TR = {
   'share.sub': 'Bilgileriniz yalnızca bu tarayıcıda tutulur (<kbd>localStorage</kbd>). Hiçbir şey aktarılmaz, ne sunucu ne de izleyici vardır.',
   'footer.1': '<b>Vergi ya da yatırım danışmanlığı değildir.</b> Bir model, sözleşme değildir. Reforme edilmiş özel emeklilik birikimiyle ilgili 2026 hukuki durumu birçok noktada henüz kesin olarak açıklığa kavuşmamıştır; güven düzeyi en düşük varsayımlar „Hesap yolu → Varsayımların dayanıklılığı“ altında yer alır ve orada değiştirilebilir.',
   'footer.2': 'Hesap çekirdeği birebir özgün Excel modelinden aktarılmış ve üç test durumuna karşı makine hassasiyetinde sınanmıştır (en büyük göreli sapma 1,3·10<sup>&minus;14</sup>).',
+  'footer.imprint': 'Künye',
+  'footer.privacy': 'Gizlilik politikası',
   'metric.monat.desc': 'Tüm ödeme evresi boyunca aynı değerle sabit aylık ödeme, bugünkü alım gücüyle. Bugünkü net gelirinizle doğrudan karşılaştırılabilen tek rakam.',
   'metric.ertrag.desc': 'Seçeneğin bugünkü alım gücüyle kendi katkısının ötesinde ne getirdiği: tüm net ödemelerin bugünkü değeri eksi net yükün bugünkü değeri.',
   'metric.irr.desc': 'Fiilen yatırılan net tutar üzerinden getiri, nominal. ETF’in ayarlanan brüt getirisiyle doğrudan karşılaştırılabilir — fark, teşvik ve kesintilerin birlikte ne kadar mal olduğu ya da kazandırdığıdır.',

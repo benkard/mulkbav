@@ -1,6 +1,6 @@
 /* =====================================================================
    Wörterbuch Deutsch, Register „Amtsdeutsch" (BCP 47 § 2.2.7,
-   privater Untertag de-x-amt) — VOLLSTÄNDIG (459 Schlüssel).
+   privater Untertag de-x-amt) — VOLLSTÄNDIG (461 Schlüssel).
 
    Keine Übersetzung, sondern eine Stilvariante derselben Sprache: exakt
    dieselben Zahlen, Formeln und Paragraphen wie im Wörterbuch Deutsch
@@ -244,6 +244,8 @@ window.I18N_DE_X_AMT = {
   'sb.up': 'Zurück zum Ergebnis (Seitenanfang)',
   'footer.1': '<b>Es wird ausdrücklich darauf hingewiesen, dass mit der vorliegenden Anwendung weder eine steuerliche noch eine anlagebezogene Beratung im Sinne der einschlägigen berufsrechtlichen Vorschriften erbracht wird.</b> Ein Berechnungsmodell vermag eine auf den Einzelfall bezogene Beratung nicht zu ersetzen; ein Rechtsanspruch auf Richtigkeit der ausgewiesenen Beträge wird nicht begründet. Es wird ferner darauf hingewiesen, dass die Rechtslage 2026 betreffend die reformierte private Altersvorsorge in mehreren Punkten noch nicht abschließend geklärt ist. Diejenigen Annahmen, denen der geringste Vertrauensgrad beizumessen ist, sind unter „Rechenweg → Belastbarkeit der Annahmen" gesondert ausgewiesen und können dort im Einzelnen angepasst werden.',
   'footer.2': 'Der Rechenkern ist unverändert und ohne inhaltliche Abweichung aus dem ursprünglichen, in Gestalt einer Tabellenkalkulation geführten Berechnungsmodell übernommen worden. Eine Überprüfung anhand dreier Testfälle hat ergeben, dass Übereinstimmung bis zur Maschinengenauigkeit besteht; die größte festgestellte relative Abweichung beträgt 1,3·10<sup>&minus;14</sup> und ist mithin als vernachlässigbar einzustufen.',
+  'footer.imprint': 'Anbieterkennzeichnung',
+  'footer.privacy': 'Erklärung zum Datenschutz',
 
   /* ---------------- Die drei Gestaltungsvarianten ---------------- */
   'opt.bav.name': 'Betriebliche Altersversorgung im Wege der Entgeltumwandlung',

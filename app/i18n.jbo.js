@@ -1,5 +1,5 @@
 /* =====================================================================
-   Wörterbuch Lojban (ISO 639-3: jbo) — VOLLSTÄNDIG (459 Schlüssel).
+   Wörterbuch Lojban (ISO 639-3: jbo) — VOLLSTÄNDIG (461 Schlüssel).
 
    Lojban ist syntaktisch eindeutig: die Grammatik ist eine kommen-
    freie Sprache mit einem geprüften LALR(1)-Parser (camxes), es gibt
@@ -263,6 +263,8 @@ window.I18N_JBO = {
   'sb.up': 'ko klama ga\'u lo se jalge',
   'footer.1': '<b>ti na flalu ja sorcu stidi.</b> lo ciste na se javni .i lo 2026 flalu be lo cnino sivni gunsisti sorcu cu na mulno se jdice vi so\'i da .i lo sruma poi mleca la\'u se xusra cu zvati lo "lanli pluta → lo tsali be lo sruma" gi\'e ka\'e se galfi vi ti',
   'footer.2': 'lo lanli midju cu se fukpi lo tanbo ciste gi\'e se cipra ci lo mupli co\'u lo minji preciso (lo zmadu parbi frica cu 1,3·10<sup>&minus;14</sup>)',
+  'footer.imprint': 'lo finti',
+  'footer.privacy': 'lo nu mipri se javni',
 
   /* ---------------- Die drei Optionen ---------------- */
   'opt.bav.name': 'lo gunka gunsisti sorcu (galfi lo sumji jdini)',

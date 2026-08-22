@@ -1,5 +1,5 @@
 /* =====================================================================
-   GUTISKA RAZDA — Gotisch, VOLLSTÄNDIG (459 Schlüssel).
+   GUTISKA RAZDA — Gotisch, VOLLSTÄNDIG (461 Schlüssel).
    Seit der zweiten Fassung auch die langen Erläuterungstexte, Fließtext-
    Hinweise und Verdikt-Sätze übersetzt statt über tRaw() auf Deutsch
    zurückzufallen. Für Fließtext gilt zwangsläufig ein niedrigerer
@@ -490,6 +490,8 @@ window.I18N_GOT = {
   'share.sub': 'Þeina waurda sind ains in þamma waurstwa (<kbd>localStorage</kbd>). Ni waiht wairþiþ sandiþ, nist waldufni ni spaikulatjands.',
   'footer.1': '<b>Ni ist gildis aiþþau faihu ragineins.</b> Frisahts nist triggwa. Witodis stojan 2026 bi niujein seina kararis in managam staþam ni ist andjis skeirjada; þo anahahona miþ minnistin trauainshugja standand undar „Wiga þizos rathjons → Swinþein þizo anahahano“ jah mahtjand jainar wandjan.',
   'footer.2': 'Sa rathjons kern ains du ainamma ustauhans us þamma frumistin Excel-frisahtja jah wiþra þrins fraisteinins bi asanjis raihtein gakannids (maists galeiks missaleikeins 1,3·10<sup>&minus;14</sup>).',
+  'footer.imprint': 'Bi þamma taujandin',
+  'footer.privacy': 'Bi fastan runos',
   'metric.monat.desc': 'Samaleiks menoþis giba all gibos mel miþ þamma samin waírþa, bi himma daga waírþa. Þata aina rathjo, þatei mag galeikan miþ þeinamma hrainjamma faihau nu.',
   'metric.ertrag.desc': 'Þatei sa wilja bi himma daga waírþa ufar eiginana anafilh gataujiþ: waírþ nu allaizo hrainjaizo gibo inuh waírþ nu þis hrainis wilwis.',
   'metric.irr.desc': 'Wokrs ana þamma sunjeino galagidin hrainjamma faihau, bi namin. Galeiks miþ þamma gasatidin allamma wokra þis ETF — so missaleikeins ist bi sunjai þatei giba jah gibandeis samana kostjand aiþþau giband.',

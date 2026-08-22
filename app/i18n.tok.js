@@ -1,5 +1,5 @@
 /* =====================================================================
-   Wörterbuch Toki Pona (ISO 639-3: tok) — VOLLSTÄNDIG (459 Schlüssel).
+   Wörterbuch Toki Pona (ISO 639-3: tok) — VOLLSTÄNDIG (461 Schlüssel).
 
    SCHRIFT. Gespeichert wird sitelen Lasina, also die ASCII-Umschrift.
    Das ist bewusst so und nicht die zweitbeste Lösung: sitelen pona
@@ -270,6 +270,8 @@ window.I18N_TOK = {
   'sb.up': 'o tawa sewi, tawa pini',
   'footer.1': '<b>ni li sona ala pi mani lawa, li sona ala pi mani awen.</b> ilo nanpa li lipu ala. lipu lawa pi 2026 pi mani awen sin li ken ala pini lon ijo mute; nasin pi sona lili li lon "nasin nanpa → wawa pi nasin mi", li ken ante lon ni.',
   'footer.2': 'nasin nanpa li kama tan lipu nanpa open, li lukin lon nasin tu wan, li sama lon nasin pi ilo sona (ante suli li 1,3·10<sup>&minus;14</sup>).',
+  'footer.imprint': 'jan pali',
+  'footer.privacy': 'nasin pi len sona',
 
   /* ---------------- Die drei Optionen ---------------- */
   'opt.bav.name': 'mani awen pali (pana tan mani ale)',

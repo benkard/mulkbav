@@ -1,5 +1,5 @@
 /* =====================================================================
-   Euskarazko hiztegia — OSOA (459 gako).
+   Euskarazko hiztegia — OSOA (461 gako).
    Lege-aipamenak nahita alemanez daude: iturri primarioak dira eta ez dute
    itzulpen ofizialik. „bAV“ = Entgeltumwandlung, soldata gordinetik
    elikatzen den enpresa-pentsioa; euskaraz ez dago baliokide zehatzik,
@@ -434,6 +434,8 @@ window.I18N_EU = {
   'share.sub': 'Zure datuak nabigatzaile honetan bakarrik daude (<kbd>localStorage</kbd>). Ez da ezer transmititzen, ez dago zerbitzaririk ez jarraipen-tresnarik.',
   'footer.1': '<b>Ez da zerga- edo inbertsio-aholkularitza.</b> Eredu bat ez da kontratu bat. Diruz lagundutako pentsio pribatu erreformatuari buruzko 2026ko egoera juridikoa ez dago puntu batzuetan behin betiko argituta; konfiantza-maila baxuena duten hipotesiak «Kalkulu-bidea → Hipotesien sendotasuna» azpian daude, eta han alda daitezke.',
   'footer.2': 'Kalkulu-nukleoa bat-batean jatorrizko Excel ereduetik transferitu da, eta hiru test-kasuren aurrean egiaztatu da makina-zehaztasunarekin (desbideratze erlatibo handiena 1,3·10<sup>&minus;14</sup>).',
+  'footer.imprint': 'Lege oharra',
+  'footer.privacy': 'Pribatutasun-politika',
   'metric.monat.desc': 'Ordainketa-fase osoan zehar balio berarekin ordaintzen den hileko prestazio konstantea, gaurko erosteko ahalmenean. Zure gaurko diru-sarrera garbiarekin zuzenean konpara daitekeen zenbaki bakarra.',
   'metric.ertrag.desc': 'Aukerak gaurko erosteko ahalmenean, ekarpen propiotik haratago, zer ematen duen: ordainketa garbi guztien gaurko balioa ken gastu garbiaren gaurko balioa.',
   'metric.irr.desc': 'Benetan inbertitutako zenbateko garbiaren errendimendua, nominala. ETFaren ezarritako errendimendu gordinarekin zuzenean konparagarria — diferentzia laguntzek eta kenkariek batera zenbat kostatzen edo ematen duten da, hain zuzen.',

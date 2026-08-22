@@ -229,6 +229,8 @@ window.I18N_EN = {
   'sb.up': 'Back up to the result',
   'footer.1': '<b>Not tax or investment advice.</b> A model is not a contract. The 2026 legal position on reformed private retirement provision is not settled in several respects; the assumptions with the lowest confidence are listed under „How it is calculated → Robustness of the assumptions“ and can be changed there.',
   'footer.2': 'Calculation core ported one-to-one from the original Excel model and checked against three test cases to machine precision (largest relative deviation 1.3·10<sup>&minus;14</sup>).',
+  'footer.imprint': 'Legal notice',
+  'footer.privacy': 'Privacy policy',
 
   /* ---------------- The three options ---------------- */
   'opt.bav.name': 'Occupational pension (bAV, salary sacrifice)',

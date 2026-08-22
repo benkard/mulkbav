@@ -229,6 +229,8 @@ window.I18N_LA = {
   'sb.up': 'Sursum ad exitum',
   'footer.1': '<b>Non est consilium tributarium neque de collocando.</b> Exemplar non est contractus. Ius anni 2026 de provisione privata reformata pluribus locis nondum certum est; suppositiones minimae fidei sub „Ratio computandi → Firmitas suppositionum“ stant et ibi mutari possunt.',
   'footer.2': 'Nucleus computandi ad litteram ex exemplari Excel pristino translatus et tribus casibus ad praecisionem machinae probatus (maxima discrepantia relativa 1,3·10<sup>&minus;14</sup>).',
+  'footer.imprint': 'De auctore',
+  'footer.privacy': 'De tutela datorum',
 
   /* ---------------- Tres rationes ---------------- */
   'opt.bav.name': 'Pensio operativa (conversio mercedis)',
